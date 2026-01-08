@@ -479,6 +479,143 @@
         </div>
     </section>
 
+    <!-- Interactive System Assembly Game -->
+    <section class="py-20 relative bg-gradient-to-br from-purple-900/20 to-blue-900/20">
+        <div class="container mx-auto px-6">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-black mb-4 text-center">
+                    <span class="gradient-text" x-text="t.game?.title || 'Interactive System Assembly'"></span>
+                </h2>
+                <p class="text-center text-gray-400 mb-12 max-w-2xl mx-auto" x-text="t.game?.subtitle || 'Drag and drop components to build the Solar-Battery Node AI system'"></p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Component Library -->
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4" x-text="t.game?.componentsTitle || 'Available Components'"></h3>
+                        <div class="space-y-3" id="componentLibrary">
+                            <div class="bg-gradient-to-r from-blue-500/20 to-blue-600/20 rounded-xl p-4 border border-blue-400/30 cursor-move hover:scale-105 transition transform"
+                                 draggable="true"
+                                 @dragstart="dragStart($event, 'iot')"
+                                 id="component-iot">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-500/30 rounded-lg p-3 mr-3">
+                                        <svg class="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-white text-sm">STM32 B-L475E</p>
+                                        <p class="text-xs text-gray-400" x-text="t.game?.iotDesc || 'IoT & ML Board'"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-r from-purple-500/20 to-purple-600/20 rounded-xl p-4 border border-purple-400/30 cursor-move hover:scale-105 transition transform"
+                                 draggable="true"
+                                 @dragstart="dragStart($event, 'vision')"
+                                 id="component-vision">
+                                <div class="flex items-center">
+                                    <div class="bg-purple-500/30 rounded-lg p-3 mr-3">
+                                        <svg class="w-8 h-8 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-white text-sm">STM32N6 NPU</p>
+                                        <p class="text-xs text-gray-400" x-text="t.game?.visionDesc || 'Computer Vision'"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-r from-green-500/20 to-green-600/20 rounded-xl p-4 border border-green-400/30 cursor-move hover:scale-105 transition transform"
+                                 draggable="true"
+                                 @dragstart="dragStart($event, 'backend')"
+                                 id="component-backend">
+                                <div class="flex items-center">
+                                    <div class="bg-green-500/30 rounded-lg p-3 mr-3">
+                                        <svg class="w-8 h-8 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-white text-sm">Flask Backend</p>
+                                        <p class="text-xs text-gray-400" x-text="t.game?.backendDesc || 'ML & AI Processing'"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 rounded-xl p-4 border border-yellow-400/30 cursor-move hover:scale-105 transition transform"
+                                 draggable="true"
+                                 @dragstart="dragStart($event, 'mobile')"
+                                 id="component-mobile">
+                                <div class="flex items-center">
+                                    <div class="bg-yellow-500/30 rounded-lg p-3 mr-3">
+                                        <svg class="w-8 h-8 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-white text-sm">Flutter Mobile</p>
+                                        <p class="text-xs text-gray-400" x-text="t.game?.mobileDesc || 'Mobile Interface'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assembly Area -->
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4" x-text="t.game?.assemblyTitle || 'System Assembly (Drag Here)'"></h3>
+                        <div class="bg-gray-800/50 rounded-2xl p-6 border-2 border-dashed border-gray-600 min-h-[400px] relative"
+                             @drop="drop($event)"
+                             @dragover.prevent
+                             id="assemblyArea">
+                            <div class="text-center text-gray-500 absolute inset-0 flex items-center justify-center pointer-events-none" x-show="assemblies.length === 0">
+                                <p x-text="t.game?.dragPrompt || 'Drag components here in the correct order'"></p>
+                            </div>
+                            <div class="space-y-3">
+                                <template x-for="(item, index) in assemblies" :key="index">
+                                    <div class="bg-gradient-to-r rounded-xl p-3 border flex items-center justify-between"
+                                         :class="{
+                                             'from-blue-500/30 to-blue-600/30 border-blue-400/50': item === 'iot',
+                                             'from-purple-500/30 to-purple-600/30 border-purple-400/50': item === 'vision',
+                                             'from-green-500/30 to-green-600/30 border-green-400/50': item === 'backend',
+                                             'from-yellow-500/30 to-yellow-600/30 border-yellow-400/50': item === 'mobile'
+                                         }">
+                                        <div class="flex items-center">
+                                            <span class="text-white font-bold mr-3" x-text="(index + 1) + '.'"></span>
+                                            <span class="text-white text-sm" x-text="getComponentName(item)"></span>
+                                        </div>
+                                        <button @click="removeComponent(index)" class="text-red-400 hover:text-red-300">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Check Button -->
+                        <button @click="checkAssembly()"
+                                class="mt-6 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3 px-6 rounded-xl transition">
+                            <span x-text="t.game?.checkButton || 'Check Assembly'"></span>
+                        </button>
+
+                        <!-- Result Message -->
+                        <div x-show="gameResult" class="mt-4 p-4 rounded-xl" :class="gameResult === 'correct' ? 'bg-green-500/20 border border-green-400' : 'bg-red-500/20 border border-red-400'">
+                            <p class="text-center font-bold" :class="gameResult === 'correct' ? 'text-green-300' : 'text-red-300'" x-text="gameMessage"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button @click="resetGame()" class="text-blue-400 hover:text-blue-300 text-sm underline" x-text="t.game?.resetButton || 'Reset Game'"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Technical Implementation Section -->
     <section id="implementation" class="py-20 relative academic-section">
         <div class="container mx-auto px-6">
@@ -831,6 +968,53 @@
                     // Combined formula with weights
                     this.predictedRUL = Math.max(0, Math.min(100, (cycleImpact * 0.7) + (tempImpact * 0.3)));
                 },
+                // Interactive Game Logic
+                assemblies: [],
+                gameResult: null,
+                gameMessage: '',
+                draggedComponent: null,
+                dragStart(event, componentId) {
+                    this.draggedComponent = componentId;
+                    event.dataTransfer.effectAllowed = 'move';
+                },
+                drop(event) {
+                    event.preventDefault();
+                    if (this.draggedComponent && !this.assemblies.includes(this.draggedComponent)) {
+                        this.assemblies.push(this.draggedComponent);
+                    }
+                    this.draggedComponent = null;
+                },
+                removeComponent(index) {
+                    this.assemblies.splice(index, 1);
+                    this.gameResult = null;
+                },
+                checkAssembly() {
+                    const correctOrder = ['iot', 'vision', 'backend', 'mobile'];
+                    if (this.assemblies.length !== 4) {
+                        this.gameResult = 'incorrect';
+                        this.gameMessage = this.t.game.messageMissing || 'Please add all 4 components!';
+                    } else if (JSON.stringify(this.assemblies) === JSON.stringify(correctOrder)) {
+                        this.gameResult = 'correct';
+                        this.gameMessage = this.t.game.messageCorrect || '🎉 Perfect! You assembled the system correctly!';
+                    } else {
+                        this.gameResult = 'incorrect';
+                        this.gameMessage = this.t.game.messageWrong || 'Not quite right. Try again!';
+                    }
+                },
+                resetGame() {
+                    this.assemblies = [];
+                    this.gameResult = null;
+                    this.gameMessage = '';
+                },
+                getComponentName(id) {
+                    const names = this.t.game.components || {
+                        iot: 'STM32 B-L475E (IoT Board)',
+                        vision: 'STM32N6 NPU (Computer Vision)',
+                        backend: 'Flask Backend (ML Processing)',
+                        mobile: 'Flutter Mobile (User Interface)'
+                    };
+                    return names[id] || id;
+                },
                 translations: {
                     en: {
                         nav: {
@@ -1023,6 +1207,24 @@
                             whitepaperDesc: 'Complete technical documentation (PDF-ready)',
                             datasetTitle: 'Dataset Documentation',
                             datasetDesc: 'NASA & Roboflow dataset details'
+                        },
+                        game: {
+                            title: 'Interactive Module Assembly Challenge',
+                            subtitle: 'Drag and drop components in the correct order to assemble the Solar-Battery Node AI system',
+                            componentsTitle: 'Available Components',
+                            assemblyTitle: 'Assembly Area',
+                            assemblyHint: 'Drag components here in the correct order',
+                            checkButton: 'Check Assembly',
+                            resetButton: 'Reset',
+                            messageMissing: 'Please add all 4 components!',
+                            messageCorrect: 'Perfect! You assembled the system correctly!',
+                            messageWrong: 'Not quite right. The correct order is: IoT Board → Vision NPU → Backend → Mobile. Try again!',
+                            components: {
+                                iot: 'STM32 B-L475E (IoT Board)',
+                                vision: 'STM32N6 NPU (Computer Vision)',
+                                backend: 'Flask Backend (ML Processing)',
+                                mobile: 'Flutter Mobile (User Interface)'
+                            }
                         },
                         business: {
                             title: 'Business Model & Technology Transfer',
@@ -1313,7 +1515,36 @@
                             },
                             demoCaption: 'Жүйеге Шолу: Нақты уақыттағы бақылау панелі және мобильді қосымша',
                             mobileTitle: 'Көп Платформалы Мобильді Қосымша',
-                            mobileCaption: 'Нақты уақыттағы жүйені бақылау және хабарламалар үшін Flutter-негізіндегі мобильді қосымша'
+                            mobileCaption: 'Нақты уақыттағы жүйені бақылау және хабарламалар үшін Flutter-негізіндегі мобильді қосымша',
+                            simulatorTitle: 'Батарея Денсаулығын Болжаушыны Сынаңыз',
+                            cycleslabel: 'Батарея Циклдері',
+                            templabel: 'Температура',
+                            rulLabel: 'ҚПӨ',
+                            healthStatus: 'Денсаулық Күйі',
+                            simulatorNote: 'Ескерту: Бұл NASA батарея деректерінде үйретілген біздің МО моделіне негізделген жеңілдетілген симуляция.',
+                            resourcesTitle: 'Ресурстарды Жүктеу',
+                            whitepaperTitle: 'Техникалық Ақ Қағаз',
+                            whitepaperDesc: 'Толық техникалық құжаттама (PDF-дайын)',
+                            datasetTitle: 'Деректер Жиынтығы Құжаттамасы',
+                            datasetDesc: 'NASA және Roboflow деректер жиынтығы мәліметтері'
+                        },
+                        game: {
+                            title: 'Интерактивті Модульдік Құрастыру Сынағы',
+                            subtitle: 'Solar-Battery Node AI жүйесін құрастыру үшін компоненттерді дұрыс ретпен сүйреп апарыңыз',
+                            componentsTitle: 'Қолжетімді Компоненттер',
+                            assemblyTitle: 'Құрастыру Аймағы',
+                            assemblyHint: 'Компоненттерді дұрыс ретпен осында сүйреңіз',
+                            checkButton: 'Құрастыруды Тексеру',
+                            resetButton: 'Қайта Бастау',
+                            messageMissing: 'Барлық 4 компонентті қосыңыз!',
+                            messageCorrect: 'Керемет! Сіз жүйені дұрыс құрастырдыңыз!',
+                            messageWrong: 'Дұрыс емес. Дұрыс ретпен: IoT Платасы → Vision NPU → Backend → Mobile. Қайта көріңіз!',
+                            components: {
+                                iot: 'STM32 B-L475E (IoT Платасы)',
+                                vision: 'STM32N6 NPU (Компьютерлік Көру)',
+                                backend: 'Flask Backend (МО Өңдеу)',
+                                mobile: 'Flutter Mobile (Пайдаланушы Интерфейсі)'
+                            }
                         },
                         business: {
                             title: 'Бизнес Модель және Технология Трансферті',
@@ -1604,7 +1835,36 @@
                             },
                             demoCaption: 'Обзор Системы: Панель мониторинга в реальном времени и мобильное приложение',
                             mobileTitle: 'Мультиплатформенное Мобильное Приложение',
-                            mobileCaption: 'Мобильное приложение на Flutter для мониторинга системы и оповещений в реальном времени'
+                            mobileCaption: 'Мобильное приложение на Flutter для мониторинга системы и оповещений в реальном времени',
+                            simulatorTitle: 'Попробуйте Предсказатель Здоровья Батареи',
+                            cycleslabel: 'Циклы Батареи',
+                            templabel: 'Температура',
+                            rulLabel: 'ОПЖ',
+                            healthStatus: 'Состояние Здоровья',
+                            simulatorNote: 'Примечание: Это упрощенная симуляция на основе нашей МО модели, обученной на данных батарей NASA.',
+                            resourcesTitle: 'Скачать Ресурсы',
+                            whitepaperTitle: 'Техническая Белая Книга',
+                            whitepaperDesc: 'Полная техническая документация (готова к PDF)',
+                            datasetTitle: 'Документация Датасета',
+                            datasetDesc: 'Детали датасетов NASA и Roboflow'
+                        },
+                        game: {
+                            title: 'Интерактивная Сборка Модулей',
+                            subtitle: 'Перетащите компоненты в правильном порядке для сборки системы Solar-Battery Node AI',
+                            componentsTitle: 'Доступные Компоненты',
+                            assemblyTitle: 'Область Сборки',
+                            assemblyHint: 'Перетащите компоненты сюда в правильном порядке',
+                            checkButton: 'Проверить Сборку',
+                            resetButton: 'Сбросить',
+                            messageMissing: 'Добавьте все 4 компонента!',
+                            messageCorrect: 'Отлично! Вы правильно собрали систему!',
+                            messageWrong: 'Не совсем правильно. Правильный порядок: IoT Плата → Vision NPU → Backend → Mobile. Попробуйте снова!',
+                            components: {
+                                iot: 'STM32 B-L475E (IoT Плата)',
+                                vision: 'STM32N6 NPU (Компьютерное Зрение)',
+                                backend: 'Flask Backend (МО Обработка)',
+                                mobile: 'Flutter Mobile (Пользовательский Интерфейс)'
+                            }
                         },
                         business: {
                             title: 'Бизнес-модель и Передача Технологий',
@@ -1895,7 +2155,36 @@
                             },
                             demoCaption: 'Sistem Genel Bakış: Gerçek zamanlı izleme panosu ve mobil uygulama',
                             mobileTitle: 'Çapraz Platform Mobil Uygulama',
-                            mobileCaption: 'Gerçek zamanlı sistem izleme ve uyarılar için Flutter tabanlı mobil uygulama'
+                            mobileCaption: 'Gerçek zamanlı sistem izleme ve uyarılar için Flutter tabanlı mobil uygulama',
+                            simulatorTitle: 'Batarya Sağlığı Tahmin Aracını Deneyin',
+                            cycleslabel: 'Batarya Döngüleri',
+                            templabel: 'Sıcaklık',
+                            rulLabel: 'KFÖ',
+                            healthStatus: 'Sağlık Durumu',
+                            simulatorNote: 'Not: Bu, NASA batarya verileri üzerinde eğitilen ML modelimize dayanan basitleştirilmiş bir simülasyondur.',
+                            resourcesTitle: 'Kaynakları İndir',
+                            whitepaperTitle: 'Teknik Beyaz Kitap',
+                            whitepaperDesc: 'Tam teknik dokümantasyon (PDF-hazır)',
+                            datasetTitle: 'Veri Seti Dokümantasyonu',
+                            datasetDesc: 'NASA ve Roboflow veri seti detayları'
+                        },
+                        game: {
+                            title: 'Etkileşimli Modül Montaj Meydan Okuması',
+                            subtitle: 'Solar-Battery Node AI sistemini monte etmek için bileşenleri doğru sırayla sürükleyip bırakın',
+                            componentsTitle: 'Mevcut Bileşenler',
+                            assemblyTitle: 'Montaj Alanı',
+                            assemblyHint: 'Bileşenleri doğru sırayla buraya sürükleyin',
+                            checkButton: 'Montajı Kontrol Et',
+                            resetButton: 'Sıfırla',
+                            messageMissing: 'Lütfen tüm 4 bileşeni ekleyin!',
+                            messageCorrect: 'Mükemmel! Sistemi doğru şekilde monte ettiniz!',
+                            messageWrong: 'Tam olarak doğru değil. Doğru sıra: IoT Kart → Vision NPU → Backend → Mobile. Tekrar deneyin!',
+                            components: {
+                                iot: 'STM32 B-L475E (IoT Kart)',
+                                vision: 'STM32N6 NPU (Bilgisayarlı Görü)',
+                                backend: 'Flask Backend (ML İşleme)',
+                                mobile: 'Flutter Mobile (Kullanıcı Arayüzü)'
+                            }
                         },
                         business: {
                             title: 'İş Modeli ve Teknoloji Transferi',
