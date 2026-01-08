@@ -6,6 +6,9 @@
     <title>Solar-Battery Node AI - AEROO Space AI 2026</title>
     <meta name="description" content="Power Health & Vision Anomaly Detection System - AEROO Space AI Competition 2026">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%233b82f6;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%238b5cf6;stop-opacity:1' /%3E%3C/linearGradient%3E%3CradialGradient id='glow'%3E%3Cstop offset='0%25' style='stop-color:%23fbbf24;stop-opacity:0.8' /%3E%3Cstop offset='100%25' style='stop-color:%23f59e0b;stop-opacity:0' /%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Ccircle cx='50' cy='30' r='18' fill='url(%23glow)'/%3E%3Cpath d='M 50 18 L 53 25 L 60 25 L 54 30 L 57 37 L 50 32 L 43 37 L 46 30 L 40 25 L 47 25 Z' fill='%23fbbf24'/%3E%3Crect x='30' y='52' width='40' height='28' rx='4' fill='%2310b981' stroke='%23059669' stroke-width='2'/%3E%3Crect x='35' y='57' width='30' height='8' rx='2' fill='%2334d399'/%3E%3Crect x='35' y='68' width='30' height='8' rx='2' fill='%2334d399'/%3E%3Cpath d='M 42 57 L 42 65 M 50 57 L 50 65 M 58 57 L 58 65' stroke='%23059669' stroke-width='1.5'/%3E%3Ccircle cx='38' cy='72' r='1.5' fill='%23fbbf24'/%3E%3Ccircle cx='62' cy='72' r='1.5' fill='%23ef4444'/%3E%3Cpath d='M 32 85 Q 50 88 68 85' stroke='%2306b6d4' stroke-width='2' fill='none'/%3E%3Ccircle cx='50' cy='86' r='2' fill='%2306b6d4'/%3E%3C/svg%3E">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -46,6 +49,14 @@
             background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .preserve-3d {
+            transform-style: preserve-3d;
         }
 
         @keyframes float {
@@ -726,6 +737,119 @@
         </div>
     </section>
 
+    <!-- 3D Interactive Hardware Viewer -->
+    <section class="py-20 relative bg-gradient-to-br from-gray-900 via-blue-900/10 to-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-black mb-4 text-center">
+                    <span class="gradient-text" x-text="t.hardware?.title || '3D Hardware Explorer'"></span>
+                </h2>
+                <p class="text-center text-gray-400 mb-12 max-w-2xl mx-auto" x-text="t.hardware?.subtitle || 'Explore our dual STM32 microcontroller architecture in 3D'"></p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- STM32 B-L475E IoT Board -->
+                    <div class="relative group" x-data="{ rotateX: 0, rotateY: 0 }"
+                         @mousemove="rotateY = (($event.offsetX / $el.offsetWidth) - 0.5) * 40; rotateX = -(($event.offsetY / $el.offsetHeight) - 0.5) * 40"
+                         @mouseleave="rotateX = 0; rotateY = 0">
+                        <div class="perspective-1000">
+                            <div class="relative rounded-2xl overflow-hidden transition-transform duration-300 ease-out preserve-3d"
+                                 :style="`transform: rotateX(${rotateX}deg) rotateY(${rotateY}deg)`">
+                                <div class="bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border border-cyan-500/30 p-8 rounded-2xl backdrop-blur-sm">
+                                    <!-- Board Visualization -->
+                                    <div class="relative h-64 mb-6 flex items-center justify-center">
+                                        <div class="absolute inset-0 bg-cyan-500/5 rounded-lg border-2 border-cyan-400/30"></div>
+                                        <svg class="w-32 h-32 text-cyan-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                        </svg>
+                                        <!-- Decorative chips -->
+                                        <div class="absolute top-4 left-4 w-12 h-12 bg-cyan-500/20 rounded border border-cyan-400/40"></div>
+                                        <div class="absolute top-4 right-4 w-8 h-8 bg-cyan-500/20 rounded border border-cyan-400/40"></div>
+                                        <div class="absolute bottom-4 left-6 w-10 h-6 bg-cyan-500/20 rounded border border-cyan-400/40"></div>
+                                        <div class="absolute bottom-4 right-6 w-10 h-6 bg-cyan-500/20 rounded border border-cyan-400/40"></div>
+                                    </div>
+
+                                    <h3 class="text-2xl font-bold text-white mb-3 text-center" x-text="t.hardware?.iot?.name || 'STM32 B-L475E-IOT01A'"></h3>
+                                    <p class="text-sm text-cyan-300 mb-4 text-center" x-text="t.hardware?.iot?.role || 'IoT Discovery Board + ML Inference'"></p>
+
+                                    <div class="space-y-2 text-xs text-gray-300">
+                                        <div class="flex justify-between">
+                                            <span x-text="t.hardware?.iot?.specs?.cpu || 'CPU:'"></span>
+                                            <span class="text-cyan-300">STM32L475VG (Cortex-M4)</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span x-text="t.hardware?.iot?.specs?.freq || 'Frequency:'"></span>
+                                            <span class="text-cyan-300">80 MHz</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span x-text="t.hardware?.iot?.specs?.ram || 'RAM:'"></span>
+                                            <span class="text-cyan-300">128 KB SRAM</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span x-text="t.hardware?.iot?.specs?.sensors || 'Sensors:'"></span>
+                                            <span class="text-cyan-300">Temp, Humidity, Pressure</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center text-xs text-gray-500 mt-4" x-text="t.hardware?.hint || 'Hover to rotate'"></p>
+                    </div>
+
+                    <!-- STM32N6 NPU Vision Board -->
+                    <div class="relative group" x-data="{ rotateX: 0, rotateY: 0 }"
+                         @mousemove="rotateY = (($event.offsetX / $el.offsetWidth) - 0.5) * 40; rotateX = -(($event.offsetY / $el.offsetHeight) - 0.5) * 40"
+                         @mouseleave="rotateX = 0; rotateY = 0">
+                        <div class="perspective-1000">
+                            <div class="relative rounded-2xl overflow-hidden transition-transform duration-300 ease-out preserve-3d"
+                                 :style="`transform: rotateX(${rotateX}deg) rotateY(${rotateY}deg)`">
+                                <div class="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-500/30 p-8 rounded-2xl backdrop-blur-sm">
+                                    <!-- Board Visualization -->
+                                    <div class="relative h-64 mb-6 flex items-center justify-center">
+                                        <div class="absolute inset-0 bg-purple-500/5 rounded-lg border-2 border-purple-400/30"></div>
+                                        <svg class="w-32 h-32 text-purple-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                        </svg>
+                                        <!-- NPU indicator -->
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <div class="w-24 h-24 border-2 border-purple-400/40 rounded-lg animate-pulse"></div>
+                                        </div>
+                                        <!-- Decorative chips -->
+                                        <div class="absolute top-4 left-4 w-16 h-16 bg-purple-500/20 rounded border border-purple-400/40"></div>
+                                        <div class="absolute top-4 right-4 w-12 h-8 bg-purple-500/20 rounded border border-purple-400/40"></div>
+                                        <div class="absolute bottom-4 left-6 w-14 h-8 bg-purple-500/20 rounded border border-purple-400/40"></div>
+                                    </div>
+
+                                    <h3 class="text-2xl font-bold text-white mb-3 text-center" x-text="t.hardware?.vision?.name || 'STM32N6570-DK'"></h3>
+                                    <p class="text-sm text-purple-300 mb-4 text-center" x-text="t.hardware?.vision?.role || 'NPU-Accelerated Vision Processing'"></p>
+
+                                    <div class="space-y-2 text-xs text-gray-300">
+                                        <div class="flex justify-between">
+                                            <span x-text="t.hardware?.vision?.specs?.cpu || 'CPU:'"></span>
+                                            <span class="text-purple-300">STM32N6 (Cortex-M55)</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span x-text="t.hardware?.vision?.specs?.npu || 'NPU:'"></span>
+                                            <span class="text-purple-300">Neural-ART Accelerator</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span x-text="t.hardware?.vision?.specs?.inference || 'Inference:'"></span>
+                                            <span class="text-purple-300">&lt;100ms (YOLOv8)</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span x-text="t.hardware?.vision?.specs?.camera || 'Camera:'"></span>
+                                            <span class="text-purple-300">DCMI Interface</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center text-xs text-gray-500 mt-4" x-text="t.hardware?.hint || 'Hover to rotate'"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Business Model & Market Section -->
     <section id="business" class="py-20 relative academic-section bg-gradient-to-b from-gray-900 to-black">
         <div class="container mx-auto px-6">
@@ -1029,10 +1153,10 @@
                         },
                         abstract: {
                             title: 'Abstract',
-                            content: 'This research presents an integrated autonomous monitoring system for solar-powered space missions, combining machine learning-based battery health prediction with computer vision anomaly detection. The system employs dual STM32 microcontrollers: an IoT discovery board for real-time environmental monitoring and ML inference, and an N6 development kit with dedicated Neural Processing Unit for vision-based solar panel diagnostics. Using NASA battery degradation datasets and Roboflow solar panel imagery, we achieved 92% prediction accuracy for Remaining Useful Life estimation and sub-100ms inference time for multi-class object detection. The system integrates real-time web and mobile monitoring interfaces, a GPT-4o-mini powered proactive assistant for context-aware maintenance recommendations, with comprehensive data logging via Google Drive API for mission-critical analytics. Beyond immediate space applications, this research follows NASA\'s technology transfer paradigm, where extreme environment validation creates commercially viable spin-offs for terrestrial solar energy monitoring, with future scalability through advanced material science sensor integration.',
+                            content: 'This research presents an integrated autonomous monitoring system for solar-powered space missions, combining machine learning-based battery health prediction, computer vision anomaly detection, and generative AI-powered intelligent assistance. The system employs dual STM32 microcontrollers: an IoT discovery board for real-time environmental monitoring and ML inference, and an N6 development kit with dedicated Neural Processing Unit for vision-based solar panel diagnostics. Using NASA battery degradation datasets and Roboflow solar panel imagery, we achieved 92% prediction accuracy for Remaining Useful Life estimation and sub-100ms inference time for multi-class object detection. The system uniquely integrates real-time web and mobile monitoring interfaces with a generative AI proactive assistant (GPT-4o-mini) for context-aware maintenance recommendations, complemented by comprehensive data logging via Google Drive API for mission-critical analytics. Beyond immediate space applications, this research follows NASA\'s technology transfer paradigm, where extreme environment validation creates commercially viable spin-offs for terrestrial solar energy monitoring, with future scalability through advanced material science sensor integration.',
                             keywords: {
                                 title: 'Keywords',
-                                list: ['Machine Learning', 'Computer Vision', 'Edge AI', 'Battery Health Monitoring', 'Solar Panel Diagnostics', 'STM32 NPU', 'YOLO', 'Predictive Maintenance']
+                                list: ['Machine Learning', 'Computer Vision', 'Generative AI', 'Edge AI', 'Battery Health Monitoring', 'Solar Panel Diagnostics', 'STM32 NPU', 'YOLO', 'Predictive Maintenance']
                             }
                         },
                         problem: {
@@ -1218,6 +1342,31 @@
                                 'mobile': { name: 'Flutter Mobile App', desc: 'Cross-Platform Mobile' }
                             }
                         },
+                        hardware: {
+                            title: '3D Hardware Explorer',
+                            subtitle: 'Explore our dual STM32 microcontroller architecture in 3D',
+                            hint: 'Hover to rotate',
+                            iot: {
+                                name: 'STM32 B-L475E-IOT01A',
+                                role: 'IoT Discovery Board + ML Inference',
+                                specs: {
+                                    cpu: 'CPU:',
+                                    freq: 'Frequency:',
+                                    ram: 'RAM:',
+                                    sensors: 'Sensors:'
+                                }
+                            },
+                            vision: {
+                                name: 'STM32N6570-DK',
+                                role: 'NPU-Accelerated Vision Processing',
+                                specs: {
+                                    cpu: 'CPU:',
+                                    npu: 'NPU:',
+                                    inference: 'Inference:',
+                                    camera: 'Camera:'
+                                }
+                            }
+                        },
                         business: {
                             title: 'Business Model & Technology Transfer',
                             subtitle: 'Space-grade R&D with commercial spin-off potential',
@@ -1356,10 +1505,10 @@
                         },
                         abstract: {
                             title: 'Аннотация',
-                            content: 'Бұл зерттеу күн энергиясымен жұмыс істейтін ғарыштық миссияларға арналған интеграцияланған автономды мониторинг жүйесін ұсынады, машиналық оқытуға негізделген батарея денсаулығын болжауды компьютерлік көру аномалияларын анықтаумен біріктіреді. Жүйе екі STM32 микроконтроллерін пайдаланады: нақты уақыттағы қоршаған орта мониторингі мен МО қорытындысы үшін IoT табу платасы және көруге негізделген күн панелі диагностикасы үшін арнайы Нейрондық Өңдеу Блогымен N6 даму жинағы. NASA батарея деградация деректер жиынтығы мен Roboflow күн панелі кескіндемесін пайдалана отырып, біз Қалған Пайдалы Өмірді бағалау үшін 92% болжау дәлдігіне және көп класты объектіні анықтау үшін 100мс-тан төмен қорытынды уақытына қол жеткіздік. Жүйе нақты уақыт веб және мобильді мониторинг интерфейстерін, контекстке сезімтал техникалық қызмет көрсету ұсыныстары үшін GPT-4o-mini қуатталған проактивті көмекшіні, миссияға критикалық талдау үшін Google Drive API арқылы кешенді деректер журналын біріктіреді. Тікелей ғарыштық қолданулардан тыс, бұл зерттеу NASA технология трансферт парадигмасын қолданады, мұнда экстремалды орта тексеруі жердегі күн энергиясын бақылау үшін коммерциялық тұрғыдан тиімді spin-off жасайды, кеңейтілген материал ғылымы сенсор интеграциясы арқылы болашақта масштабталады.',
+                            content: 'Бұл зерттеу күн энергиясымен жұмыс істейтін ғарыштық миссияларға арналған интеграцияланған автономды мониторинг жүйесін ұсынады, машиналық оқытуға негізделген батарея денсаулығын болжауды, компьютерлік көру аномалияларын анықтауды және генеративті AI қуатталған интеллектуалды көмекті біріктіреді. Жүйе екі STM32 микроконтроллерін пайдаланады: нақты уақыттағы қоршаған орта мониторингі мен МО қорытындысы үшін IoT табу платасы және көруге негізделген күн панелі диагностикасы үшін арнайы Нейрондық Өңдеу Блогымен N6 даму жинағы. NASA батарея деградация деректер жиынтығы мен Roboflow күн панелі кескіндемесін пайдалана отырып, біз Қалған Пайдалы Өмірді бағалау үшін 92% болжау дәлдігіне және көп класты объектіні анықтау үшін 100мс-тан төмен қорытынды уақытына қол жеткіздік. Жүйе бірегей түрде нақты уақыт веб және мобильді мониторинг интерфейстерін контекстке сезімтал техникалық қызмет көрсету ұсыныстары үшін генеративті AI проактивті көмекшімен (GPT-4o-mini) біріктіреді, миссияға критикалық талдау үшін Google Drive API арқылы кешенді деректер журналымен толықтырылған. Тікелей ғарыштық қолданулардан тыс, бұл зерттеу NASA технология трансферт парадигмасын қолданады, мұнда экстремалды орта тексеруі жердегі күн энергиясын бақылау үшін коммерциялық тұрғыдан тиімді spin-off жасайды, кеңейтілген материал ғылымы сенсор интеграциясы арқылы болашақта масштабталады.',
                             keywords: {
                                 title: 'Кілт сөздер',
-                                list: ['Машиналық Оқыту', 'Компьютерлік Көру', 'Edge AI', 'Батарея Денсаулығын Бақылау', 'Күн Панелі Диагностикасы', 'STM32 NPU', 'YOLO', 'Болжамды Қызмет']
+                                list: ['Машиналық Оқыту', 'Компьютерлік Көру', 'Генеративті AI', 'Edge AI', 'Батарея Денсаулығын Бақылау', 'Күн Панелі Диагностикасы', 'STM32 NPU', 'YOLO', 'Болжамды Қызмет']
                             }
                         },
                         problem: {
@@ -1545,6 +1694,31 @@
                                 'mobile': { name: 'Flutter Мобильді Қосымша', desc: 'Көп Платформалы Мобильді' }
                             }
                         },
+                        hardware: {
+                            title: '3D Аппараттық Зерттеуші',
+                            subtitle: 'Біздің қос STM32 микроконтроллер архитектурасын 3D-де зерттеңіз',
+                            hint: 'Айналдыру үшін үстінен өтіңіз',
+                            iot: {
+                                name: 'STM32 B-L475E-IOT01A',
+                                role: 'IoT Табу Платасы + МО Шығару',
+                                specs: {
+                                    cpu: 'Процессор:',
+                                    freq: 'Жиілік:',
+                                    ram: 'Жедел жад:',
+                                    sensors: 'Сенсорлар:'
+                                }
+                            },
+                            vision: {
+                                name: 'STM32N6570-DK',
+                                role: 'NPU-Үдетілген Көру Өңдеу',
+                                specs: {
+                                    cpu: 'Процессор:',
+                                    npu: 'NPU:',
+                                    inference: 'Шығару:',
+                                    camera: 'Камера:'
+                                }
+                            }
+                        },
                         business: {
                             title: 'Бизнес Модель және Технология Трансферті',
                             subtitle: 'Ғарыштық деңгейдегі Ғ&Д коммерциялық spin-off әлеуетімен',
@@ -1683,10 +1857,10 @@
                         },
                         abstract: {
                             title: 'Аннотация',
-                            content: 'Это исследование представляет интегрированную автономную систему мониторинга для космических миссий на солнечной энергии, объединяющую прогнозирование состояния батарей на основе машинного обучения с обнаружением аномалий с помощью компьютерного зрения. Система использует два микроконтроллера STM32: плату IoT discovery для мониторинга окружающей среды в реальном времени и вывода МО, и комплект разработки N6 с выделенным блоком нейронной обработки для диагностики солнечных панелей на основе зрения. Используя наборы данных деградации батарей NASA и изображения солнечных панелей Roboflow, мы достигли точности прогнозирования 92% для оценки оставшегося срока службы и времени вывода менее 100мс для многоклассового обнаружения объектов. Система интегрирует веб- и мобильные интерфейсы мониторинга в реальном времени, проактивного помощника на базе GPT-4o-mini для контекстно-зависимых рекомендаций по обслуживанию, с комплексной регистрацией данных через Google Drive API для критически важного анализа миссий. Помимо непосредственных космических применений, это исследование следует парадигме передачи технологий NASA, где валидация в экстремальных условиях создает коммерчески жизнеспособные spin-off для наземного мониторинга солнечной энергии, с будущей масштабируемостью через интеграцию передовых сенсоров материаловедения.',
+                            content: 'Это исследование представляет интегрированную автономную систему мониторинга для космических миссий на солнечной энергии, объединяющую прогнозирование состояния батарей на основе машинного обучения, обнаружение аномалий с помощью компьютерного зрения и интеллектуальную помощь на базе генеративного ИИ. Система использует два микроконтроллера STM32: плату IoT discovery для мониторинга окружающей среды в реальном времени и вывода МО, и комплект разработки N6 с выделенным блоком нейронной обработки для диагностики солнечных панелей на основе зрения. Используя наборы данных деградации батарей NASA и изображения солнечных панелей Roboflow, мы достигли точности прогнозирования 92% для оценки оставшегося срока службы и времени вывода менее 100мс для многоклассового обнаружения объектов. Система уникально интегрирует веб- и мобильные интерфейсы мониторинга в реальном времени с проактивным помощником на базе генеративного ИИ (GPT-4o-mini) для контекстно-зависимых рекомендаций по обслуживанию, дополненным комплексной регистрацией данных через Google Drive API для критически важного анализа миссий. Помимо непосредственных космических применений, это исследование следует парадигме передачи технологий NASA, где валидация в экстремальных условиях создает коммерчески жизнеспособные spin-off для наземного мониторинга солнечной энергии, с будущей масштабируемостью через интеграцию передовых сенсоров материаловедения.',
                             keywords: {
                                 title: 'Ключевые слова',
-                                list: ['Машинное Обучение', 'Компьютерное Зрение', 'Edge AI', 'Мониторинг Здоровья Батарей', 'Диагностика Солнечных Панелей', 'STM32 NPU', 'YOLO', 'Предиктивное Обслуживание']
+                                list: ['Машинное Обучение', 'Компьютерное Зрение', 'Генеративный ИИ', 'Edge AI', 'Мониторинг Здоровья Батарей', 'Диагностика Солнечных Панелей', 'STM32 NPU', 'YOLO', 'Предиктивное Обслуживание']
                             }
                         },
                         problem: {
@@ -1872,6 +2046,31 @@
                                 'mobile': { name: 'Flutter Мобильное Приложение', desc: 'Кроссплатформенное Мобильное' }
                             }
                         },
+                        hardware: {
+                            title: '3D Исследователь Оборудования',
+                            subtitle: 'Изучите нашу двойную архитектуру микроконтроллеров STM32 в 3D',
+                            hint: 'Наведите курсор для вращения',
+                            iot: {
+                                name: 'STM32 B-L475E-IOT01A',
+                                role: 'IoT Плата Discovery + МО Вывод',
+                                specs: {
+                                    cpu: 'Процессор:',
+                                    freq: 'Частота:',
+                                    ram: 'ОЗУ:',
+                                    sensors: 'Датчики:'
+                                }
+                            },
+                            vision: {
+                                name: 'STM32N6570-DK',
+                                role: 'NPU-ускоренная Обработка Зрения',
+                                specs: {
+                                    cpu: 'Процессор:',
+                                    npu: 'NPU:',
+                                    inference: 'Вывод:',
+                                    camera: 'Камера:'
+                                }
+                            }
+                        },
                         business: {
                             title: 'Бизнес-модель и Передача Технологий',
                             subtitle: 'Космические НИОКР с потенциалом коммерческого spin-off',
@@ -2010,10 +2209,10 @@
                         },
                         abstract: {
                             title: 'Özet',
-                            content: 'Bu araştırma, güneş enerjili uzay misyonları için makine öğrenmesi tabanlı batarya sağlığı tahmini ile bilgisayarlı görü anomali tespitini birleştiren entegre bir otonom izleme sistemi sunmaktadır. Sistem çift STM32 mikrodenetleyici kullanır: gerçek zamanlı çevresel izleme ve ML çıkarımı için bir IoT keşif kartı ve görüntü tabanlı güneş paneli teşhisi için özel Nöral İşleme Birimi ile bir N6 geliştirme kiti. NASA batarya bozulma veri setleri ve Roboflow güneş paneli görüntüleri kullanarak, Kalan Faydalı Ömür tahmini için %92 tahmin doğruluğu ve çok sınıflı nesne tespiti için 100ms altı çıkarım süresi elde ettik. Sistem gerçek zamanlı web ve mobil izleme arayüzlerini, bağlam duyarlı bakım önerileri için GPT-4o-mini destekli proaktif bir asistanı, misyon kritik analizler için Google Drive API aracılığıyla kapsamlı veri kaydını entegre eder. Doğrudan uzay uygulamalarının ötesinde, bu araştırma NASA\'nın teknoloji transfer paradigmasını takip eder; aşırı ortam doğrulaması yeryüzü güneş enerjisi izlemesi için ticari olarak uygulanabilir spin-off\'lar yaratır ve gelişmiş malzeme bilimi sensör entegrasyonu ile gelecekte ölçeklendirilebilir.',
+                            content: 'Bu araştırma, güneş enerjili uzay misyonları için makine öğrenmesi tabanlı batarya sağlığı tahmini, bilgisayarlı görü anomali tespiti ve üretken yapay zeka destekli akıllı yardımı birleştiren entegre bir otonom izleme sistemi sunmaktadır. Sistem çift STM32 mikrodenetleyici kullanır: gerçek zamanlı çevresel izleme ve ML çıkarımı için bir IoT keşif kartı ve görüntü tabanlı güneş paneli teşhisi için özel Nöral İşleme Birimi ile bir N6 geliştirme kiti. NASA batarya bozulma veri setleri ve Roboflow güneş paneli görüntüleri kullanarak, Kalan Faydalı Ömür tahmini için %92 tahmin doğruluğu ve çok sınıflı nesne tespiti için 100ms altı çıkarım süresi elde ettik. Sistem benzersiz bir şekilde gerçek zamanlı web ve mobil izleme arayüzlerini bağlam duyarlı bakım önerileri için üretken yapay zeka proaktif asistanıyla (GPT-4o-mini) entegre eder, misyon kritik analizler için Google Drive API aracılığıyla kapsamlı veri kaydıyla tamamlanır. Doğrudan uzay uygulamalarının ötesinde, bu araştırma NASA\'nın teknoloji transfer paradigmasını takip eder; aşırı ortam doğrulaması yeryüzü güneş enerjisi izlemesi için ticari olarak uygulanabilir spin-off\'lar yaratır ve gelişmiş malzeme bilimi sensör entegrasyonu ile gelecekte ölçeklendirilebilir.',
                             keywords: {
                                 title: 'Anahtar Kelimeler',
-                                list: ['Makine Öğrenmesi', 'Bilgisayarlı Görü', 'Uç YZ', 'Batarya Sağlığı İzleme', 'Güneş Paneli Teşhisi', 'STM32 NPU', 'YOLO', 'Öngörülü Bakım']
+                                list: ['Makine Öğrenmesi', 'Bilgisayarlı Görü', 'Üretken Yapay Zeka', 'Uç YZ', 'Batarya Sağlığı İzleme', 'Güneş Paneli Teşhisi', 'STM32 NPU', 'YOLO', 'Öngörülü Bakım']
                             }
                         },
                         problem: {
@@ -2197,6 +2396,31 @@
                                 'gdrive': { name: 'Google Drive', desc: 'Bulut Veri Depolama' },
                                 'openai': { name: 'OpenAI GPT-4o-mini', desc: 'Yapay Zeka Asistanı' },
                                 'mobile': { name: 'Flutter Mobil Uygulama', desc: 'Çapraz Platform Mobil' }
+                            }
+                        },
+                        hardware: {
+                            title: '3D Donanım Gezgini',
+                            subtitle: 'İkili STM32 mikrodenetleyici mimarimizi 3D olarak keşfedin',
+                            hint: 'Döndürmek için üzerine gelin',
+                            iot: {
+                                name: 'STM32 B-L475E-IOT01A',
+                                role: 'IoT Keşif Kartı + ML Çıkarımı',
+                                specs: {
+                                    cpu: 'İşlemci:',
+                                    freq: 'Frekans:',
+                                    ram: 'RAM:',
+                                    sensors: 'Sensörler:'
+                                }
+                            },
+                            vision: {
+                                name: 'STM32N6570-DK',
+                                role: 'NPU-Hızlandırılmış Görüntü İşleme',
+                                specs: {
+                                    cpu: 'İşlemci:',
+                                    npu: 'NPU:',
+                                    inference: 'Çıkarım:',
+                                    camera: 'Kamera:'
+                                }
                             }
                         },
                         business: {
