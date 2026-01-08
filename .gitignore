@@ -1,0 +1,20 @@
+# Claude and development files
+.claude/
+
+# Documentation and reference files
+README_1.md
+README_2.md
+links.txt
+*.pdf
+*.xlsx
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
