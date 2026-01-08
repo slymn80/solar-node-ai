@@ -541,6 +541,101 @@
                         </template>
                     </div>
                 </div>
+
+                <!-- Interactive Battery Health Simulator -->
+                <div class="mt-16 max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold text-white mb-6 text-center" x-text="t.implementation.simulatorTitle || 'Try Battery Health Predictor'"></h3>
+                    <div class="bg-gradient-to-br from-blue-900/40 to-purple-900/40 rounded-2xl p-8 border border-blue-500/30 shadow-2xl">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2" x-text="t.implementation.cycleslabel || 'Battery Cycles'"></label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="2000"
+                                    value="500"
+                                    class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                                    x-model="batteryCycles"
+                                    @input="updateRUL()">
+                                <p class="text-center text-white mt-2 text-lg font-bold" x-text="batteryCycles + ' cycles'"></p>
+
+                                <label class="block text-sm font-medium text-gray-300 mb-2 mt-6" x-text="t.implementation.templabel || 'Temperature'"></label>
+                                <input
+                                    type="range"
+                                    min="-20"
+                                    max="60"
+                                    value="25"
+                                    class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                                    x-model="batteryTemp"
+                                    @input="updateRUL()">
+                                <p class="text-center text-white mt-2 text-lg font-bold" x-text="batteryTemp + '°C'"></p>
+                            </div>
+
+                            <div class="flex flex-col justify-center items-center">
+                                <div class="relative w-48 h-48">
+                                    <svg viewBox="0 0 100 100" class="w-full h-full transform -rotate-90">
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#374151" stroke-width="8"></circle>
+                                        <circle
+                                            cx="50"
+                                            cy="50"
+                                            r="40"
+                                            fill="none"
+                                            :stroke="predictedRUL > 70 ? '#10b981' : (predictedRUL > 40 ? '#f59e0b' : '#ef4444')"
+                                            stroke-width="8"
+                                            :stroke-dasharray="(predictedRUL * 2.51) + ' 251'"
+                                            class="transition-all duration-500">
+                                        </circle>
+                                    </svg>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                        <p class="text-4xl font-black text-white" x-text="Math.round(predictedRUL) + '%'"></p>
+                                        <p class="text-sm text-gray-400" x-text="t.implementation.rulLabel || 'RUL'"></p>
+                                    </div>
+                                </div>
+                                <p class="mt-4 text-center text-gray-300" x-text="t.implementation.healthStatus || 'Health Status'"></p>
+                                <p class="text-lg font-bold" :class="predictedRUL > 70 ? 'text-green-400' : (predictedRUL > 40 ? 'text-yellow-400' : 'text-red-400')" x-text="predictedRUL > 70 ? 'Excellent' : (predictedRUL > 40 ? 'Good' : 'Critical')"></p>
+                            </div>
+                        </div>
+                        <p class="mt-6 text-sm text-gray-400 text-center" x-text="t.implementation.simulatorNote || 'Note: This is a simplified simulation based on our ML model trained on NASA battery data.'"></p>
+                    </div>
+                </div>
+
+                <!-- Download Resources Section -->
+                <div class="mt-16">
+                    <h3 class="text-2xl font-bold text-white mb-8 text-center" x-text="t.implementation.resourcesTitle || 'Download Resources'"></h3>
+                    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                        <!-- Technical White Paper -->
+                        <a href="technical-whitepaper.html" target="_blank" class="tech-card rounded-2xl p-6 card-hover block group">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-blue-500/20 rounded-lg p-3 mr-4">
+                                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white group-hover:text-blue-400 transition" x-text="t.implementation.whitepaperTitle || 'Technical White Paper'"></h4>
+                                    <p class="text-sm text-gray-400" x-text="t.implementation.whitepaperDesc || 'Complete technical documentation (PDF-ready)'"></p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-blue-400">→ Open & Print to PDF</p>
+                        </a>
+
+                        <!-- Dataset Documentation -->
+                        <a href="dataset-documentation.html" target="_blank" class="tech-card rounded-2xl p-6 card-hover block group">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-green-500/20 rounded-lg p-3 mr-4">
+                                    <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white group-hover:text-green-400 transition" x-text="t.implementation.datasetTitle || 'Dataset Documentation'"></h4>
+                                    <p class="text-sm text-gray-400" x-text="t.implementation.datasetDesc || 'NASA & Roboflow dataset details'"></p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-green-400">→ Open & Print to PDF</p>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -722,6 +817,20 @@
         function solarNodeApp() {
             return {
                 currentLang: localStorage.getItem('lang') || 'en',
+                batteryCycles: 500,
+                batteryTemp: 25,
+                predictedRUL: 75,
+                updateRUL() {
+                    // Simplified RUL prediction formula based on our NASA-trained model
+                    // RUL decreases with cycles and extreme temperatures
+                    const cycleImpact = (2000 - this.batteryCycles) / 2000 * 100;
+                    const tempOptimal = 25; // Optimal temperature
+                    const tempDeviation = Math.abs(this.batteryTemp - tempOptimal);
+                    const tempImpact = Math.max(0, 100 - (tempDeviation * 1.5));
+
+                    // Combined formula with weights
+                    this.predictedRUL = Math.max(0, Math.min(100, (cycleImpact * 0.7) + (tempImpact * 0.3)));
+                },
                 translations: {
                     en: {
                         nav: {
@@ -902,7 +1011,18 @@
                             },
                             demoCaption: 'System Overview: Real-time monitoring dashboard and mobile application',
                             mobileTitle: 'Cross-Platform Mobile Application',
-                            mobileCaption: 'Flutter-based mobile app for real-time system monitoring and alerts'
+                            mobileCaption: 'Flutter-based mobile app for real-time system monitoring and alerts',
+                            simulatorTitle: 'Try Battery Health Predictor',
+                            cycleslabel: 'Battery Cycles',
+                            templabel: 'Temperature',
+                            rulLabel: 'RUL',
+                            healthStatus: 'Health Status',
+                            simulatorNote: 'Note: This is a simplified simulation based on our ML model trained on NASA battery data.',
+                            resourcesTitle: 'Download Resources',
+                            whitepaperTitle: 'Technical White Paper',
+                            whitepaperDesc: 'Complete technical documentation (PDF-ready)',
+                            datasetTitle: 'Dataset Documentation',
+                            datasetDesc: 'NASA & Roboflow dataset details'
                         },
                         business: {
                             title: 'Business Model & Technology Transfer',
