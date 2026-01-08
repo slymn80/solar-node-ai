@@ -88,6 +88,36 @@
         .academic-section {
             scroll-margin-top: 80px;
         }
+
+        /* Additional Responsive Optimizations */
+        @media (max-width: 640px) {
+            * {
+                /* Prevent horizontal overflow on small screens */
+                max-width: 100%;
+            }
+
+            /* Better text handling on mobile */
+            p, li, span {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            /* Optimize images for mobile */
+            img {
+                height: auto;
+                max-width: 100%;
+            }
+        }
+
+        /* Touch-friendly minimum sizes */
+        button, a {
+            min-height: 40px;
+        }
+
+        /* Smooth scrolling for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 
     <script>
@@ -107,59 +137,107 @@
 <body class="gradient-bg text-gray-100 antialiased" x-data="solarNodeApp()">
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 border-b border-gray-800">
-        <div class="container mx-auto px-6 py-4">
+    <nav class="fixed top-0 w-full z-50 border-b border-gray-800" x-data="{ mobileMenuOpen: false }">
+        <div class="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
             <div class="flex items-center justify-between">
                 <!-- Logo -->
-                <a href="#hero" class="text-xl font-bold gradient-text">
+                <a href="#hero" class="text-lg sm:text-xl font-bold gradient-text">
                     Solar-Battery Node AI
                 </a>
 
                 <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-6 text-sm">
-                    <a href="#abstract" class="hover:text-blue-400 transition" x-text="t.nav.abstract"></a>
-                    <a href="#problem" class="hover:text-blue-400 transition" x-text="t.nav.problem"></a>
-                    <a href="#methodology" class="hover:text-blue-400 transition" x-text="t.nav.methodology"></a>
-                    <a href="#results" class="hover:text-blue-400 transition" x-text="t.nav.results"></a>
-                    <a href="#implementation" class="hover:text-blue-400 transition" x-text="t.nav.implementation"></a>
-                    <a href="#business" class="hover:text-blue-400 transition" x-text="t.nav.business"></a>
-                    <a href="#team" class="hover:text-blue-400 transition" x-text="t.nav.team"></a>
+                <div class="hidden md:flex items-center space-x-4 lg:space-x-6 text-xs lg:text-sm">
+                    <a href="#abstract" class="hover:text-blue-400 transition py-2" x-text="t.nav.abstract" @click="mobileMenuOpen = false"></a>
+                    <a href="#problem" class="hover:text-blue-400 transition py-2" x-text="t.nav.problem" @click="mobileMenuOpen = false"></a>
+                    <a href="#methodology" class="hover:text-blue-400 transition py-2" x-text="t.nav.methodology" @click="mobileMenuOpen = false"></a>
+                    <a href="#results" class="hover:text-blue-400 transition py-2" x-text="t.nav.results" @click="mobileMenuOpen = false"></a>
+                    <a href="#implementation" class="hover:text-blue-400 transition py-2" x-text="t.nav.implementation" @click="mobileMenuOpen = false"></a>
+                    <a href="#business" class="hover:text-blue-400 transition py-2" x-text="t.nav.business" @click="mobileMenuOpen = false"></a>
+                    <a href="#team" class="hover:text-blue-400 transition py-2" x-text="t.nav.team" @click="mobileMenuOpen = false"></a>
                 </div>
 
-                <!-- Language Switcher & Sound Toggle -->
-                <div class="flex items-center space-x-2">
+                <!-- Language Switcher & Mobile Menu Button -->
+                <div class="flex items-center space-x-1 sm:space-x-2">
                     <!-- Mute/Unmute Button -->
                     <button @click="toggleMute()"
-                            class="px-3 py-1 rounded-lg text-sm font-semibold transition bg-gray-800 text-gray-400 hover:bg-gray-700"
+                            class="px-3 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-gray-800 text-gray-400 hover:bg-gray-700 min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
                             x-html="isMuted ? '🔇' : '🔊'">
                     </button>
                     <button @click="changeLang('en')"
                             :class="currentLang === 'en' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'"
-                            class="px-3 py-1 rounded-lg text-sm font-semibold transition">
+                            class="px-3 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition min-h-[40px] touch-manipulation">
                         EN
                     </button>
                     <button @click="changeLang('kk')"
                             :class="currentLang === 'kk' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'"
-                            class="px-3 py-1 rounded-lg text-sm font-semibold transition">
+                            class="hidden sm:inline-block px-3 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition min-h-[40px] touch-manipulation">
                         ҚЗ
                     </button>
                     <button @click="changeLang('ru')"
                             :class="currentLang === 'ru' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'"
-                            class="px-3 py-1 rounded-lg text-sm font-semibold transition">
+                            class="hidden sm:inline-block px-3 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition min-h-[40px] touch-manipulation">
                         РУ
                     </button>
                     <button @click="changeLang('tr')"
                             :class="currentLang === 'tr' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'"
-                            class="px-3 py-1 rounded-lg text-sm font-semibold transition">
+                            class="hidden sm:inline-block px-3 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition min-h-[40px] touch-manipulation">
                         TR
                     </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden px-2 py-2 text-gray-400 hover:text-white min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div x-show="mobileMenuOpen"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 transform translate-y-0"
+                 x-transition:leave-end="opacity-0 transform -translate-y-2"
+                 class="md:hidden mt-4 pb-4 border-t border-gray-800 pt-4"
+                 @click.away="mobileMenuOpen = false">
+                <div class="flex flex-col space-y-3">
+                    <a href="#abstract" class="hover:text-blue-400 transition py-3 border-b border-gray-800 touch-manipulation" x-text="t.nav.abstract" @click="mobileMenuOpen = false"></a>
+                    <a href="#problem" class="hover:text-blue-400 transition py-3 border-b border-gray-800 touch-manipulation" x-text="t.nav.problem" @click="mobileMenuOpen = false"></a>
+                    <a href="#methodology" class="hover:text-blue-400 transition py-3 border-b border-gray-800 touch-manipulation" x-text="t.nav.methodology" @click="mobileMenuOpen = false"></a>
+                    <a href="#results" class="hover:text-blue-400 transition py-3 border-b border-gray-800 touch-manipulation" x-text="t.nav.results" @click="mobileMenuOpen = false"></a>
+                    <a href="#implementation" class="hover:text-blue-400 transition py-3 border-b border-gray-800 touch-manipulation" x-text="t.nav.implementation" @click="mobileMenuOpen = false"></a>
+                    <a href="#business" class="hover:text-blue-400 transition py-3 border-b border-gray-800 touch-manipulation" x-text="t.nav.business" @click="mobileMenuOpen = false"></a>
+                    <a href="#team" class="hover:text-blue-400 transition py-3 touch-manipulation" x-text="t.nav.team" @click="mobileMenuOpen = false"></a>
+
+                    <!-- Mobile Language Buttons -->
+                    <div class="flex space-x-2 pt-3 sm:hidden">
+                        <button @click="changeLang('kk'); mobileMenuOpen = false"
+                                :class="currentLang === 'kk' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'"
+                                class="flex-1 px-3 py-2.5 rounded-lg text-sm font-semibold transition min-h-[44px] touch-manipulation">
+                            ҚЗ
+                        </button>
+                        <button @click="changeLang('ru'); mobileMenuOpen = false"
+                                :class="currentLang === 'ru' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'"
+                                class="flex-1 px-3 py-2.5 rounded-lg text-sm font-semibold transition min-h-[44px] touch-manipulation">
+                            РУ
+                        </button>
+                        <button @click="changeLang('tr'); mobileMenuOpen = false"
+                                :class="currentLang === 'tr' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'"
+                                class="flex-1 px-3 py-2.5 rounded-lg text-sm font-semibold transition min-h-[44px] touch-manipulation">
+                            TR
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section with Video -->
-    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden academic-section"
+    <section id="hero" class="relative min-h-[600px] sm:min-h-[700px] md:min-h-screen flex items-center justify-center overflow-hidden academic-section"
              x-init="
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
@@ -181,52 +259,52 @@
         </div>
 
         <!-- Hero Content -->
-        <div class="relative z-10 container mx-auto px-6 text-center mt-16">
+        <div class="relative z-10 container mx-auto px-4 sm:px-6 text-center mt-16 sm:mt-20">
             <div class="max-w-5xl mx-auto">
                 <!-- Competition Badge -->
-                <a href="https://aeroo.space/competitions/space-ai-2026" target="_blank" class="inline-flex items-center space-x-2 bg-blue-900/30 backdrop-blur-sm border border-blue-500/30 rounded-full px-6 py-2 mb-8 hover:bg-blue-800/40 hover:border-blue-400/50 transition-all">
+                <a href="https://aeroo.space/competitions/space-ai-2026" target="_blank" class="inline-flex items-center space-x-2 bg-blue-900/30 backdrop-blur-sm border border-blue-500/30 rounded-full px-4 sm:px-6 py-1.5 sm:py-2 mb-6 sm:mb-8 hover:bg-blue-800/40 hover:border-blue-400/50 transition-all">
                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                     </svg>
-                    <span class="text-sm font-semibold text-blue-300" x-text="t.hero.badge"></span>
+                    <span class="text-xs sm:text-sm font-semibold text-blue-300" x-text="t.hero.badge"></span>
                 </a>
 
-                <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">
+                <h1 class="text-3xl sm:text-4xl md:text-6xl font-black mb-3 sm:mb-4 leading-tight px-2 break-words">
                     <span class="gradient-text" x-text="t.hero.title"></span>
                 </h1>
 
-                <p class="text-xl md:text-2xl text-blue-400 mb-6 font-semibold" x-text="t.hero.subtitle"></p>
+                <p class="text-lg sm:text-xl md:text-2xl text-blue-400 mb-4 sm:mb-6 font-semibold px-4" x-text="t.hero.subtitle"></p>
 
                 <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12">
-                    <a href="#abstract" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-xl transition transform hover:scale-105 shadow-lg shadow-blue-500/50">
+                <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8 sm:mb-12">
+                    <a href="#abstract" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 sm:px-10 py-3 sm:py-3.5 rounded-xl transition transform hover:scale-105 shadow-lg shadow-blue-500/50 touch-manipulation min-h-[44px] flex items-center justify-center">
                         <span x-text="t.hero.cta.read"></span>
                     </a>
                 </div>
 
                 <!-- Key Metrics -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="stat-card rounded-xl p-4">
-                        <div class="text-3xl font-black text-white mb-1">92%</div>
-                        <div class="text-xs text-blue-200" x-text="t.hero.stats.accuracy"></div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                    <div class="stat-card rounded-xl p-3 sm:p-4">
+                        <div class="text-2xl sm:text-3xl font-black text-white mb-1">92%</div>
+                        <div class="text-[10px] sm:text-xs text-blue-200" x-text="t.hero.stats.accuracy"></div>
                     </div>
-                    <div class="stat-card rounded-xl p-4">
-                        <div class="text-3xl font-black text-white mb-1">&lt;100ms</div>
-                        <div class="text-xs text-blue-200" x-text="t.hero.stats.inference"></div>
+                    <div class="stat-card rounded-xl p-3 sm:p-4">
+                        <div class="text-2xl sm:text-3xl font-black text-white mb-1">&lt;100ms</div>
+                        <div class="text-[10px] sm:text-xs text-blue-200" x-text="t.hero.stats.inference"></div>
                     </div>
-                    <div class="stat-card rounded-xl p-4">
-                        <div class="text-3xl font-black text-white mb-1">3</div>
-                        <div class="text-xs text-blue-200" x-text="t.hero.stats.ai"></div>
+                    <div class="stat-card rounded-xl p-3 sm:p-4">
+                        <div class="text-2xl sm:text-3xl font-black text-white mb-1">3</div>
+                        <div class="text-[10px] sm:text-xs text-blue-200" x-text="t.hero.stats.ai"></div>
                     </div>
-                    <div class="stat-card rounded-xl p-4">
-                        <div class="text-3xl font-black text-white mb-1">2</div>
-                        <div class="text-xs text-blue-200" x-text="t.hero.stats.boards"></div>
+                    <div class="stat-card rounded-xl p-3 sm:p-4">
+                        <div class="text-2xl sm:text-3xl font-black text-white mb-1">2</div>
+                        <div class="text-[10px] sm:text-xs text-blue-200" x-text="t.hero.stats.boards"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Scroll Indicator -->
-            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+            <div class="hidden md:block absolute bottom-10 left-1/2 transform -translate-x-1/2">
                 <div class="animate-bounce">
                     <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
@@ -237,21 +315,21 @@
     </section>
 
     <!-- Abstract Section -->
-    <section id="abstract" class="py-20 relative academic-section">
-        <div class="container mx-auto px-6">
+    <section id="abstract" class="py-12 sm:py-16 md:py-20 relative academic-section">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="max-w-4xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black mb-8 text-center">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-6 sm:mb-8 text-center px-2 break-words">
                     <span class="gradient-text" x-text="t.abstract.title"></span>
                 </h2>
 
-                <div class="tech-card rounded-2xl p-8 mb-8">
+                <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
                     <p class="text-gray-300 leading-relaxed mb-6" x-text="t.abstract.content"></p>
 
-                    <div class="border-t border-gray-700 pt-6 mt-6">
-                        <h3 class="text-lg font-bold text-white mb-4" x-text="t.abstract.keywords.title"></h3>
-                        <div class="flex flex-wrap gap-3">
+                    <div class="border-t border-gray-700 pt-4 sm:pt-6 mt-4 sm:mt-6">
+                        <h3 class="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4" x-text="t.abstract.keywords.title"></h3>
+                        <div class="flex flex-wrap gap-2 sm:gap-3">
                             <template x-for="keyword in t.abstract.keywords.list" :key="keyword">
-                                <span class="bg-blue-900/30 text-blue-300 px-4 py-2 rounded-lg text-sm font-semibold border border-blue-500/30" x-text="keyword"></span>
+                                <span class="bg-blue-900/30 text-blue-300 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold border border-blue-500/30" x-text="keyword"></span>
                             </template>
                         </div>
                     </div>
@@ -261,24 +339,24 @@
     </section>
 
     <!-- Research Problem Section -->
-    <section id="problem" class="py-20 relative academic-section">
-        <div class="container mx-auto px-6">
+    <section id="problem" class="py-12 sm:py-16 md:py-20 relative academic-section">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black mb-8 text-center">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-6 sm:mb-8 text-center px-2 break-words">
                     <span class="gradient-text" x-text="t.problem.title"></span>
                 </h2>
 
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="tech-card rounded-2xl p-8">
-                        <div class="flex items-center mb-6">
-                            <div class="bg-red-500/20 rounded-full p-3 mr-4">
-                                <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8">
+                        <div class="flex items-center mb-4 sm:mb-6">
+                            <div class="bg-red-500/20 rounded-full p-2 sm:p-3 mr-3 sm:mr-4">
+                                <svg class="w-5 h-5 sm:w-7 sm:h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-white" x-text="t.problem.challenges.title"></h3>
+                            <h3 class="text-lg sm:text-xl font-bold text-white" x-text="t.problem.challenges.title"></h3>
                         </div>
-                        <ul class="space-y-3 text-gray-300 text-sm">
+                        <ul class="space-y-2 sm:space-y-3 text-gray-300 text-xs sm:text-sm">
                             <template x-for="item in t.problem.challenges.items" :key="item">
                                 <li class="flex items-start">
                                     <span class="text-red-400 mr-2 mt-1">►</span>
@@ -288,16 +366,16 @@
                         </ul>
                     </div>
 
-                    <div class="tech-card rounded-2xl p-8">
-                        <div class="flex items-center mb-6">
-                            <div class="bg-blue-500/20 rounded-full p-3 mr-4">
-                                <svg class="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8">
+                        <div class="flex items-center mb-4 sm:mb-6">
+                            <div class="bg-blue-500/20 rounded-full p-2 sm:p-3 mr-3 sm:mr-4">
+                                <svg class="w-5 h-5 sm:w-7 sm:h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-white" x-text="t.problem.objectives.title"></h3>
+                            <h3 class="text-lg sm:text-xl font-bold text-white" x-text="t.problem.objectives.title"></h3>
                         </div>
-                        <ul class="space-y-3 text-gray-300 text-sm">
+                        <ul class="space-y-2 sm:space-y-3 text-gray-300 text-xs sm:text-sm">
                             <template x-for="item in t.problem.objectives.items" :key="item">
                                 <li class="flex items-start">
                                     <span class="text-blue-400 mr-2 mt-1">✓</span>
@@ -312,27 +390,27 @@
     </section>
 
     <!-- Methodology Section -->
-    <section id="methodology" class="py-20 relative academic-section">
-        <div class="container mx-auto px-6">
+    <section id="methodology" class="py-12 sm:py-16 md:py-20 relative academic-section">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black mb-8 text-center">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-6 sm:mb-8 text-center px-2 break-words">
                     <span class="gradient-text" x-text="t.methodology.title"></span>
                 </h2>
 
                 <!-- System Architecture -->
-                <div class="tech-card rounded-2xl p-8 mb-8">
-                    <h3 class="text-2xl font-bold text-white mb-6" x-text="t.methodology.architecture.title"></h3>
-                    <p class="text-gray-400 mb-6" x-text="t.methodology.architecture.desc"></p>
+                <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6" x-text="t.methodology.architecture.title"></h3>
+                    <p class="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6" x-text="t.methodology.architecture.desc"></p>
 
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-gray-800/50 rounded-xl p-6 border border-blue-500/20">
-                            <h4 class="font-bold text-blue-400 mb-3 flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+                        <div class="bg-gray-800/50 rounded-xl p-4 sm:p-6 border border-blue-500/20">
+                            <h4 class="text-sm sm:text-base font-bold text-blue-400 mb-2 sm:mb-3 flex items-center">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
                                 </svg>
                                 <span x-text="t.methodology.hardware.title"></span>
                             </h4>
-                            <ul class="space-y-2 text-sm text-gray-300 mb-4">
+                            <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-gray-300 mb-3 sm:mb-4">
                                 <template x-for="item in t.methodology.hardware.items" :key="item">
                                     <li class="flex items-start">
                                         <span class="text-blue-400 mr-2">•</span>
@@ -342,33 +420,33 @@
                             </ul>
 
                             <!-- Hardware Board Images -->
-                            <div class="grid grid-cols-2 gap-3 mt-4">
-                                <div class="bg-white/5 rounded-lg p-2 border border-blue-500/10">
+                            <div class="grid grid-cols-2 gap-2 sm:gap-3 mt-3 sm:mt-4">
+                                <div class="bg-white/5 rounded-lg p-1.5 sm:p-2 border border-blue-500/10">
                                     <img src="images/image.PF264366.en.feature-description-include-personalized-no-cpn-medium.webp"
                                          alt="STM32 B-L475E-IOT01A"
                                          class="w-full h-auto rounded">
-                                    <p class="text-xs text-gray-400 text-center mt-1">B-L475E-IOT01A</p>
+                                    <p class="text-[10px] sm:text-xs text-gray-400 text-center mt-1">B-L475E-IOT01A</p>
                                 </div>
-                                <div class="bg-white/5 rounded-lg p-2 border border-blue-500/10">
+                                <div class="bg-white/5 rounded-lg p-1.5 sm:p-2 border border-blue-500/10">
                                     <picture>
                                         <source srcset="images/image.PF275430.en.feature-description-include-personalized-no-cpn-medium.avif" type="image/avif">
                                         <img src="images/image.PF275430.en.feature-description-include-personalized-no-cpn-medium.avif"
                                              alt="STM32N6570-DK"
                                              class="w-full h-auto rounded">
                                     </picture>
-                                    <p class="text-xs text-gray-400 text-center mt-1">STM32N6570-DK</p>
+                                    <p class="text-[10px] sm:text-xs text-gray-400 text-center mt-1">STM32N6570-DK</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-gray-800/50 rounded-xl p-6 border border-purple-500/20">
-                            <h4 class="font-bold text-purple-400 mb-3 flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="bg-gray-800/50 rounded-xl p-4 sm:p-6 border border-purple-500/20">
+                            <h4 class="text-sm sm:text-base font-bold text-purple-400 mb-2 sm:mb-3 flex items-center">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
                                 </svg>
                                 <span x-text="t.methodology.software.title"></span>
                             </h4>
-                            <ul class="space-y-2 text-sm text-gray-300">
+                            <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-gray-300">
                                 <template x-for="item in t.methodology.software.items" :key="item">
                                     <li class="flex items-start">
                                         <span class="text-purple-400 mr-2">•</span>
@@ -381,18 +459,18 @@
                 </div>
 
                 <!-- Dataset & Training -->
-                <div class="grid md:grid-cols-2 gap-8 mb-8">
-                    <div class="tech-card rounded-2xl p-8">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-xl font-bold text-white flex items-center">
-                                <svg class="w-6 h-6 mr-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8">
+                        <div class="flex items-start justify-between mb-3 sm:mb-4">
+                            <h3 class="text-base sm:text-lg md:text-xl font-bold text-white flex items-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
                                 <span x-text="t.methodology.vision.title"></span>
                             </h3>
-                            <img src="images/solar.png" alt="Solar Satellite" class="w-20 h-auto opacity-80">
+                            <img src="images/solar.png" alt="Solar Satellite" class="w-12 sm:w-16 md:w-20 h-auto opacity-80">
                         </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
+                        <ul class="space-y-2 sm:space-y-3 text-xs sm:text-sm text-gray-300">
                             <template x-for="item in t.methodology.vision.items" :key="item">
                                 <li class="flex items-start">
                                     <span class="text-green-400 mr-2">▸</span>
@@ -400,22 +478,22 @@
                                 </li>
                             </template>
                         </ul>
-                        <a href="https://universe.roboflow.com/gao-shou-zheng-b6xqc/solar-panel-0swal" target="_blank" class="inline-flex items-center mt-4 text-green-400 hover:text-green-300 text-sm transition">
+                        <a href="https://universe.roboflow.com/gao-shou-zheng-b6xqc/solar-panel-0swal" target="_blank" class="inline-flex items-center mt-3 sm:mt-4 text-green-400 hover:text-green-300 text-xs sm:text-sm transition">
                             <span x-text="t.methodology.vision.link"></span>
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                             </svg>
                         </a>
                     </div>
 
-                    <div class="tech-card rounded-2xl p-8">
-                        <h3 class="text-xl font-bold text-white mb-4 flex items-center">
-                            <svg class="w-6 h-6 mr-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8">
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold text-white mb-3 sm:mb-4 flex items-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                             </svg>
                             <span x-text="t.methodology.battery.title"></span>
                         </h3>
-                        <ul class="space-y-3 text-sm text-gray-300">
+                        <ul class="space-y-2 sm:space-y-3 text-xs sm:text-sm text-gray-300">
                             <template x-for="item in t.methodology.battery.items" :key="item">
                                 <li class="flex items-start">
                                     <span class="text-yellow-400 mr-2">▸</span>
@@ -423,9 +501,9 @@
                                 </li>
                             </template>
                         </ul>
-                        <a href="https://www.kaggle.com/datasets/patrickfleith/nasa-battery-dataset" target="_blank" class="inline-flex items-center mt-4 text-yellow-400 hover:text-yellow-300 text-sm transition">
+                        <a href="https://www.kaggle.com/datasets/patrickfleith/nasa-battery-dataset" target="_blank" class="inline-flex items-center mt-3 sm:mt-4 text-yellow-400 hover:text-yellow-300 text-xs sm:text-sm transition">
                             <span x-text="t.methodology.battery.link"></span>
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                             </svg>
                         </a>
@@ -436,54 +514,54 @@
     </section>
 
     <!-- Results Section -->
-    <section id="results" class="py-20 relative academic-section">
-        <div class="container mx-auto px-6">
+    <section id="results" class="py-12 sm:py-16 md:py-20 relative academic-section">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black mb-8 text-center">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-6 sm:mb-8 text-center px-2 break-words">
                     <span class="gradient-text" x-text="t.results.title"></span>
                 </h2>
 
-                <div class="grid md:grid-cols-3 gap-6 mb-8">
-                    <div class="tech-card rounded-2xl p-6 text-center card-hover">
-                        <div class="text-4xl font-black text-green-400 mb-2">92%</div>
-                        <div class="text-sm text-gray-400" x-text="t.results.metrics.ml"></div>
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 text-center card-hover">
+                        <div class="text-3xl sm:text-4xl font-black text-green-400 mb-2">92%</div>
+                        <div class="text-xs sm:text-sm text-gray-400" x-text="t.results.metrics.ml"></div>
                     </div>
-                    <div class="tech-card rounded-2xl p-6 text-center card-hover">
-                        <div class="text-4xl font-black text-blue-400 mb-2">&lt;100ms</div>
-                        <div class="text-sm text-gray-400" x-text="t.results.metrics.vision"></div>
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 text-center card-hover">
+                        <div class="text-3xl sm:text-4xl font-black text-blue-400 mb-2">&lt;100ms</div>
+                        <div class="text-xs sm:text-sm text-gray-400" x-text="t.results.metrics.vision"></div>
                     </div>
-                    <div class="tech-card rounded-2xl p-6 text-center card-hover">
-                        <div class="text-4xl font-black text-purple-400 mb-2">24/7</div>
-                        <div class="text-sm text-gray-400" x-text="t.results.metrics.monitoring"></div>
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 text-center card-hover sm:col-span-2 md:col-span-1">
+                        <div class="text-3xl sm:text-4xl font-black text-purple-400 mb-2">24/7</div>
+                        <div class="text-xs sm:text-sm text-gray-400" x-text="t.results.metrics.monitoring"></div>
                     </div>
                 </div>
 
                 <!-- Demo Screenshots Placeholder -->
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="tech-card rounded-2xl p-6">
-                        <div class="bg-gray-800/50 rounded-xl mb-4 h-48 flex items-center justify-center border border-gray-700">
+                <div class="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6">
+                        <div class="bg-gray-800/50 rounded-xl mb-3 sm:mb-4 h-36 sm:h-48 flex items-center justify-center border border-gray-700">
                             <div class="text-center">
-                                <svg class="w-16 h-16 mx-auto mb-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                 </svg>
-                                <p class="text-gray-500 text-sm" x-text="t.results.demo.dashboard"></p>
+                                <p class="text-gray-500 text-xs sm:text-sm" x-text="t.results.demo.dashboard"></p>
                             </div>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2" x-text="t.results.demo.web"></h4>
-                        <p class="text-sm text-gray-400" x-text="t.results.demo.webDesc"></p>
+                        <h4 class="text-base sm:text-lg font-bold text-white mb-1 sm:mb-2" x-text="t.results.demo.web"></h4>
+                        <p class="text-xs sm:text-sm text-gray-400" x-text="t.results.demo.webDesc"></p>
                     </div>
 
-                    <div class="tech-card rounded-2xl p-6">
-                        <div class="bg-gray-800/50 rounded-xl mb-4 h-48 flex items-center justify-center border border-gray-700">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6">
+                        <div class="bg-gray-800/50 rounded-xl mb-3 sm:mb-4 h-36 sm:h-48 flex items-center justify-center border border-gray-700">
                             <div class="text-center">
-                                <svg class="w-16 h-16 mx-auto mb-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                 </svg>
-                                <p class="text-gray-500 text-sm" x-text="t.results.demo.mobile"></p>
+                                <p class="text-gray-500 text-xs sm:text-sm" x-text="t.results.demo.mobile"></p>
                             </div>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2" x-text="t.results.demo.app"></h4>
-                        <p class="text-sm text-gray-400" x-text="t.results.demo.appDesc"></p>
+                        <h4 class="text-base sm:text-lg font-bold text-white mb-1 sm:mb-2" x-text="t.results.demo.app"></h4>
+                        <p class="text-xs sm:text-sm text-gray-400" x-text="t.results.demo.appDesc"></p>
                     </div>
                 </div>
             </div>
@@ -491,32 +569,32 @@
     </section>
 
     <!-- Interactive System Assembly Game -->
-    <section class="py-20 relative bg-gradient-to-br from-purple-900/20 to-blue-900/20">
-        <div class="container mx-auto px-6">
+    <section class="py-12 sm:py-20 relative bg-gradient-to-br from-purple-900/20 to-blue-900/20">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black mb-4 text-center">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 text-center px-2 break-words">
                     <span class="gradient-text" x-text="t.game?.title || 'Interactive System Assembly'"></span>
                 </h2>
-                <p class="text-center text-gray-400 mb-12 max-w-3xl mx-auto" x-text="t.game?.subtitle || 'Drag and drop all 11 components in the correct order to build the complete system'"></p>
+                <p class="text-center text-sm sm:text-base text-gray-400 mb-8 sm:mb-12 max-w-3xl mx-auto px-4" x-text="t.game?.subtitle || 'Drag and drop all 11 components in the correct order to build the complete system'"></p>
 
-                <div class="grid lg:grid-cols-2 gap-8">
+                <div class="grid lg:grid-cols-2 gap-6 sm:gap-8">
                     <!-- Component Library -->
                     <div>
-                        <h3 class="text-xl font-bold text-white mb-4" x-text="t.game?.componentsTitle || 'Available Components (Drag These)'"></h3>
-                        <div class="space-y-2 max-h-[600px] overflow-y-auto pr-2" id="componentLibrary">
+                        <h3 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 px-2" x-text="t.game?.componentsTitle || 'Available Components (Drag These)'"></h3>
+                        <div class="space-y-2 max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-y-auto pr-1 sm:pr-2" id="componentLibrary">
                             <template x-for="comp in shuffledComponents" :key="comp.id">
-                                <div class="rounded-lg p-3 border cursor-move hover:scale-105 transition transform"
+                                <div class="rounded-lg p-2 sm:p-3 border cursor-move hover:scale-105 transition transform touch-manipulation"
                                      :class="comp.gradient"
                                      draggable="true"
                                      @dragstart="dragStart($event, comp.id)"
                                      :id="'component-' + comp.id">
                                     <div class="flex items-center">
-                                        <div class="rounded-lg p-2 mr-3" :class="comp.iconBg">
-                                            <div class="w-6 h-6" x-html="comp.icon"></div>
+                                        <div class="rounded-lg p-1.5 sm:p-2 mr-2 sm:mr-3 flex-shrink-0" :class="comp.iconBg">
+                                            <div class="w-5 h-5 sm:w-6 sm:h-6" x-html="comp.icon"></div>
                                         </div>
-                                        <div>
-                                            <p class="font-bold text-white text-sm" x-text="t.game?.components?.[comp.id]?.name || comp.name"></p>
-                                            <p class="text-xs text-gray-400" x-text="t.game?.components?.[comp.id]?.desc || comp.desc"></p>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="font-bold text-white text-xs sm:text-sm truncate" x-text="t.game?.components?.[comp.id]?.name || comp.name"></p>
+                                            <p class="text-xs text-gray-400 truncate" x-text="t.game?.components?.[comp.id]?.desc || comp.desc"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -526,26 +604,26 @@
 
                     <!-- Assembly Area -->
                     <div>
-                        <h3 class="text-xl font-bold text-white mb-4">
+                        <h3 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 px-2">
                             <span x-text="t.game?.assemblyTitle || 'System Assembly'"></span>
-                            <span class="text-sm text-gray-400 ml-2" x-text="'(' + assemblies.length + '/11)'"></span>
+                            <span class="text-xs sm:text-sm text-gray-400 ml-2" x-text="'(' + assemblies.length + '/11)'"></span>
                         </h3>
-                        <div class="bg-gray-800/50 rounded-2xl p-6 border-2 border-dashed border-gray-600 min-h-[550px] max-h-[600px] overflow-y-auto relative"
+                        <div class="bg-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-dashed border-gray-600 min-h-[300px] sm:min-h-[400px] lg:min-h-[550px] max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-y-auto relative"
                              @drop="drop($event)"
                              @dragover.prevent
                              id="assemblyArea">
-                            <div class="text-center text-gray-500 absolute inset-0 flex items-center justify-center pointer-events-none" x-show="assemblies.length === 0">
-                                <p x-text="t.game?.dragPrompt || 'Drag all 11 components here in correct order'"></p>
+                            <div class="text-center text-gray-500 absolute inset-0 flex items-center justify-center pointer-events-none px-4" x-show="assemblies.length === 0">
+                                <p class="text-xs sm:text-sm" x-text="t.game?.dragPrompt || 'Drag all 11 components here in correct order'"></p>
                             </div>
                             <div class="space-y-2">
                                 <template x-for="(item, index) in assemblies" :key="index">
                                     <div class="rounded-lg p-2 border flex items-center justify-between"
                                          :class="getComponentStyle(item)">
-                                        <div class="flex items-center">
-                                            <span class="text-white font-bold mr-3 text-sm bg-white/10 rounded px-2 py-1" x-text="index + 1"></span>
-                                            <span class="text-white text-sm" x-text="getComponentName(item)"></span>
+                                        <div class="flex items-center min-w-0 flex-1 mr-2">
+                                            <span class="text-white font-bold mr-2 sm:mr-3 text-xs sm:text-sm bg-white/10 rounded px-1.5 sm:px-2 py-0.5 sm:py-1 flex-shrink-0" x-text="index + 1"></span>
+                                            <span class="text-white text-xs sm:text-sm truncate" x-text="getComponentName(item)"></span>
                                         </div>
-                                        <button @click="removeComponent(index)" class="text-red-400 hover:text-red-300">
+                                        <button @click="removeComponent(index)" class="text-red-400 hover:text-red-300 flex-shrink-0 p-2 touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                             </svg>
@@ -557,18 +635,18 @@
 
                         <!-- Check Button -->
                         <button @click="checkAssembly()"
-                                class="mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3 px-6 rounded-xl transition">
+                                class="mt-3 sm:mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl transition text-sm sm:text-base touch-manipulation min-h-[44px]">
                             <span x-text="t.game?.checkButton || 'Check Assembly'"></span>
                         </button>
 
                         <!-- Result Message -->
-                        <div x-show="gameResult" class="mt-4 p-4 rounded-xl" :class="gameResult === 'correct' ? 'bg-green-500/20 border border-green-400' : 'bg-red-500/20 border border-red-400'">
-                            <p class="text-center font-bold" :class="gameResult === 'correct' ? 'text-green-300' : 'text-red-300'" x-text="gameMessage"></p>
+                        <div x-show="gameResult" class="mt-3 sm:mt-4 p-3 sm:p-4 rounded-xl" :class="gameResult === 'correct' ? 'bg-green-500/20 border border-green-400' : 'bg-red-500/20 border border-red-400'">
+                            <p class="text-center font-bold text-xs sm:text-sm" :class="gameResult === 'correct' ? 'text-green-300' : 'text-red-300'" x-text="gameMessage"></p>
                         </div>
 
                         <!-- Reset Button -->
-                        <div class="mt-4 text-center">
-                            <button @click="resetGame()" class="text-blue-400 hover:text-blue-300 text-sm underline" x-text="t.game?.resetButton || 'Reset Game'"></button>
+                        <div class="mt-3 sm:mt-4 text-center">
+                            <button @click="resetGame()" class="text-blue-400 hover:text-blue-300 text-xs sm:text-sm underline touch-manipulation py-2 px-3 min-h-[44px] inline-flex items-center" x-text="t.game?.resetButton || 'Reset Game'"></button>
                         </div>
                     </div>
                 </div>
@@ -577,99 +655,99 @@
     </section>
 
     <!-- Technical Implementation Section -->
-    <section id="implementation" class="py-20 relative academic-section">
-        <div class="container mx-auto px-6">
+    <section id="implementation" class="py-12 sm:py-16 md:py-20 relative academic-section">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black mb-8 text-center">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-6 sm:mb-8 text-center px-2 break-words">
                     <span class="gradient-text" x-text="t.implementation.title"></span>
                 </h2>
 
                 <!-- System Demo Video -->
-                <div class="mb-12 max-w-4xl mx-auto">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-blue-500/20">
+                <div class="mb-8 sm:mb-12 max-w-4xl mx-auto">
+                    <div class="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border border-blue-500/20">
                         <video controls class="w-full h-auto">
                             <source src="videos/solor_web_1.mp4" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
-                    <p class="text-center text-sm text-gray-400 mt-3" x-text="t.implementation.demoCaption || 'System Overview: Real-time monitoring dashboard and mobile application'"></p>
+                    <p class="text-center text-xs sm:text-sm text-gray-400 mt-2 sm:mt-3 px-4" x-text="t.implementation.demoCaption || 'System Overview: Real-time monitoring dashboard and mobile application'"></p>
                 </div>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     <template x-for="feature in t.implementation.features" :key="feature.title">
-                        <div class="tech-card rounded-2xl p-6 card-hover">
-                            <div class="flex items-center mb-4">
-                                <div :class="`bg-${feature.color}-500/20 rounded-lg p-3 mr-4`">
-                                    <svg class="w-6 h-6" :class="`text-${feature.color}-400`" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-html="feature.icon"></svg>
+                        <div class="tech-card rounded-2xl p-4 sm:p-6 card-hover">
+                            <div class="flex items-center mb-3 sm:mb-4">
+                                <div :class="`bg-${feature.color}-500/20 rounded-lg p-2 sm:p-3 mr-3 sm:mr-4`">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6" :class="`text-${feature.color}-400`" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-html="feature.icon"></svg>
                                 </div>
-                                <h4 class="text-lg font-bold text-white" x-text="feature.title"></h4>
+                                <h4 class="text-base sm:text-lg font-bold text-white" x-text="feature.title"></h4>
                             </div>
-                            <p class="text-sm text-gray-400" x-text="feature.desc"></p>
+                            <p class="text-xs sm:text-sm text-gray-400" x-text="feature.desc"></p>
                         </div>
                     </template>
                 </div>
 
                 <!-- Mobile Application Showcase -->
-                <div class="mt-12 max-w-3xl mx-auto">
-                    <h3 class="text-2xl font-bold text-white mb-6 text-center" x-text="t.implementation.mobileTitle || 'Cross-Platform Mobile Application'"></h3>
+                <div class="mt-8 sm:mt-12 max-w-3xl mx-auto px-4">
+                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center" x-text="t.implementation.mobileTitle || 'Cross-Platform Mobile Application'"></h3>
                     <div class="flex justify-center">
-                        <div class="relative max-w-sm">
-                            <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl blur-xl opacity-30"></div>
-                            <img src="images/mobile.jpeg" alt="Mobile Application" class="relative rounded-3xl shadow-2xl border-2 border-blue-500/30 w-full h-auto">
+                        <div class="relative max-w-xs sm:max-w-sm">
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl sm:rounded-3xl blur-xl opacity-30"></div>
+                            <img src="images/mobile.jpeg" alt="Mobile Application" class="relative rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-blue-500/30 w-full h-auto">
                         </div>
                     </div>
-                    <p class="text-center text-sm text-gray-400 mt-4" x-text="t.implementation.mobileCaption || 'Flutter-based mobile app for real-time system monitoring and alerts'"></p>
+                    <p class="text-center text-xs sm:text-sm text-gray-400 mt-3 sm:mt-4" x-text="t.implementation.mobileCaption || 'Flutter-based mobile app for real-time system monitoring and alerts'"></p>
                 </div>
 
                 <!-- GitHub Repositories -->
-                <div class="mt-12">
-                    <h3 class="text-2xl font-bold text-white mb-6 text-center" x-text="t.implementation.repos.title"></h3>
-                    <div class="grid md:grid-cols-3 gap-6">
+                <div class="mt-8 sm:mt-12">
+                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center px-4" x-text="t.implementation.repos.title"></h3>
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                         <template x-for="repo in t.implementation.repos.list" :key="repo.name">
-                            <a :href="repo.url" target="_blank" class="tech-card rounded-2xl p-6 card-hover block group">
-                                <div class="flex items-center mb-3">
-                                    <svg class="w-6 h-6 text-gray-400 group-hover:text-blue-400 transition mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <a :href="repo.url" target="_blank" class="tech-card rounded-2xl p-4 sm:p-6 card-hover block group">
+                                <div class="flex items-center mb-2 sm:mb-3">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-blue-400 transition mr-2 sm:mr-3" fill="currentColor" viewBox="0 0 24 24">
                                         <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
                                     </svg>
-                                    <h4 class="font-bold text-white group-hover:text-blue-400 transition text-sm" x-text="repo.name"></h4>
+                                    <h4 class="font-bold text-white group-hover:text-blue-400 transition text-xs sm:text-sm" x-text="repo.name"></h4>
                                 </div>
-                                <p class="text-xs text-gray-500" x-text="repo.desc"></p>
+                                <p class="text-[10px] sm:text-xs text-gray-500" x-text="repo.desc"></p>
                             </a>
                         </template>
                     </div>
                 </div>
 
                 <!-- Interactive Battery Health Simulator -->
-                <div class="mt-16 max-w-4xl mx-auto">
-                    <h3 class="text-2xl font-bold text-white mb-6 text-center" x-text="t.implementation.simulatorTitle || 'Try Battery Health Predictor'"></h3>
-                    <div class="bg-gradient-to-br from-blue-900/40 to-purple-900/40 rounded-2xl p-8 border border-blue-500/30 shadow-2xl">
-                        <div class="grid md:grid-cols-2 gap-8">
+                <div class="mt-12 sm:mt-16 max-w-4xl mx-auto">
+                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center px-4" x-text="t.implementation.simulatorTitle || 'Try Battery Health Predictor'"></h3>
+                    <div class="bg-gradient-to-br from-blue-900/40 to-purple-900/40 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-blue-500/30 shadow-2xl">
+                        <div class="grid md:grid-cols-2 gap-6 sm:gap-8">
                             <div>
-                                <label class="block text-sm font-medium text-gray-300 mb-2" x-text="t.implementation.cycleslabel || 'Battery Cycles'"></label>
+                                <label class="block text-xs sm:text-sm font-medium text-gray-300 mb-1.5 sm:mb-2" x-text="t.implementation.cycleslabel || 'Battery Cycles'"></label>
                                 <input
                                     type="range"
                                     min="0"
                                     max="2000"
                                     value="500"
-                                    class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                                    class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer touch-manipulation"
                                     x-model="batteryCycles"
                                     @input="updateRUL()">
-                                <p class="text-center text-white mt-2 text-lg font-bold" x-text="batteryCycles + ' cycles'"></p>
+                                <p class="text-center text-white mt-1.5 sm:mt-2 text-base sm:text-lg font-bold" x-text="batteryCycles + ' cycles'"></p>
 
-                                <label class="block text-sm font-medium text-gray-300 mb-2 mt-6" x-text="t.implementation.templabel || 'Temperature'"></label>
+                                <label class="block text-xs sm:text-sm font-medium text-gray-300 mb-1.5 sm:mb-2 mt-4 sm:mt-6" x-text="t.implementation.templabel || 'Temperature'"></label>
                                 <input
                                     type="range"
                                     min="-20"
                                     max="60"
                                     value="25"
-                                    class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                                    class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer touch-manipulation"
                                     x-model="batteryTemp"
                                     @input="updateRUL()">
-                                <p class="text-center text-white mt-2 text-lg font-bold" x-text="batteryTemp + '°C'"></p>
+                                <p class="text-center text-white mt-1.5 sm:mt-2 text-base sm:text-lg font-bold" x-text="batteryTemp + '°C'"></p>
                             </div>
 
-                            <div class="flex flex-col justify-center items-center">
-                                <div class="relative w-48 h-48">
+                            <div class="flex flex-col justify-center items-center mt-4 md:mt-0">
+                                <div class="relative w-40 h-40 sm:w-48 sm:h-48">
                                     <svg viewBox="0 0 100 100" class="w-full h-full transform -rotate-90">
                                         <circle cx="50" cy="50" r="40" fill="none" stroke="#374151" stroke-width="8"></circle>
                                         <circle
@@ -684,52 +762,52 @@
                                         </circle>
                                     </svg>
                                     <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                        <p class="text-4xl font-black text-white" x-text="Math.round(predictedRUL) + '%'"></p>
-                                        <p class="text-sm text-gray-400" x-text="t.implementation.rulLabel || 'RUL'"></p>
+                                        <p class="text-3xl sm:text-4xl font-black text-white" x-text="Math.round(predictedRUL) + '%'"></p>
+                                        <p class="text-xs sm:text-sm text-gray-400" x-text="t.implementation.rulLabel || 'RUL'"></p>
                                     </div>
                                 </div>
-                                <p class="mt-4 text-center text-gray-300" x-text="t.implementation.healthStatus || 'Health Status'"></p>
-                                <p class="text-lg font-bold" :class="predictedRUL > 70 ? 'text-green-400' : (predictedRUL > 40 ? 'text-yellow-400' : 'text-red-400')" x-text="predictedRUL > 70 ? 'Excellent' : (predictedRUL > 40 ? 'Good' : 'Critical')"></p>
+                                <p class="mt-3 sm:mt-4 text-center text-sm sm:text-base text-gray-300" x-text="t.implementation.healthStatus || 'Health Status'"></p>
+                                <p class="text-base sm:text-lg font-bold text-center" :class="predictedRUL > 70 ? 'text-green-400' : (predictedRUL > 40 ? 'text-yellow-400' : 'text-red-400')" x-text="predictedRUL > 70 ? 'Excellent' : (predictedRUL > 40 ? 'Good' : 'Critical')"></p>
                             </div>
                         </div>
-                        <p class="mt-6 text-sm text-gray-400 text-center" x-text="t.implementation.simulatorNote || 'Note: This is a simplified simulation based on our ML model trained on NASA battery data.'"></p>
+                        <p class="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-400 text-center px-2" x-text="t.implementation.simulatorNote || 'Note: This is a simplified simulation based on our ML model trained on NASA battery data.'"></p>
                     </div>
                 </div>
 
                 <!-- Download Resources Section -->
-                <div class="mt-16">
-                    <h3 class="text-2xl font-bold text-white mb-8 text-center" x-text="t.implementation.resourcesTitle || 'Download Resources'"></h3>
-                    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <div class="mt-12 sm:mt-16">
+                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-6 sm:mb-8 text-center px-4" x-text="t.implementation.resourcesTitle || 'Download Resources'"></h3>
+                    <div class="grid md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
                         <!-- Technical White Paper -->
-                        <a href="technical-whitepaper.html" target="_blank" class="tech-card rounded-2xl p-6 card-hover block group">
-                            <div class="flex items-center mb-4">
-                                <div class="bg-blue-500/20 rounded-lg p-3 mr-4">
-                                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="technical-whitepaper.html" target="_blank" class="tech-card rounded-2xl p-4 sm:p-6 card-hover block group">
+                            <div class="flex items-center mb-3 sm:mb-4">
+                                <div class="bg-blue-500/20 rounded-lg p-2 sm:p-3 mr-3 sm:mr-4">
+                                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 class="text-lg font-bold text-white group-hover:text-blue-400 transition" x-text="t.implementation.whitepaperTitle || 'Technical White Paper'"></h4>
-                                    <p class="text-sm text-gray-400" x-text="t.implementation.whitepaperDesc || 'Complete technical documentation (PDF-ready)'"></p>
+                                    <h4 class="text-base sm:text-lg font-bold text-white group-hover:text-blue-400 transition" x-text="t.implementation.whitepaperTitle || 'Technical White Paper'"></h4>
+                                    <p class="text-xs sm:text-sm text-gray-400" x-text="t.implementation.whitepaperDesc || 'Complete technical documentation (PDF-ready)'"></p>
                                 </div>
                             </div>
-                            <p class="text-xs text-blue-400">→ Open & Print to PDF</p>
+                            <p class="text-[10px] sm:text-xs text-blue-400">→ Open & Print to PDF</p>
                         </a>
 
                         <!-- Dataset Documentation -->
-                        <a href="dataset-documentation.html" target="_blank" class="tech-card rounded-2xl p-6 card-hover block group">
-                            <div class="flex items-center mb-4">
-                                <div class="bg-green-500/20 rounded-lg p-3 mr-4">
-                                    <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="dataset-documentation.html" target="_blank" class="tech-card rounded-2xl p-4 sm:p-6 card-hover block group">
+                            <div class="flex items-center mb-3 sm:mb-4">
+                                <div class="bg-green-500/20 rounded-lg p-2 sm:p-3 mr-3 sm:mr-4">
+                                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 class="text-lg font-bold text-white group-hover:text-green-400 transition" x-text="t.implementation.datasetTitle || 'Dataset Documentation'"></h4>
-                                    <p class="text-sm text-gray-400" x-text="t.implementation.datasetDesc || 'NASA & Roboflow dataset details'"></p>
+                                    <h4 class="text-base sm:text-lg font-bold text-white group-hover:text-green-400 transition" x-text="t.implementation.datasetTitle || 'Dataset Documentation'"></h4>
+                                    <p class="text-xs sm:text-sm text-gray-400" x-text="t.implementation.datasetDesc || 'NASA & Roboflow dataset details'"></p>
                                 </div>
                             </div>
-                            <p class="text-xs text-green-400">→ Open & Print to PDF</p>
+                            <p class="text-[10px] sm:text-xs text-green-400">→ Open & Print to PDF</p>
                         </a>
                     </div>
                 </div>
@@ -738,46 +816,46 @@
     </section>
 
     <!-- Business Model & Market Section -->
-    <section id="business" class="py-20 relative academic-section bg-gradient-to-b from-gray-900 to-black">
-        <div class="container mx-auto px-6">
+    <section id="business" class="py-12 sm:py-16 md:py-20 relative academic-section bg-gradient-to-b from-gray-900 to-black">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black mb-4 text-center">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 text-center px-2 break-words">
                     <span class="gradient-text" x-text="t.business.title"></span>
                 </h2>
-                <p class="text-gray-400 text-center mb-12 max-w-3xl mx-auto" x-text="t.business.subtitle"></p>
+                <p class="text-sm sm:text-base text-gray-400 text-center mb-8 sm:mb-12 max-w-3xl mx-auto px-4" x-text="t.business.subtitle"></p>
 
                 <!-- Market Opportunity -->
-                <div class="grid md:grid-cols-2 gap-8 mb-12">
-                    <div class="tech-card rounded-2xl p-8">
-                        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-                            <svg class="w-7 h-7 mr-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8">
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 mr-2 sm:mr-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <span x-text="t.business.market.title"></span>
                         </h3>
-                        <div class="space-y-4">
+                        <div class="space-y-3 sm:space-y-4">
                             <template x-for="segment in t.business.market.segments" :key="segment.name">
-                                <div class="border-l-4 border-green-500/50 pl-4">
-                                    <h4 class="font-bold text-white text-sm mb-1" x-text="segment.name"></h4>
-                                    <p class="text-xs text-gray-400" x-text="segment.desc"></p>
+                                <div class="border-l-4 border-green-500/50 pl-3 sm:pl-4">
+                                    <h4 class="font-bold text-white text-xs sm:text-sm mb-1" x-text="segment.name"></h4>
+                                    <p class="text-[10px] sm:text-xs text-gray-400" x-text="segment.desc"></p>
                                 </div>
                             </template>
                         </div>
                     </div>
 
-                    <div class="tech-card rounded-2xl p-8">
-                        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-                            <svg class="w-7 h-7 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8">
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 mr-2 sm:mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <span x-text="t.business.revenue.title"></span>
                         </h3>
-                        <div class="space-y-4">
+                        <div class="space-y-3 sm:space-y-4">
                             <template x-for="stream in t.business.revenue.streams" :key="stream.name">
-                                <div class="border-l-4 border-blue-500/50 pl-4">
-                                    <h4 class="font-bold text-white text-sm mb-1" x-text="stream.name"></h4>
-                                    <p class="text-xs text-gray-400 mb-1" x-text="stream.desc"></p>
-                                    <p class="text-xs text-blue-400 font-semibold" x-text="stream.price"></p>
+                                <div class="border-l-4 border-blue-500/50 pl-3 sm:pl-4">
+                                    <h4 class="font-bold text-white text-xs sm:text-sm mb-1" x-text="stream.name"></h4>
+                                    <p class="text-[10px] sm:text-xs text-gray-400 mb-1" x-text="stream.desc"></p>
+                                    <p class="text-[10px] sm:text-xs text-blue-400 font-semibold" x-text="stream.price"></p>
                                 </div>
                             </template>
                         </div>
@@ -785,18 +863,18 @@
                 </div>
 
                 <!-- Value Proposition & GTM -->
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="tech-card rounded-2xl p-8">
-                        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-                            <svg class="w-7 h-7 mr-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8">
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 mr-2 sm:mr-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                             </svg>
                             <span x-text="t.business.advantage.title"></span>
                         </h3>
-                        <ul class="space-y-3">
+                        <ul class="space-y-2 sm:space-y-3">
                             <template x-for="item in t.business.advantage.items" :key="item">
-                                <li class="flex items-start text-sm text-gray-300">
-                                    <svg class="w-5 h-5 mr-2 text-yellow-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <li class="flex items-start text-xs sm:text-sm text-gray-300">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 text-yellow-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                     </svg>
                                     <span x-text="item"></span>
@@ -805,18 +883,18 @@
                         </ul>
                     </div>
 
-                    <div class="tech-card rounded-2xl p-8">
-                        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-                            <svg class="w-7 h-7 mr-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8">
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 mr-2 sm:mr-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                             </svg>
                             <span x-text="t.business.gtm.title"></span>
                         </h3>
-                        <div class="space-y-4">
+                        <div class="space-y-3 sm:space-y-4">
                             <template x-for="phase in t.business.gtm.phases" :key="phase.name">
-                                <div class="border-l-4 border-purple-500/50 pl-4">
-                                    <h4 class="font-bold text-white text-sm mb-1" x-text="phase.name"></h4>
-                                    <p class="text-xs text-gray-400" x-text="phase.desc"></p>
+                                <div class="border-l-4 border-purple-500/50 pl-3 sm:pl-4">
+                                    <h4 class="font-bold text-white text-xs sm:text-sm mb-1" x-text="phase.name"></h4>
+                                    <p class="text-[10px] sm:text-xs text-gray-400" x-text="phase.desc"></p>
                                 </div>
                             </template>
                         </div>
@@ -827,71 +905,71 @@
     </section>
 
     <!-- Team & School Section -->
-    <section id="team" class="py-20 relative academic-section">
-        <div class="container mx-auto px-6">
+    <section id="team" class="py-12 sm:py-16 md:py-20 relative academic-section">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black mb-8 text-center">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-6 sm:mb-8 text-center px-2 break-words">
                     <span class="gradient-text" x-text="t.team.title"></span>
                 </h2>
 
                 <!-- School Info -->
-                <div class="tech-card rounded-2xl p-10 mb-10 text-center">
-                    <div class="bg-gray-800/50 rounded-xl p-6 mb-6 inline-block">
-                        <svg class="w-20 h-20 text-blue-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="tech-card rounded-2xl p-6 sm:p-8 md:p-10 mb-6 sm:mb-8 md:mb-10 text-center">
+                    <div class="bg-gray-800/50 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 inline-block">
+                        <svg class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-blue-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M12 14l9-5-9-5-9 5 9 5z"/>
                             <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-3" x-text="t.team.school.name"></h3>
-                    <p class="text-gray-400 mb-4" x-text="t.team.school.location"></p>
-                    <a :href="t.team.school.website" target="_blank" class="inline-flex items-center text-blue-400 hover:text-blue-300 transition text-sm">
+                    <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 px-4" x-text="t.team.school.name"></h3>
+                    <p class="text-sm sm:text-base text-gray-400 mb-3 sm:mb-4 px-4" x-text="t.team.school.location"></p>
+                    <a :href="t.team.school.website" target="_blank" class="inline-flex items-center text-blue-400 hover:text-blue-300 transition text-xs sm:text-sm">
                         <span x-text="t.team.school.visit"></span>
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                         </svg>
                     </a>
                 </div>
 
                 <!-- Team Members -->
-                <div class="text-center mb-6">
-                    <h3 class="text-xl font-bold text-white" x-text="t.team.members.title"></h3>
+                <div class="text-center mb-4 sm:mb-6">
+                    <h3 class="text-lg sm:text-xl font-bold text-white px-4" x-text="t.team.members.title"></h3>
                 </div>
 
                 <!-- Students -->
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                     <!-- Team Leader - Amir (Left) -->
-                    <div class="tech-card rounded-2xl p-6 text-center card-hover border-2 border-yellow-500/30">
-                        <div class="bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                            <span class="text-2xl font-black text-white">A</span>
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 text-center card-hover border-2 border-yellow-500/30">
+                        <div class="bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                            <span class="text-xl sm:text-2xl font-black text-white">A</span>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2" x-text="t.team.members.students[0].name"></h4>
-                        <p class="text-sm text-yellow-400 mb-2" x-text="t.team.members.students[0].grade"></p>
-                        <p class="text-xs text-gray-400" x-text="t.team.members.students[0].role"></p>
+                        <h4 class="text-base sm:text-lg font-bold text-white mb-1.5 sm:mb-2" x-text="t.team.members.students[0].name"></h4>
+                        <p class="text-xs sm:text-sm text-yellow-400 mb-1.5 sm:mb-2" x-text="t.team.members.students[0].grade"></p>
+                        <p class="text-[10px] sm:text-xs text-gray-400" x-text="t.team.members.students[0].role"></p>
                     </div>
 
                     <!-- Student Researcher - Ayla (Right) -->
-                    <div class="tech-card rounded-2xl p-6 text-center card-hover">
-                        <div class="bg-gradient-to-br from-green-500 to-teal-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                            <span class="text-2xl font-black text-white">A</span>
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 text-center card-hover">
+                        <div class="bg-gradient-to-br from-green-500 to-teal-600 rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                            <span class="text-xl sm:text-2xl font-black text-white">A</span>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2" x-text="t.team.members.students[1].name"></h4>
-                        <p class="text-sm text-green-400 mb-2" x-text="t.team.members.students[1].grade"></p>
-                        <p class="text-xs text-gray-400" x-text="t.team.members.students[1].role"></p>
+                        <h4 class="text-base sm:text-lg font-bold text-white mb-1.5 sm:mb-2" x-text="t.team.members.students[1].name"></h4>
+                        <p class="text-xs sm:text-sm text-green-400 mb-1.5 sm:mb-2" x-text="t.team.members.students[1].grade"></p>
+                        <p class="text-[10px] sm:text-xs text-gray-400" x-text="t.team.members.students[1].role"></p>
                     </div>
                 </div>
 
                 <!-- Project Advisor -->
                 <div class="max-w-md mx-auto">
-                    <div class="tech-card rounded-2xl p-6 text-center card-hover border-2 border-blue-500/30">
-                        <div class="mx-auto mb-4">
-                            <img src="images/IMG_6985.JPG" alt="Süleyman Tongut" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-blue-500/50">
+                    <div class="tech-card rounded-2xl p-4 sm:p-6 text-center card-hover border-2 border-blue-500/30">
+                        <div class="mx-auto mb-3 sm:mb-4">
+                            <img src="images/IMG_6985.JPG" alt="Süleyman Tongut" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full mx-auto object-cover border-4 border-blue-500/50">
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2" x-text="t.team.members.advisor.name"></h4>
-                        <p class="text-sm text-blue-400 mb-1" x-text="t.team.members.advisor.role"></p>
-                        <p class="text-xs text-gray-400 mb-1" x-text="t.team.members.advisor.title"></p>
-                        <p class="text-xs text-gray-500 mb-3" x-text="t.team.members.advisor.degree"></p>
-                        <p class="text-xs text-gray-400" x-text="t.team.members.advisor.contribution"></p>
+                        <h4 class="text-base sm:text-lg font-bold text-white mb-1.5 sm:mb-2" x-text="t.team.members.advisor.name"></h4>
+                        <p class="text-xs sm:text-sm text-blue-400 mb-1" x-text="t.team.members.advisor.role"></p>
+                        <p class="text-[10px] sm:text-xs text-gray-400 mb-1" x-text="t.team.members.advisor.title"></p>
+                        <p class="text-[10px] sm:text-xs text-gray-500 mb-2 sm:mb-3" x-text="t.team.members.advisor.degree"></p>
+                        <p class="text-[10px] sm:text-xs text-gray-400 px-2" x-text="t.team.members.advisor.contribution"></p>
                     </div>
                 </div>
             </div>
@@ -899,13 +977,13 @@
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-800 py-10">
-        <div class="container mx-auto px-6">
+    <footer class="border-t border-gray-800 py-6 sm:py-8 md:py-10">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="max-w-6xl mx-auto text-center">
-                <h3 class="text-2xl font-black gradient-text mb-3">Solar-Battery Node AI</h3>
-                <p class="text-sm text-gray-400 mb-4" x-text="t.footer.subtitle"></p>
-                <p class="text-xs text-gray-500 mb-4" x-text="t.footer.competition"></p>
-                <p class="text-xs text-gray-600" x-text="t.footer.copyright"></p>
+                <h3 class="text-xl sm:text-2xl font-black gradient-text mb-2 sm:mb-3">Solar-Battery Node AI</h3>
+                <p class="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4 px-4" x-text="t.footer.subtitle"></p>
+                <p class="text-[10px] sm:text-xs text-gray-500 mb-3 sm:mb-4 px-4" x-text="t.footer.competition"></p>
+                <p class="text-[10px] sm:text-xs text-gray-600 px-4" x-text="t.footer.copyright"></p>
             </div>
         </div>
     </footer>
