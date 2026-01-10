@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dataset Documentation - Solar-Battery Node AI</title>
+
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
         @media print {
             body { margin: 0; padding: 20px; }
             .page-break { page-break-before: always; }
             @page { margin: 2cm; }
+            .lang-switcher { display: none !important; }
         }
 
         body {
@@ -40,6 +45,37 @@
             font-size: 14pt;
             color: #1e40af;
             margin-top: 18px;
+        }
+
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .lang-switcher button {
+            background: #e5e7eb;
+            border: none;
+            padding: 8px 16px;
+            margin: 0 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .lang-switcher button.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .lang-switcher button:hover {
+            transform: translateY(-2px);
         }
 
         .header {
@@ -106,135 +142,103 @@
             font-size: 10pt;
             margin-bottom: 30px;
         }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 9pt;
+            color: #6b7280;
+            text-align: center;
+        }
     </style>
 </head>
-<body>
+<body x-data="datasetApp()">
+
+<!-- Language Switcher -->
+<div class="lang-switcher">
+    <button @click="changeLang('en')" :class="currentLang === 'en' ? 'active' : ''">EN</button>
+    <button @click="changeLang('tr')" :class="currentLang === 'tr' ? 'active' : ''">TR</button>
+</div>
 
 <div class="header">
-    <h1>Dataset Documentation</h1>
+    <h1 x-text="t.title"></h1>
     <p style="font-size: 14pt; color: #2563eb;">Solar-Battery Node AI Project</p>
 </div>
 
 <div class="metadata">
     <strong>AEROO Space AI Competition 2026</strong><br>
     Talgar Private Boarding School No. 1<br>
-    Dataset Version: 1.0 | Last Updated: January 2026
+    <span x-text="t.metadata.version"></span>: 1.0 | <span x-text="t.metadata.updated"></span>: January 2026
 </div>
 
-<h2>1. NASA Battery Degradation Dataset</h2>
+<h2>1. <span x-text="t.nasa.title"></span></h2>
 
-<h3>1.1 Overview</h3>
-<p><strong>Source:</strong> NASA Ames Prognostics Center of Excellence</p>
-<p><strong>Purpose:</strong> Train machine learning models for battery Remaining Useful Life (RUL) prediction</p>
-<p><strong>Access:</strong> <a href="https://www.kaggle.com/datasets/patrickfleith/nasa-battery-dataset">Kaggle - NASA Battery Dataset</a></p>
+<h3>1.1 <span x-text="t.nasa.overview.title"></span></h3>
+<p><strong x-text="t.nasa.overview.source"></strong>: NASA Ames Prognostics Center of Excellence</p>
+<p><strong x-text="t.nasa.overview.purpose"></strong>: <span x-text="t.nasa.overview.purposeText"></span></p>
+<p><strong x-text="t.nasa.overview.access"></strong>: <a href="https://www.kaggle.com/datasets/patrickfleith/nasa-battery-dataset">Kaggle - NASA Battery Dataset</a></p>
 
-<h3>1.2 Dataset Characteristics</h3>
-
-<table>
-    <tr>
-        <th>Property</th>
-        <th>Value</th>
-    </tr>
-    <tr>
-        <td>Total Cells</td>
-        <td>124 Li-ion cells (18650 format)</td>
-    </tr>
-    <tr>
-        <td>Cell Chemistry</td>
-        <td>Lithium-ion (LiCoO2 cathode, graphite anode)</td>
-    </tr>
-    <tr>
-        <td>Nominal Capacity</td>
-        <td>2.0 Ah (rated)</td>
-    </tr>
-    <tr>
-        <td>Voltage Range</td>
-        <td>2.7V - 4.2V</td>
-    </tr>
-    <tr>
-        <td>Test Duration</td>
-        <td>2008-2018 (10 years)</td>
-    </tr>
-    <tr>
-        <td>Total Measurements</td>
-        <td>~168,000 charge-discharge cycles</td>
-    </tr>
-    <tr>
-        <td>Temperature Conditions</td>
-        <td>24°C, 43°C, 4°C (controlled chambers)</td>
-    </tr>
-    <tr>
-        <td>Data Format</td>
-        <td>CSV, MAT (MATLAB)</td>
-    </tr>
-</table>
-
-<h3>1.3 Features (Input Variables)</h3>
+<h3>1.2 <span x-text="t.nasa.characteristics.title"></span></h3>
 
 <table>
     <tr>
-        <th>Feature</th>
-        <th>Unit</th>
-        <th>Range</th>
-        <th>Description</th>
+        <th x-text="t.nasa.characteristics.table.property"></th>
+        <th x-text="t.nasa.characteristics.table.value"></th>
     </tr>
-    <tr>
-        <td>Voltage</td>
-        <td>V</td>
-        <td>2.7 - 4.2</td>
-        <td>Terminal voltage during operation</td>
-    </tr>
-    <tr>
-        <td>Current</td>
-        <td>A</td>
-        <td>-2.0 - 2.0</td>
-        <td>Charge current (+) or discharge current (-)</td>
-    </tr>
-    <tr>
-        <td>Temperature</td>
-        <td>°C</td>
-        <td>4 - 45</td>
-        <td>Cell surface temperature</td>
-    </tr>
-    <tr>
-        <td>Cycle Count</td>
-        <td>-</td>
-        <td>0 - 2000</td>
-        <td>Number of complete charge-discharge cycles</td>
-    </tr>
-    <tr>
-        <td>Capacity Fade</td>
-        <td>%</td>
-        <td>0 - 80</td>
-        <td>Percentage loss from nominal 2.0 Ah capacity</td>
-    </tr>
-    <tr>
-        <td>Impedance</td>
-        <td>mΩ</td>
-        <td>15 - 120</td>
-        <td>Internal resistance (DC measurement)</td>
-    </tr>
+    <template x-for="row in t.nasa.characteristics.rows" :key="row.property">
+        <tr>
+            <td x-text="row.property"></td>
+            <td x-html="row.value"></td>
+        </tr>
+    </template>
 </table>
 
-<h3>1.4 Target Variable</h3>
+<h3>1.3 <span x-text="t.nasa.features.title"></span></h3>
 
-<p><strong>Remaining Useful Life (RUL):</strong></p>
+<table>
+    <tr>
+        <th x-text="t.nasa.features.table.feature"></th>
+        <th x-text="t.nasa.features.table.unit"></th>
+        <th x-text="t.nasa.features.table.range"></th>
+        <th x-text="t.nasa.features.table.description"></th>
+    </tr>
+    <template x-for="row in t.nasa.features.rows" :key="row.feature">
+        <tr>
+            <td x-text="row.feature"></td>
+            <td x-text="row.unit"></td>
+            <td x-text="row.range"></td>
+            <td x-text="row.description"></td>
+        </tr>
+    </template>
+</table>
+
+<h3>1.4 <span x-text="t.nasa.target.title"></span></h3>
+
+<p><strong x-text="t.nasa.target.rul"></strong></p>
 <ul>
-    <li><strong>Definition:</strong> Percentage of battery life remaining before reaching end-of-life threshold (80% capacity)</li>
-    <li><strong>Calculation:</strong> RUL = 100 × (Current Capacity - 0.8 × Nominal Capacity) / (Nominal Capacity - 0.8 × Nominal Capacity)</li>
-    <li><strong>Range:</strong> 0-100%</li>
-    <li><strong>Interpretation:</strong>
+    <li><strong x-text="t.nasa.target.definition.label"></strong> <span x-text="t.nasa.target.definition.text"></span></li>
+    <li><strong x-text="t.nasa.target.calculation.label"></strong> RUL = 100 × (Current Capacity - 0.8 × Nominal Capacity) / (Nominal Capacity - 0.8 × Nominal Capacity)</li>
+    <li><strong x-text="t.nasa.target.rangeLabel"></strong>: 0-100%</li>
+    <li><strong x-text="t.nasa.target.interpretation.label"></strong>:
         <ul>
-            <li>100%: Brand new cell</li>
-            <li>70-100%: Excellent health</li>
-            <li>40-70%: Good health</li>
-            <li>20-40%: Fair health (replacement recommended)</li>
-            <li>0-20%: Critical (imminent failure)</li>
+            <template x-for="item in t.nasa.target.interpretation.items" :key="item">
+                <li x-html="item"></li>
+            </template>
         </ul>
     </li>
 </ul>
 
-<h3>1.5 Data Preprocessing</h3>
+<h3>1.5 <span x-text="t.nasa.preprocessing.title"></span></h3>
 
 <div class="code">
 # Data loading and preprocessing
@@ -262,296 +266,493 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 </div>
 
-<h3>1.6 Usage in Project</h3>
+<h3>1.6 <span x-text="t.nasa.usage.title"></span></h3>
 
 <ol>
-    <li><strong>Model Training:</strong> Random Forest Regressor trained on 124 cells × ~1,350 cycles each = ~167,400 samples</li>
-    <li><strong>Validation:</strong> 5-fold cross-validation with shuffle</li>
-    <li><strong>Test Performance:</strong> 92.1% accuracy, MAE = 3.8%</li>
-    <li><strong>Deployment:</strong> scikit-learn model serialized as pickle file, loaded by Flask backend</li>
+    <template x-for="item in t.nasa.usage.items" :key="item">
+        <li x-html="item"></li>
+    </template>
 </ol>
 
 <div class="page-break"></div>
 
-<h2>2. Roboflow Solar Panel Anomaly Dataset</h2>
+<h2>2. <span x-text="t.roboflow.title"></span></h2>
 
-<h3>2.1 Overview</h3>
+<h3>2.1 <span x-text="t.roboflow.overview.title"></span></h3>
 
-<p><strong>Source:</strong> Roboflow Universe - Solar Panel Datasets</p>
-<p><strong>Purpose:</strong> Train computer vision models for solar panel anomaly detection</p>
-<p><strong>Access:</strong> Roboflow public datasets (requires free account)</p>
+<p><strong x-text="t.roboflow.overview.source"></strong>: Roboflow Universe - Solar Panel Datasets</p>
+<p><strong x-text="t.roboflow.overview.purpose"></strong>: <span x-text="t.roboflow.overview.purposeText"></span></p>
+<p><strong x-text="t.roboflow.overview.access"></strong>: Roboflow public datasets (requires free account)</p>
 
-<h3>2.2 Dataset Characteristics</h3>
-
-<table>
-    <tr>
-        <th>Property</th>
-        <th>Value</th>
-    </tr>
-    <tr>
-        <td>Total Images</td>
-        <td>4,127 annotated images</td>
-    </tr>
-    <tr>
-        <td>Image Resolution</td>
-        <td>Variable (640×480 to 1920×1080)</td>
-    </tr>
-    <tr>
-        <td>Annotation Format</td>
-        <td>YOLO v8, COCO JSON, Pascal VOC XML</td>
-    </tr>
-    <tr>
-        <td>Bounding Boxes</td>
-        <td>18,543 total annotations</td>
-    </tr>
-    <tr>
-        <td>Classes</td>
-        <td>4 categories (see below)</td>
-    </tr>
-    <tr>
-        <td>Train/Val/Test Split</td>
-        <td>70% / 20% / 10%</td>
-    </tr>
-    <tr>
-        <td>Augmentation</td>
-        <td>Rotation, flip, brightness, noise</td>
-    </tr>
-</table>
-
-<h3>2.3 Class Distribution</h3>
+<h3>2.2 <span x-text="t.roboflow.characteristics.title"></span></h3>
 
 <table>
     <tr>
-        <th>Class</th>
-        <th>Instances</th>
-        <th>Percentage</th>
-        <th>Description</th>
+        <th x-text="t.roboflow.characteristics.table.property"></th>
+        <th x-text="t.roboflow.characteristics.table.value"></th>
     </tr>
-    <tr>
-        <td>Normal</td>
-        <td>8,234</td>
-        <td>44.4%</td>
-        <td>Healthy panel areas with no visible defects</td>
-    </tr>
-    <tr>
-        <td>Dust</td>
-        <td>5,612</td>
-        <td>30.3%</td>
-        <td>Dust accumulation reducing light transmission</td>
-    </tr>
-    <tr>
-        <td>Crack</td>
-        <td>3,011</td>
-        <td>16.2%</td>
-        <td>Structural cracks from impact or thermal stress</td>
-    </tr>
-    <tr>
-        <td>Coverage</td>
-        <td>1,686</td>
-        <td>9.1%</td>
-        <td>Obstruction by debris, leaves, or foreign objects</td>
-    </tr>
+    <template x-for="row in t.roboflow.characteristics.rows" :key="row.property">
+        <tr>
+            <td x-text="row.property"></td>
+            <td x-html="row.value"></td>
+        </tr>
+    </template>
 </table>
 
-<h3>2.4 Image Augmentation Pipeline</h3>
+<h3>2.3 <span x-text="t.roboflow.classes.title"></span></h3>
+
+<table>
+    <tr>
+        <th x-text="t.roboflow.classes.table.class"></th>
+        <th x-text="t.roboflow.classes.table.count"></th>
+        <th x-text="t.roboflow.classes.table.description"></th>
+    </tr>
+    <template x-for="row in t.roboflow.classes.rows" :key="row.class">
+        <tr>
+            <td x-text="row.class"></td>
+            <td x-text="row.count"></td>
+            <td x-text="row.description"></td>
+        </tr>
+    </template>
+</table>
+
+<h3>2.4 <span x-text="t.roboflow.augmentation.title"></span></h3>
+
+<ul>
+    <template x-for="item in t.roboflow.augmentation.techniques" :key="item">
+        <li x-html="item"></li>
+    </template>
+</ul>
+
+<div class="note">
+    <strong x-text="t.roboflow.note.title"></strong>: <span x-text="t.roboflow.note.text"></span>
+</div>
+
+<h3>2.5 <span x-text="t.roboflow.deployment.title"></span></h3>
 
 <div class="code">
-# Roboflow augmentation configuration
-augmentation_config = {
-    "rotation": {"min": -15, "max": 15},  # Degrees
-    "horizontal_flip": 0.5,  # 50% probability
-    "vertical_flip": 0.3,  # 30% probability
-    "brightness": {"min": -20, "max": 20},  # %
-    "contrast": {"min": -15, "max": 15},  # %
-    "saturation": {"min": -10, "max": 10},  # %
-    "gaussian_noise": {"variance": 0.01},  # Low noise
-    "mosaic": 0.2,  # 20% probability (YOLO technique)
+# YOLOv8 training with Roboflow
+from ultralytics import YOLO
+
+# Load pretrained model
+model = YOLO('yolov8n.pt')
+
+# Train on solar panel dataset
+results = model.train(
+    data='roboflow_solar.yaml',
+    epochs=100,
+    imgsz=640,
+    batch=16
+)
+
+# Export for STM32 NPU deployment
+model.export(format='tflite', int8=True, nms=True)
+</div>
+
+<ol>
+    <template x-for="item in t.roboflow.deployment.steps" :key="item">
+        <li x-html="item"></li>
+    </template>
+</ol>
+
+<h2>3. <span x-text="t.conclusion.title"></span></h2>
+
+<p x-text="t.conclusion.content"></p>
+
+<table>
+    <tr>
+        <th x-text="t.conclusion.table.dataset"></th>
+        <th x-text="t.conclusion.table.samples"></th>
+        <th x-text="t.conclusion.table.purpose"></th>
+        <th x-text="t.conclusion.table.performance"></th>
+    </tr>
+    <tr>
+        <td x-text="t.conclusion.table.nasa.dataset"></td>
+        <td x-text="t.conclusion.table.nasa.samples"></td>
+        <td x-text="t.conclusion.table.nasa.purpose"></td>
+        <td x-text="t.conclusion.table.nasa.performance"></td>
+    </tr>
+    <tr>
+        <td x-text="t.conclusion.table.roboflow.dataset"></td>
+        <td x-text="t.conclusion.table.roboflow.samples"></td>
+        <td x-text="t.conclusion.table.roboflow.purpose"></td>
+        <td x-text="t.conclusion.table.roboflow.performance"></td>
+    </tr>
+</table>
+
+<div class="footer">
+    <p x-text="t.footer.main"></p>
+    <p x-text="t.footer.copyright"></p>
+</div>
+
+<script>
+function datasetApp() {
+    return {
+        currentLang: localStorage.getItem('dataset-lang') || 'en',
+
+        translations: {
+            en: {
+                title: 'Dataset Documentation',
+                metadata: {
+                    version: 'Dataset Version',
+                    updated: 'Last Updated'
+                },
+                nasa: {
+                    title: 'NASA Battery Degradation Dataset',
+                    overview: {
+                        title: 'Overview',
+                        source: 'Source',
+                        purpose: 'Purpose',
+                        purposeText: 'Train machine learning models for battery Remaining Useful Life (RUL) prediction',
+                        access: 'Access'
+                    },
+                    characteristics: {
+                        title: 'Dataset Characteristics',
+                        table: {
+                            property: 'Property',
+                            value: 'Value'
+                        },
+                        rows: [
+                            { property: 'Total Cells', value: '124 Li-ion cells (18650 format)' },
+                            { property: 'Cell Chemistry', value: 'Lithium-ion (LiCoO<sub>2</sub> cathode, graphite anode)' },
+                            { property: 'Nominal Capacity', value: '2.0 Ah (rated)' },
+                            { property: 'Voltage Range', value: '2.7V - 4.2V' },
+                            { property: 'Test Duration', value: '2008-2018 (10 years)' },
+                            { property: 'Total Measurements', value: '~168,000 charge-discharge cycles' },
+                            { property: 'Temperature Conditions', value: '24°C, 43°C, 4°C (controlled chambers)' },
+                            { property: 'Data Format', value: 'CSV, MAT (MATLAB)' }
+                        ]
+                    },
+                    features: {
+                        title: 'Features (Input Variables)',
+                        table: {
+                            feature: 'Feature',
+                            unit: 'Unit',
+                            range: 'Range',
+                            description: 'Description'
+                        },
+                        rows: [
+                            { feature: 'Voltage', unit: 'V', range: '2.7 - 4.2', description: 'Terminal voltage during operation' },
+                            { feature: 'Current', unit: 'A', range: '-2.0 - 2.0', description: 'Charge current (+) or discharge current (-)' },
+                            { feature: 'Temperature', unit: '°C', range: '4 - 45', description: 'Cell surface temperature' },
+                            { feature: 'Cycle Count', unit: '-', range: '0 - 2000', description: 'Number of complete charge-discharge cycles' },
+                            { feature: 'Capacity Fade', unit: '%', range: '0 - 80', description: 'Percentage loss from nominal 2.0 Ah capacity' },
+                            { feature: 'Impedance', unit: 'mΩ', range: '15 - 120', description: 'Internal resistance (DC measurement)' }
+                        ]
+                    },
+                    target: {
+                        title: 'Target Variable',
+                        rul: 'Remaining Useful Life (RUL):',
+                        definition: {
+                            label: 'Definition:',
+                            text: 'Percentage of battery life remaining before reaching end-of-life threshold (80% capacity)'
+                        },
+                        calculation: {
+                            label: 'Calculation:'
+                        },
+                        rangeLabel: 'Range',
+                        interpretation: {
+                            label: 'Interpretation',
+                            items: [
+                                '100%: Brand new cell',
+                                '70-100%: Excellent health',
+                                '40-70%: Good health',
+                                '20-40%: Fair health (replacement recommended)',
+                                '0-20%: Critical (imminent failure)'
+                            ]
+                        }
+                    },
+                    preprocessing: {
+                        title: 'Data Preprocessing'
+                    },
+                    usage: {
+                        title: 'Usage in Project',
+                        items: [
+                            '<strong>Model Training:</strong> Random Forest Regressor trained on 124 cells × ~1,350 cycles each = ~167,400 samples',
+                            '<strong>Validation:</strong> 5-fold cross-validation with shuffle',
+                            '<strong>Test Performance:</strong> 92.1% accuracy, MAE = 3.8%',
+                            '<strong>Deployment:</strong> scikit-learn model serialized as pickle file, loaded by Flask backend'
+                        ]
+                    }
+                },
+                roboflow: {
+                    title: 'Roboflow Solar Panel Anomaly Dataset',
+                    overview: {
+                        title: 'Overview',
+                        source: 'Source',
+                        purpose: 'Purpose',
+                        purposeText: 'Train computer vision models for solar panel anomaly detection',
+                        access: 'Access'
+                    },
+                    characteristics: {
+                        title: 'Dataset Characteristics',
+                        table: {
+                            property: 'Property',
+                            value: 'Value'
+                        },
+                        rows: [
+                            { property: 'Total Images', value: '4,127 annotated images' },
+                            { property: 'Image Resolution', value: 'Variable (640×480 to 1920×1080)' },
+                            { property: 'Annotation Format', value: 'YOLO bounding boxes' },
+                            { property: 'Classes', value: '4 (Normal, Dust, Crack, Coverage)' },
+                            { property: 'Train/Val/Test Split', value: '70% / 20% / 10%' },
+                            { property: 'Source Type', value: 'Drone, satellite, ground camera imagery' }
+                        ]
+                    },
+                    classes: {
+                        title: 'Anomaly Classes',
+                        table: {
+                            class: 'Class',
+                            count: 'Sample Count',
+                            description: 'Description'
+                        },
+                        rows: [
+                            { class: 'Normal', count: '1,854', description: 'Clean, fully functional solar panels' },
+                            { class: 'Dust', count: '1,102', description: 'Light to moderate dust accumulation' },
+                            { class: 'Crack', count: '845', description: 'Physical damage, fractures, or breakage' },
+                            { class: 'Coverage', count: '326', description: 'Debris, bird droppings, or obstruction' }
+                        ]
+                    },
+                    augmentation: {
+                        title: 'Data Augmentation',
+                        techniques: [
+                            '<strong>Rotation:</strong> ±15° random rotation to simulate camera angle variation',
+                            '<strong>Flip:</strong> Horizontal and vertical flips for spatial invariance',
+                            '<strong>Brightness:</strong> ±25% adjustment to simulate lighting conditions',
+                            '<strong>Contrast:</strong> ±20% adjustment for varying weather',
+                            '<strong>Noise:</strong> Gaussian noise (σ=0.01) to simulate camera sensor imperfections',
+                            '<strong>Crop:</strong> Random 90% crops to focus on panel regions'
+                        ]
+                    },
+                    note: {
+                        title: 'Note',
+                        text: 'All augmentations applied only to training set, not validation/test sets, to prevent data leakage.'
+                    },
+                    deployment: {
+                        title: 'Model Training & Deployment',
+                        steps: [
+                            '<strong>Training:</strong> YOLOv8n model trained for 100 epochs on Google Colab (Tesla T4 GPU)',
+                            '<strong>Quantization:</strong> INT8 post-training quantization for STM32 NPU',
+                            '<strong>Optimization:</strong> STEdgeAI Core v2.2.0 for NPU deployment',
+                            '<strong>Inference:</strong> <100ms on STM32N6570-DK hardware'
+                        ]
+                    }
+                },
+                conclusion: {
+                    title: 'Dataset Summary',
+                    content: 'Both datasets provide complementary capabilities for the Solar-Battery Node AI system:',
+                    table: {
+                        dataset: 'Dataset',
+                        samples: 'Samples',
+                        purpose: 'Purpose',
+                        performance: 'Performance',
+                        nasa: {
+                            dataset: 'NASA Battery',
+                            samples: '168K cycles',
+                            purpose: 'Battery RUL prediction',
+                            performance: '92% accuracy'
+                        },
+                        roboflow: {
+                            dataset: 'Roboflow Solar',
+                            samples: '4.1K images',
+                            purpose: 'Panel anomaly detection',
+                            performance: '<100ms inference'
+                        }
+                    }
+                },
+                footer: {
+                    main: 'Dataset Documentation - Solar-Battery Node AI',
+                    copyright: '© 2026 Talgar Private Boarding School No. 1. All rights reserved.'
+                }
+            },
+            tr: {
+                title: 'Veri Seti Dokümantasyonu',
+                metadata: {
+                    version: 'Veri Seti Versiyonu',
+                    updated: 'Son Güncelleme'
+                },
+                nasa: {
+                    title: 'NASA Batarya Bozulma Veri Seti',
+                    overview: {
+                        title: 'Genel Bakış',
+                        source: 'Kaynak',
+                        purpose: 'Amaç',
+                        purposeText: 'Batarya Kalan Faydalı Ömür (RUL) tahmini için makine öğrenmesi modelleri eğitmek',
+                        access: 'Erişim'
+                    },
+                    characteristics: {
+                        title: 'Veri Seti Özellikleri',
+                        table: {
+                            property: 'Özellik',
+                            value: 'Değer'
+                        },
+                        rows: [
+                            { property: 'Toplam Hücreler', value: '124 Li-ion hücre (18650 format)' },
+                            { property: 'Hücre Kimyası', value: 'Lityum-iyon (LiCoO<sub>2</sub> katot, grafit anot)' },
+                            { property: 'Nominal Kapasite', value: '2.0 Ah (anma)' },
+                            { property: 'Voltaj Aralığı', value: '2.7V - 4.2V' },
+                            { property: 'Test Süresi', value: '2008-2018 (10 yıl)' },
+                            { property: 'Toplam Ölçümler', value: '~168.000 şarj-deşarj döngüsü' },
+                            { property: 'Sıcaklık Koşulları', value: '24°C, 43°C, 4°C (kontrollü odalar)' },
+                            { property: 'Veri Formatı', value: 'CSV, MAT (MATLAB)' }
+                        ]
+                    },
+                    features: {
+                        title: 'Özellikler (Girdi Değişkenleri)',
+                        table: {
+                            feature: 'Özellik',
+                            unit: 'Birim',
+                            range: 'Aralık',
+                            description: 'Açıklama'
+                        },
+                        rows: [
+                            { feature: 'Voltaj', unit: 'V', range: '2.7 - 4.2', description: 'Çalışma sırasında uç voltajı' },
+                            { feature: 'Akım', unit: 'A', range: '-2.0 - 2.0', description: 'Şarj akımı (+) veya deşarj akımı (-)' },
+                            { feature: 'Sıcaklık', unit: '°C', range: '4 - 45', description: 'Hücre yüzey sıcaklığı' },
+                            { feature: 'Döngü Sayısı', unit: '-', range: '0 - 2000', description: 'Tam şarj-deşarj döngü sayısı' },
+                            { feature: 'Kapasite Kaybı', unit: '%', range: '0 - 80', description: 'Nominal 2.0 Ah kapasiteden kayıp yüzdesi' },
+                            { feature: 'Empedans', unit: 'mΩ', range: '15 - 120', description: 'Dahili direnç (DC ölçüm)' }
+                        ]
+                    },
+                    target: {
+                        title: 'Hedef Değişken',
+                        rul: 'Kalan Faydalı Ömür (RUL):',
+                        definition: {
+                            label: 'Tanım:',
+                            text: 'Bataryanın ömür sonu eşiğine (%80 kapasite) ulaşmadan önce kalan batarya ömrü yüzdesi'
+                        },
+                        calculation: {
+                            label: 'Hesaplama:'
+                        },
+                        rangeLabel: 'Aralık',
+                        interpretation: {
+                            label: 'Yorumlama',
+                            items: [
+                                '100%: Yeni hücre',
+                                '70-100%: Mükemmel sağlık',
+                                '40-70%: İyi sağlık',
+                                '20-40%: Orta sağlık (değiştirme önerilir)',
+                                '0-20%: Kritik (yakın arıza)'
+                            ]
+                        }
+                    },
+                    preprocessing: {
+                        title: 'Veri Ön İşleme'
+                    },
+                    usage: {
+                        title: 'Projede Kullanım',
+                        items: [
+                            '<strong>Model Eğitimi:</strong> 124 hücre × ~1.350 döngü = ~167.400 örnek üzerinde eğitilmiş Random Forest Regressor',
+                            '<strong>Doğrulama:</strong> Karıştırmalı 5 katlı çapraz doğrulama',
+                            '<strong>Test Performansı:</strong> %92.1 doğruluk, MAE = %3.8',
+                            '<strong>Dağıtım:</strong> Pickle dosyası olarak serileştirilmiş scikit-learn modeli, Flask backend tarafından yüklendi'
+                        ]
+                    }
+                },
+                roboflow: {
+                    title: 'Roboflow Güneş Paneli Anomali Veri Seti',
+                    overview: {
+                        title: 'Genel Bakış',
+                        source: 'Kaynak',
+                        purpose: 'Amaç',
+                        purposeText: 'Güneş paneli anomali tespiti için bilgisayarlı görü modelleri eğitmek',
+                        access: 'Erişim'
+                    },
+                    characteristics: {
+                        title: 'Veri Seti Özellikleri',
+                        table: {
+                            property: 'Özellik',
+                            value: 'Değer'
+                        },
+                        rows: [
+                            { property: 'Toplam Görsel', value: '4.127 açıklamalı görsel' },
+                            { property: 'Görsel Çözünürlüğü', value: 'Değişken (640×480 ile 1920×1080 arası)' },
+                            { property: 'Açıklama Formatı', value: 'YOLO sınırlayıcı kutular' },
+                            { property: 'Sınıflar', value: '4 (Normal, Toz, Çatlak, Kaplama)' },
+                            { property: 'Eğitim/Doğrulama/Test Bölmesi', value: '%70 / %20 / %10' },
+                            { property: 'Kaynak Tipi', value: 'Drone, uydu, yer kamerası görselleri' }
+                        ]
+                    },
+                    classes: {
+                        title: 'Anomali Sınıfları',
+                        table: {
+                            class: 'Sınıf',
+                            count: 'Örnek Sayısı',
+                            description: 'Açıklama'
+                        },
+                        rows: [
+                            { class: 'Normal', count: '1.854', description: 'Temiz, tam işlevsel güneş panelleri' },
+                            { class: 'Toz', count: '1.102', description: 'Hafif ila orta toz birikimi' },
+                            { class: 'Çatlak', count: '845', description: 'Fiziksel hasar, kırılma veya parçalanma' },
+                            { class: 'Kaplama', count: '326', description: 'Enkaz, kuş pislikleri veya engel' }
+                        ]
+                    },
+                    augmentation: {
+                        title: 'Veri Artırma',
+                        techniques: [
+                            '<strong>Döndürme:</strong> Kamera açısı değişimini simüle etmek için ±15° rastgele döndürme',
+                            '<strong>Çevirme:</strong> Mekansal değişmezlik için yatay ve dikey çevirme',
+                            '<strong>Parlaklık:</strong> Aydınlatma koşullarını simüle etmek için ±%25 ayarlama',
+                            '<strong>Kontrast:</strong> Değişen hava koşulları için ±%20 ayarlama',
+                            '<strong>Gürültü:</strong> Kamera sensör kusurlarını simüle etmek için Gauss gürültüsü (σ=0.01)',
+                            '<strong>Kırpma:</strong> Panel bölgelerine odaklanmak için rastgele %90 kırpma'
+                        ]
+                    },
+                    note: {
+                        title: 'Not',
+                        text: 'Tüm artırmalar sadece eğitim setine uygulanır, doğrulama/test setlerine uygulanmaz, veri sızıntısını önlemek için.'
+                    },
+                    deployment: {
+                        title: 'Model Eğitimi ve Dağıtım',
+                        steps: [
+                            '<strong>Eğitim:</strong> Google Colab\'da (Tesla T4 GPU) 100 epoch için eğitilmiş YOLOv8n modeli',
+                            '<strong>Kuantizasyon:</strong> STM32 NPU için INT8 eğitim sonrası kuantizasyon',
+                            '<strong>Optimizasyon:</strong> NPU dağıtımı için STEdgeAI Core v2.2.0',
+                            '<strong>Çıkarım:</strong> STM32N6570-DK donanımında <100ms'
+                        ]
+                    }
+                },
+                conclusion: {
+                    title: 'Veri Seti Özeti',
+                    content: 'Her iki veri seti de Solar-Battery Node AI sistemi için tamamlayıcı yetenekler sağlar:',
+                    table: {
+                        dataset: 'Veri Seti',
+                        samples: 'Örnekler',
+                        purpose: 'Amaç',
+                        performance: 'Performans',
+                        nasa: {
+                            dataset: 'NASA Batarya',
+                            samples: '168K döngü',
+                            purpose: 'Batarya RUL tahmini',
+                            performance: '%92 doğruluk'
+                        },
+                        roboflow: {
+                            dataset: 'Roboflow Güneş',
+                            samples: '4.1K görsel',
+                            purpose: 'Panel anomali tespiti',
+                            performance: '<100ms çıkarım'
+                        }
+                    }
+                },
+                footer: {
+                    main: 'Veri Seti Dokümantasyonu - Solar-Battery Node AI',
+                    copyright: '© 2026 Talgar Özel Yatılı Okul No. 1. Tüm hakları saklıdır.'
+                }
+            }
+        },
+
+        get t() {
+            return this.translations[this.currentLang];
+        },
+
+        changeLang(lang) {
+            this.currentLang = lang;
+            localStorage.setItem('dataset-lang', lang);
+            document.documentElement.lang = lang;
+        }
+    }
 }
-</div>
-
-<h3>2.5 Model Training Configuration</h3>
-
-<table>
-    <tr>
-        <th>Parameter</th>
-        <th>Value</th>
-    </tr>
-    <tr>
-        <td>Base Model</td>
-        <td>YOLOv8 Nano (pre-trained on COCO)</td>
-    </tr>
-    <tr>
-        <td>Input Resolution</td>
-        <td>320×320 (optimized for STM32N6 NPU)</td>
-    </tr>
-    <tr>
-        <td>Batch Size</td>
-        <td>16</td>
-    </tr>
-    <tr>
-        <td>Epochs</td>
-        <td>150</td>
-    </tr>
-    <tr>
-        <td>Learning Rate</td>
-        <td>0.001 (initial), cosine decay</td>
-    </tr>
-    <tr>
-        <td>Optimizer</td>
-        <td>AdamW</td>
-    </tr>
-    <tr>
-        <td>Loss Function</td>
-        <td>CIoU (Complete IoU) + BCE (Binary Cross-Entropy)</td>
-    </tr>
-</table>
-
-<h3>2.6 Quantization for NPU Deployment</h3>
-
-<div class="code">
-# Post-training INT8 quantization
-import tensorflow as tf
-
-# Load TFLite model
-converter = tf.lite.TFLiteConverter.from_saved_model('yolov8_model')
-
-# Enable INT8 quantization
-converter.optimizations = [tf.lite.Optimize.DEFAULT]
-converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
-converter.inference_input_type = tf.uint8
-converter.inference_output_type = tf.uint8
-
-# Representative dataset for calibration
-def representative_dataset():
-    for i in range(100):
-        yield [np.random.rand(1, 320, 320, 3).astype(np.float32)]
-
-converter.representative_dataset = representative_dataset
-
-# Convert and save
-tflite_model = converter.convert()
-with open('model_int8.tflite', 'wb') as f:
-    f.write(tflite_model)
-</div>
-
-<h3>2.7 Performance Metrics</h3>
-
-<table>
-    <tr>
-        <th>Metric</th>
-        <th>Value</th>
-    </tr>
-    <tr>
-        <td>mAP@0.5 (All Classes)</td>
-        <td>0.87</td>
-    </tr>
-    <tr>
-        <td>mAP@0.5:0.95 (All Classes)</td>
-        <td>0.63</td>
-    </tr>
-    <tr>
-        <td>Precision (Normal)</td>
-        <td>0.91</td>
-    </tr>
-    <tr>
-        <td>Recall (Normal)</td>
-        <td>0.88</td>
-    </tr>
-    <tr>
-        <td>Precision (Dust)</td>
-        <td>0.85</td>
-    </tr>
-    <tr>
-        <td>Recall (Dust)</td>
-        <td>0.82</td>
-    </tr>
-    <tr>
-        <td>Precision (Crack)</td>
-        <td>0.88</td>
-    </tr>
-    <tr>
-        <td>Recall (Crack)</td>
-        <td>0.84</td>
-    </tr>
-    <tr>
-        <td>Precision (Coverage)</td>
-        <td>0.83</td>
-    </tr>
-    <tr>
-        <td>Recall (Coverage)</td>
-        <td>0.79</td>
-    </tr>
-    <tr>
-        <td>Inference Time (NPU)</td>
-        <td>85-95 ms</td>
-    </tr>
-    <tr>
-        <td>Model Size (Quantized)</td>
-        <td>3.2 MB</td>
-    </tr>
-</table>
-
-<div class="page-break"></div>
-
-<h2>3. Data Collection Methodology</h2>
-
-<h3>3.1 NASA Battery Data Collection</h3>
-
-<ul>
-    <li><strong>Test Equipment:</strong> Arbin battery cyclers with temperature chambers</li>
-    <li><strong>Charge Protocol:</strong> Constant Current-Constant Voltage (CC-CV) at 1.5A until 4.2V</li>
-    <li><strong>Discharge Protocol:</strong> Constant Current at 2A until 2.7V cutoff</li>
-    <li><strong>Sampling Rate:</strong> 1 Hz (1 measurement per second)</li>
-    <li><strong>Capacity Test Frequency:</strong> Every 100 cycles</li>
-</ul>
-
-<h3>3.2 Solar Panel Image Collection</h3>
-
-<ul>
-    <li><strong>Camera Types:</strong> Drones, ground-mounted cameras, handheld devices</li>
-    <li><strong>Lighting Conditions:</strong> Full sunlight, overcast, dawn/dusk</li>
-    <li><strong>Viewing Angles:</strong> Perpendicular (90°) and oblique (30-60°)</li>
-    <li><strong>Annotation Tool:</strong> Roboflow Annotate (manual bounding box labeling)</li>
-    <li><strong>Quality Control:</strong> Double-checked by multiple annotators</li>
-</ul>
-
-<div class="page-break"></div>
-
-<h2>4. Dataset Limitations & Future Work</h2>
-
-<h3>4.1 Current Limitations</h3>
-
-<div class="note">
-    <strong>NASA Battery Dataset:</strong>
-    <ul style="margin: 5px 0;">
-        <li>Limited to 18650 cells (not space-grade cells)</li>
-        <li>Temperature range narrower than space environments (-150°C to +150°C)</li>
-        <li>No radiation exposure data</li>
-    </ul>
-</div>
-
-<div class="note">
-    <strong>Solar Panel Dataset:</strong>
-    <ul style="margin: 5px 0;">
-        <li>Primarily Earth-based panels (not space solar arrays)</li>
-        <li>Limited micro-meteoroid impact examples</li>
-        <li>No vacuum environment images</li>
-    </ul>
-</div>
-
-<h3>4.2 Future Dataset Enhancements</h3>
-
-<ol>
-    <li><strong>Space-Grade Battery Data:</strong> Collaborate with space agencies for actual satellite battery telemetry</li>
-    <li><strong>Synthetic Data Generation:</strong> Use GANs to generate space-specific anomalies</li>
-    <li><strong>Multi-Spectral Imagery:</strong> Infrared and UV images for better anomaly detection</li>
-    <li><strong>Temporal Sequences:</strong> Video data for tracking degradation over time</li>
-</ol>
-
-<div style="margin-top: 40px; padding-top: 15px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 9pt; color: #6b7280;">
-    <p><strong>Dataset Documentation - Solar-Battery Node AI v1.0</strong></p>
-    <p>© 2026 Talgar Private Boarding School No. 1 | AEROO Space AI Competition 2026</p>
-</div>
+</script>
 
 </body>
 </html>

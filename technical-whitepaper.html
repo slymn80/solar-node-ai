@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar-Battery Node AI - Technical White Paper</title>
+
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
         @media print {
             body { margin: 0; padding: 20px; }
             .page-break { page-break-before: always; }
             @page { margin: 2cm; }
+            .lang-switcher { display: none !important; }
         }
 
         body {
@@ -47,6 +52,37 @@
             font-size: 14pt;
             color: #374151;
             margin-top: 15px;
+        }
+
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .lang-switcher button {
+            background: #e5e7eb;
+            border: none;
+            padding: 8px 16px;
+            margin: 0 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .lang-switcher button.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .lang-switcher button:hover {
+            transform: translateY(-2px);
         }
 
         .header {
@@ -150,609 +186,745 @@
         }
     </style>
 </head>
-<body>
+<body x-data="whitePaperApp()">
+
+<!-- Language Switcher -->
+<div class="lang-switcher">
+    <button @click="changeLang('en')" :class="currentLang === 'en' ? 'active' : ''">EN</button>
+    <button @click="changeLang('tr')" :class="currentLang === 'tr' ? 'active' : ''">TR</button>
+</div>
 
 <div class="header">
     <h1>Solar-Battery Node AI</h1>
-    <p style="font-size: 16pt; color: #2563eb; margin: 10px 0;">Technical White Paper</p>
-    <p style="font-size: 14pt; color: #374151;">Autonomous Solar Panel & Battery Health Monitoring System<br>with Edge AI and Computer Vision</p>
+    <p style="font-size: 16pt; color: #2563eb; margin: 10px 0;" x-text="t.subtitle"></p>
+    <p style="font-size: 14pt; color: #374151;" x-text="t.description"></p>
 </div>
 
 <div class="metadata">
-    <strong>Authors:</strong> Amir Dilovarov, Ayla Badalova<br>
-    <strong>Advisor:</strong> Süleyman Tongut, Computer Science Teacher, B.Sc. Electrical & Electronics Engineering<br>
-    <strong>Institution:</strong> Talgar Private Boarding School No. 1, Almaty Region, Kazakhstan<br>
-    <strong>Competition:</strong> AEROO Space AI Competition 2026 - Exploring the World of Science<br>
-    <strong>Date:</strong> January 2026<br>
-    <strong>Version:</strong> 1.0
+    <strong x-text="t.metadata.authors"></strong>: Amir Dilovarov, Ayla Badalova<br>
+    <strong x-text="t.metadata.advisor"></strong>: Süleyman Tongut, <span x-text="t.metadata.advisorTitle"></span><br>
+    <strong x-text="t.metadata.institution"></strong>: Talgar Private Boarding School No. 1, Almaty Region, Kazakhstan<br>
+    <strong x-text="t.metadata.competition"></strong>: AEROO Space AI Competition 2026 - Exploring the World of Science<br>
+    <strong x-text="t.metadata.date"></strong>: January 2026<br>
+    <strong x-text="t.metadata.version"></strong>: 1.0
 </div>
 
 <div class="abstract">
-    <h3 style="margin-top: 0;">Abstract</h3>
-    <p>This research presents an integrated autonomous monitoring system for solar-powered space missions, combining machine learning-based battery health prediction with computer vision anomaly detection. The system employs dual STM32 microcontrollers: an IoT discovery board for real-time environmental monitoring and ML inference, and an N6 development kit with dedicated Neural Processing Unit for vision-based solar panel diagnostics. Using NASA battery degradation datasets and Roboflow solar panel imagery, we achieved 92% prediction accuracy for Remaining Useful Life estimation and sub-100ms inference time for multi-class object detection. The system integrates real-time web and mobile monitoring interfaces, a GPT-4o-mini powered proactive assistant for context-aware maintenance recommendations, with comprehensive data logging via Google Drive API for mission-critical analytics. Beyond immediate space applications, this research follows NASA's technology transfer paradigm, where extreme environment validation creates commercially viable spin-offs for terrestrial solar energy monitoring, with future scalability through advanced material science sensor integration.</p>
-    <p><strong>Keywords:</strong> Machine Learning, Computer Vision, Edge AI, Battery Health Monitoring, Solar Panel Diagnostics, STM32 NPU, YOLO, Predictive Maintenance, NASA Dataset, Technology Transfer</p>
+    <h3 style="margin-top: 0;" x-text="t.abstract.title"></h3>
+    <p x-text="t.abstract.content"></p>
+    <p><strong x-text="t.abstract.keywords"></strong>: Machine Learning, Computer Vision, Edge AI, Battery Health Monitoring, Solar Panel Diagnostics, STM32 NPU, YOLO, Predictive Maintenance, NASA Dataset, Technology Transfer</p>
 </div>
 
 <div class="page-break"></div>
 
-<h2><span class="section-number">1.</span> Introduction</h2>
+<h2><span class="section-number">1.</span> <span x-text="t.section1.title"></span></h2>
 
-<h3>1.1 Problem Statement</h3>
-<p>Space missions face critical challenges in power system management:</p>
+<h3>1.1 <span x-text="t.section1.problem.title"></span></h3>
+<p x-text="t.section1.problem.intro"></p>
 <ul>
-    <li><strong>Battery Degradation:</strong> Harsh environments with extreme temperatures (-150°C to +150°C) and radiation exposure cause accelerated battery degradation, reducing mission lifespan and increasing failure risk.</li>
-    <li><strong>Solar Panel Efficiency Loss:</strong> Dust accumulation, micro-meteoroid impacts, and debris coverage lead to significant power generation losses, sometimes exceeding 30% within months.</li>
-    <li><strong>Limited Diagnostic Capabilities:</strong> Traditional monitoring systems lack predictive maintenance capabilities, resulting in reactive rather than proactive responses to critical failures.</li>
-    <li><strong>Computational Constraints:</strong> Limited on-board computational resources in space environments demand energy-efficient AI inference solutions.</li>
-    <li><strong>Communication Delays:</strong> Deep-space missions experience communication latencies of minutes to hours, necessitating autonomous decision-making capabilities.</li>
+    <template x-for="item in t.section1.problem.items" :key="item">
+        <li x-html="item"></li>
+    </template>
 </ul>
 
-<h3>1.2 Proposed Solution</h3>
-<p>The Solar-Battery Node AI system addresses these challenges through a dual-microcontroller architecture combining ML-powered predictive analytics with NPU-accelerated computer vision:</p>
+<h3>1.2 <span x-text="t.section1.solution.title"></span></h3>
+<p x-text="t.section1.solution.intro"></p>
 
 <table>
     <tr>
-        <th>Component</th>
-        <th>Technology</th>
-        <th>Key Metric</th>
+        <th x-text="t.section1.solution.table.component"></th>
+        <th x-text="t.section1.solution.table.technology"></th>
+        <th x-text="t.section1.solution.table.metric"></th>
     </tr>
     <tr>
-        <td>Battery Health Prediction</td>
-        <td>Random Forest Regressor trained on NASA dataset</td>
-        <td>92% prediction accuracy</td>
+        <td x-text="t.section1.solution.rows.battery.component"></td>
+        <td x-text="t.section1.solution.rows.battery.technology"></td>
+        <td x-text="t.section1.solution.rows.battery.metric"></td>
     </tr>
     <tr>
-        <td>Solar Panel Diagnostics</td>
-        <td>YOLOv8 INT8 quantized on STM32N6 NPU</td>
-        <td>&lt;100ms inference time</td>
+        <td x-text="t.section1.solution.rows.vision.component"></td>
+        <td x-text="t.section1.solution.rows.vision.technology"></td>
+        <td x-text="t.section1.solution.rows.vision.metric"></td>
     </tr>
     <tr>
-        <td>Proactive AI Assistant</td>
-        <td>GPT-4o-mini with real-time context</td>
-        <td>80% reduction in human intervention</td>
-    </tr>
-    <tr>
-        <td>Data Logging</td>
-        <td>Google Drive API with OAuth 2.0</td>
-        <td>Mission-critical event persistence</td>
+        <td x-text="t.section1.solution.rows.ai.component"></td>
+        <td x-text="t.section1.solution.rows.ai.technology"></td>
+        <td x-text="t.section1.solution.rows.ai.metric"></td>
     </tr>
 </table>
 
 <div class="page-break"></div>
 
-<h2><span class="section-number">2.</span> System Architecture</h2>
+<h2><span class="section-number">2.</span> <span x-text="t.section2.title"></span></h2>
 
-<h3>2.1 Hardware Components</h3>
+<h3>2.1 <span x-text="t.section2.hardware.title"></span></h3>
+<p x-text="t.section2.hardware.intro"></p>
 
-<h4>2.1.1 STM32 B-L475E-IOT01A Discovery Kit</h4>
-<p><strong>Role:</strong> Battery & Environmental Monitoring</p>
+<h4 x-text="t.section2.hardware.iot.title"></h4>
 <ul>
-    <li><strong>MCU:</strong> STM32L475VGT6 (ARM Cortex-M4, 80 MHz)</li>
-    <li><strong>Connectivity:</strong> WiFi 802.11 b/g/n (Inventek ISM43362-M3G-L44)</li>
-    <li><strong>Sensors:</strong>
-        <ul>
-            <li>HTS221: Temperature & Humidity</li>
-            <li>LPS22HB: Barometric Pressure</li>
-            <li>LSM6DSL: 6-axis Accelerometer + Gyroscope</li>
-        </ul>
-    </li>
-    <li><strong>Memory:</strong> 1 MB Flash, 128 KB SRAM</li>
-    <li><strong>Implementation:</strong> HTTP server for telemetry data, LED status indicators, UART debugging</li>
+    <template x-for="spec in t.section2.hardware.iot.specs" :key="spec">
+        <li x-html="spec"></li>
+    </template>
 </ul>
 
-<h4>2.1.2 STM32N6570-DK Discovery Kit</h4>
-<p><strong>Role:</strong> Computer Vision & Object Detection</p>
+<h4 x-text="t.section2.hardware.npu.title"></h4>
 <ul>
-    <li><strong>MCU:</strong> STM32N657XX (ARM Cortex-M55 + NPU)</li>
-    <li><strong>NPU:</strong> Dedicated Neural Processing Unit for AI acceleration</li>
-    <li><strong>Camera Interface:</strong> CSI-2 MIPI (supports IMX335 5MP sensor)</li>
-    <li><strong>Display:</strong> Onboard LCD with LTDC dual-layer controller</li>
-    <li><strong>Memory:</strong>
-        <ul>
-            <li>Internal SRAM: 2 MB</li>
-            <li>External PSRAM: 32 MB</li>
-            <li>External Flash: 128 MB (MX66UW1G45G)</li>
-        </ul>
-    </li>
-    <li><strong>Implementation:</strong> DCMIPP dual-pipeline for simultaneous display and inference, ISP for image enhancement</li>
+    <template x-for="spec in t.section2.hardware.npu.specs" :key="spec">
+        <li x-html="spec"></li>
+    </template>
 </ul>
 
-<h3>2.2 Software Stack</h3>
-
-<h4>2.2.1 Embedded Firmware (C)</h4>
+<h3>2.2 <span x-text="t.section2.software.title"></span></h3>
 <ul>
-    <li><strong>Compiler:</strong> ARM GCC</li>
-    <li><strong>HAL:</strong> STM32L4xx / STM32N6xx HAL Drivers</li>
-    <li><strong>Execution Model:</strong> Bare-metal (no RTOS)</li>
-    <li><strong>AI Framework:</strong> STEdgeAI Core v2.2.0</li>
-    <li><strong>Camera Middleware:</strong> CMW Camera Library with ISP integration</li>
+    <template x-for="item in t.section2.software.stack" :key="item">
+        <li x-html="item"></li>
+    </template>
 </ul>
 
-<h4>2.2.2 Backend (Python Flask)</h4>
+<h3>2.3 <span x-text="t.section2.datasets.title"></span></h3>
+
+<h4 x-text="t.section2.datasets.vision.title"></h4>
 <ul>
-    <li><strong>Framework:</strong> Flask 2.x with CORS support</li>
-    <li><strong>ML Library:</strong> scikit-learn 1.3+ (Random Forest implementation)</li>
-    <li><strong>AI Integration:</strong> OpenAI GPT-4o-mini API</li>
-    <li><strong>Cloud Storage:</strong> Google Drive API v3 with OAuth 2.0 authentication</li>
-    <li><strong>Data Processing:</strong> NumPy, Pandas for data normalization and analysis</li>
+    <template x-for="item in t.section2.datasets.vision.details" :key="item">
+        <li x-html="item"></li>
+    </template>
 </ul>
 
-<h4>2.2.3 Frontend (Web Dashboard)</h4>
+<h4 x-text="t.section2.datasets.battery.title"></h4>
 <ul>
-    <li><strong>Language:</strong> Vanilla JavaScript (ES6+), no framework dependencies</li>
-    <li><strong>Visualization:</strong> HTML5 Canvas for real-time solar panel rendering</li>
-    <li><strong>Storage:</strong> localStorage for IP configuration persistence</li>
-    <li><strong>Styling:</strong> CSS3 with gradients, flexbox, and animations</li>
-</ul>
-
-<h4>2.2.4 Mobile Application (Flutter)</h4>
-<ul>
-    <li><strong>Framework:</strong> Flutter 3.10+ (Dart SDK)</li>
-    <li><strong>Architecture:</strong> Material Design 3 with custom theming</li>
-    <li><strong>State Management:</strong> StatefulWidget with setState pattern</li>
-    <li><strong>Localization:</strong> Multi-language support (English, Russian)</li>
-    <li><strong>Network:</strong> JSON-based REST API over HTTP/HTTPS</li>
-    <li><strong>Build Output:</strong> APK (44 MB), optimized with tree-shaking</li>
+    <template x-for="item in t.section2.datasets.battery.details" :key="item">
+        <li x-html="item"></li>
+    </template>
 </ul>
 
 <div class="page-break"></div>
 
-<h2><span class="section-number">3.</span> Machine Learning Implementation</h2>
+<h2><span class="section-number">3.</span> <span x-text="t.section3.title"></span></h2>
 
-<h3>3.1 Battery Health Prediction Model</h3>
+<h3>3.1 <span x-text="t.section3.battery.title"></span></h3>
+<p x-text="t.section3.battery.intro"></p>
 
-<h4>3.1.1 Dataset</h4>
-<p><strong>Source:</strong> NASA Battery Degradation Dataset</p>
+<h4 x-text="t.section3.battery.features.title"></h4>
 <ul>
-    <li><strong>Samples:</strong> 124 Li-ion cells under various operating conditions</li>
-    <li><strong>Features:</strong> Temperature (°C), Voltage (V), Current (A), Cycle Count, Capacity Fade (%)</li>
-    <li><strong>Target Variable:</strong> Remaining Useful Life (RUL) percentage</li>
-    <li><strong>Data Preprocessing:</strong> StandardScaler normalization, outlier removal, train-test split (80/20)</li>
+    <template x-for="feature in t.section3.battery.features.items" :key="feature">
+        <li x-html="feature"></li>
+    </template>
 </ul>
 
-<h4>3.1.2 Model Architecture</h4>
-<p><strong>Algorithm:</strong> Random Forest Regressor</p>
-<ul>
-    <li><strong>Hyperparameters:</strong>
-        <ul>
-            <li>Number of estimators: 100</li>
-            <li>Max depth: 20</li>
-            <li>Min samples split: 5</li>
-            <li>Min samples leaf: 2</li>
-        </ul>
-    </li>
-    <li><strong>Training Accuracy:</strong> 95.3%</li>
-    <li><strong>Test Accuracy:</strong> 92.1%</li>
-    <li><strong>Mean Absolute Error:</strong> 3.8%</li>
-    <li><strong>R² Score:</strong> 0.92</li>
-</ul>
+<h4 x-text="t.section3.battery.training.title"></h4>
+<p x-text="t.section3.battery.training.content"></p>
 
-<h3>3.2 Computer Vision Object Detection</h3>
-
-<h4>3.2.1 Dataset</h4>
-<p><strong>Source:</strong> Roboflow Solar Panel Anomaly Dataset</p>
-<ul>
-    <li><strong>Images:</strong> 4,000+ annotated solar panel images</li>
-    <li><strong>Classes:</strong> 4 categories
-        <ul>
-            <li>Normal: Healthy panel areas</li>
-            <li>Dust: Accumulation requiring cleaning</li>
-            <li>Crack: Structural damage</li>
-            <li>Coverage: Obstruction by debris</li>
-        </ul>
-    </li>
-    <li><strong>Augmentation:</strong> Rotation, flipping, brightness adjustment, noise injection</li>
-</ul>
-
-<h4>3.2.2 Model Architecture</h4>
-<p><strong>Base Model:</strong> YOLOv8 Nano</p>
-<ul>
-    <li><strong>Quantization:</strong> INT8 post-training quantization for NPU compatibility</li>
-    <li><strong>Input Resolution:</strong> 320×320 RGB</li>
-    <li><strong>Output:</strong> Bounding boxes with class probabilities and confidence scores</li>
-    <li><strong>Deployment:</strong> STEdgeAI code generation for STM32N6 NPU</li>
-    <li><strong>Inference Time:</strong> 85-95ms per frame</li>
-    <li><strong>Mean Average Precision (mAP):</strong> 0.87 @ IoU 0.5</li>
-</ul>
-
-<div class="page-break"></div>
-
-<h2><span class="section-number">4.</span> Technical Implementation</h2>
-
-<h3>4.1 Dual-Pipeline Camera Architecture</h3>
-
-<p>The STM32N6 DCMIPP (Digital Camera Interface Pixel Pipeline) enables simultaneous display and inference:</p>
-
-<h4>Pipeline 1: Continuous Display Feed</h4>
-<div class="code">
-CMW_CAMERA_PipeStart(
-    0,                          // Camera instance
-    DCMIPP_PIPE1,               // Pipe 1
-    lcd_bg_framebuffer,         // LTDC background layer
-    CAMERA_MODE_CONTINUOUS,     // Continuous capture
-    SCREEN_WIDTH,               // Output width
-    SCREEN_HEIGHT               // Output height
-);
-</div>
-
-<h4>Pipeline 2: Snapshot for AI Inference</h4>
-<div class="code">
-CMW_CAMERA_PipeStart(
-    0,                          // Camera instance
-    DCMIPP_PIPE2,               // Pipe 2
-    nn_input_buffer,            // Neural network input
-    CAMERA_MODE_SNAPSHOT,       // Single frame
-    NN_INPUT_WIDTH,             // Model input width (320)
-    NN_INPUT_HEIGHT             // Model input height (320)
-);
-
-// Wait for capture complete
-while (CMW_CAMERA_IsPipeCaptureDone(0, DCMIPP_PIPE2) == 0);
-</div>
-
-<h3>4.2 NPU Inference Pipeline</h3>
-
-<div class="code">
-// 1. Capture frame from camera
-CMW_CAMERA_Start(0, DCMIPP_PIPE2, nn_input_buffer, CAMERA_MODE_SNAPSHOT);
-
-// 2. Preprocess (normalization, format conversion)
-preprocess_image(nn_input_buffer, network_input);
-
-// 3. NPU inference
-ll_aton_rt_invoke(NN_INSTANCE(Default), network_input, network_output);
-
-// 4. Post-processing (parse YOLO output)
-postprocess_detections(network_output, detections, &num_detections);
-
-// 5. Visualization
-draw_bounding_boxes(detections, num_detections);
-</div>
-
-<h3>4.3 Proactive AI Assistant Logic</h3>
-
-<p>The GPT-4o-mini assistant monitors system state and generates contextual alerts:</p>
-
+<h4 x-text="t.section3.battery.performance.title"></h4>
 <table>
     <tr>
-        <th>Condition</th>
-        <th>Trigger</th>
-        <th>Alert Example</th>
+        <th x-text="t.section3.battery.performance.table.metric"></th>
+        <th x-text="t.section3.battery.performance.table.value"></th>
     </tr>
     <tr>
-        <td>Critical Battery</td>
-        <td>RUL &lt; 20%</td>
-        <td>"🚨 URGENT: Battery at 15% health. Mission-critical replacement needed within 48 hours."</td>
+        <td x-text="t.section3.battery.performance.rows.r2.metric"></td>
+        <td x-text="t.section3.battery.performance.rows.r2.value"></td>
     </tr>
     <tr>
-        <td>Panel Degradation</td>
-        <td>Health &lt; 30% + 5+ anomalies</td>
-        <td>"⚠️ Solar panel efficiency at 28%. Detected 7 dust spots and 2 cracks. Recommend immediate cleaning."</td>
+        <td x-text="t.section3.battery.performance.rows.mae.metric"></td>
+        <td x-text="t.section3.battery.performance.rows.mae.value"></td>
     </tr>
     <tr>
-        <td>Temperature Anomaly</td>
-        <td>Temp &lt; 0°C or &gt; 45°C</td>
-        <td>"🌡️ Thermal alert: 48°C detected. Activate cooling protocols to prevent thermal runaway."</td>
-    </tr>
-    <tr>
-        <td>Rapid Degradation</td>
-        <td>RUL drop &gt; 5% in 24h</td>
-        <td>"📉 Accelerated degradation: 8% health loss in 1 day. Check for load anomalies or cell imbalance."</td>
+        <td x-text="t.section3.battery.performance.rows.inference.metric"></td>
+        <td x-text="t.section3.battery.performance.rows.inference.value"></td>
     </tr>
 </table>
 
-<h3>4.4 Data Logging System</h3>
+<h3>3.2 <span x-text="t.section3.vision.title"></span></h3>
+<p x-text="t.section3.vision.intro"></p>
 
-<p><strong>Dual-Mode Logging Strategy:</strong></p>
+<h4 x-text="t.section3.vision.classes.title"></h4>
+<ul>
+    <template x-for="cls in t.section3.vision.classes.items" :key="cls">
+        <li x-html="cls"></li>
+    </template>
+</ul>
 
-<ol>
-    <li><strong>Critical Event Logging:</strong> Immediate upload to Google Drive upon threshold breach
-        <ul>
-            <li>9 event types: Battery emergency, panel critical, temperature anomaly, etc.</li>
-            <li>JSON format with complete system state snapshot</li>
-            <li>OAuth 2.0 authentication for secure cloud access</li>
-        </ul>
-    </li>
-    <li><strong>Periodic Snapshots:</strong> Hourly system state capture for trend analysis
-        <ul>
-            <li>Local filesystem backup for offline operation</li>
-            <li>Automated synchronization when connectivity restored</li>
-            <li>Retention policy: 30 days local, unlimited cloud</li>
-        </ul>
-    </li>
-</ol>
-
-<div class="page-break"></div>
-
-<h2><span class="section-number">5.</span> Innovation Highlights</h2>
-
-<h3>5.1 NPU-Accelerated Edge AI</h3>
+<h4 x-text="t.section3.vision.performance.title"></h4>
 <table>
     <tr>
-        <th>Approach</th>
-        <th>Processing Time</th>
-        <th>Power Consumption</th>
+        <th x-text="t.section3.vision.performance.table.class"></th>
+        <th x-text="t.section3.vision.performance.table.precision"></th>
+        <th x-text="t.section3.vision.performance.table.recall"></th>
     </tr>
-    <tr>
-        <td>Traditional CPU Inference</td>
-        <td>2-5 seconds per frame</td>
-        <td>500-1000 mW</td>
-    </tr>
-    <tr>
-        <td><strong>Our NPU Solution</strong></td>
-        <td><strong>&lt;100ms per frame</strong></td>
-        <td><strong>50-100 mW</strong></td>
-    </tr>
-    <tr>
-        <td>Improvement</td>
-        <td>20-50x faster</td>
-        <td>90% reduction</td>
-    </tr>
+    <template x-for="row in t.section3.vision.performance.rows" :key="row.class">
+        <tr>
+            <td x-text="row.class"></td>
+            <td x-text="row.precision"></td>
+            <td x-text="row.recall"></td>
+        </tr>
+    </template>
 </table>
 
-<h3>5.2 Adaptive ISP for Extreme Environments</h3>
-<p>The Image Signal Processor dynamically adjusts for variable lighting conditions:</p>
-<ul>
-    <li><strong>Automatic White Balance:</strong> Compensates for color temperature shifts in deep space</li>
-    <li><strong>Exposure Control:</strong> Handles extreme brightness ranges (planetary albedo variations)</li>
-    <li><strong>Noise Reduction:</strong> Mitigates sensor noise in low-light conditions</li>
-    <li><strong>Contrast Enhancement:</strong> Improves detection accuracy in challenging scenes</li>
-</ul>
+<h3>3.3 <span x-text="t.section3.ai.title"></span></h3>
+<p x-text="t.section3.ai.content"></p>
 
-<h3>5.3 Boot-from-Flash Reliability</h3>
-<p>Persistent firmware storage ensures mission continuity:</p>
+<div class="page-break"></div>
+
+<h2><span class="section-number">4.</span> <span x-text="t.section4.title"></span></h2>
+
+<h3>4.1 <span x-text="t.section4.web.title"></span></h3>
+<p x-text="t.section4.web.content"></p>
+
+<h3>4.2 <span x-text="t.section4.mobile.title"></span></h3>
+<p x-text="t.section4.mobile.content"></p>
+
+<h3>4.3 <span x-text="t.section4.cloud.title"></span></h3>
+<p x-text="t.section4.cloud.content"></p>
+
+<div class="page-break"></div>
+
+<h2><span class="section-number">5.</span> <span x-text="t.section5.title"></span></h2>
+
+<h3>5.1 <span x-text="t.section5.space.title"></span></h3>
+<p x-text="t.section5.space.content"></p>
+
+<h3>5.2 <span x-text="t.section5.transfer.title"></span></h3>
+<p x-text="t.section5.transfer.content"></p>
+
+<h3>5.3 <span x-text="t.section5.commercial.title"></span></h3>
 <ul>
-    <li><strong>First Stage Boot Loader (FSBL):</strong> Initializes external flash and loads application</li>
-    <li><strong>Radiation Tolerance:</strong> Survives single-event upsets with automatic recovery</li>
-    <li><strong>Power Cycle Resilience:</strong> No configuration loss after power interruptions</li>
-    <li><strong>Firmware Updates:</strong> Over-the-air capable for in-mission updates</li>
+    <template x-for="market in t.section5.commercial.markets" :key="market">
+        <li x-html="market"></li>
+    </template>
 </ul>
 
 <div class="page-break"></div>
 
-<h2><span class="section-number">6.</span> Business Model & Technology Transfer</h2>
-
-<h3>6.1 NASA Technology Transfer Paradigm</h3>
-<p>This project follows the proven NASA model where space-validated technologies create commercial spin-offs:</p>
-
-<table>
-    <tr>
-        <th>Phase</th>
-        <th>Focus</th>
-        <th>Timeline</th>
-    </tr>
-    <tr>
-        <td>Phase 1: Space R&D</td>
-        <td>Academic research, space agency collaboration, ISS experiment proposals</td>
-        <td>2026-2027</td>
-    </tr>
-    <tr>
-        <td>Phase 2: Material Science</td>
-        <td>Advanced sensor integration, solar panel material monitoring</td>
-        <td>2027-2028</td>
-    </tr>
-    <tr>
-        <td>Phase 3: Technology Transfer</td>
-        <td>Commercial applications using space-validated algorithms</td>
-        <td>2028+</td>
-    </tr>
-</table>
-
-<h3>6.2 Commercialization Pathway</h3>
-
-<h4>Target Markets (Post Space Validation)</h4>
-<ol>
-    <li><strong>Large-Scale Solar Farms:</strong> Predictive maintenance for 1000+ panel installations</li>
-    <li><strong>Remote Infrastructure:</strong> Off-grid telecom towers, weather stations</li>
-    <li><strong>Data Centers:</strong> Backup solar power monitoring with SLA guarantees</li>
-    <li><strong>Residential Solar:</strong> Consumer-grade health monitoring for home installations</li>
-</ol>
-
-<h4>Revenue Model</h4>
-<ul>
-    <li><strong>R&D Grants (2026-2027):</strong> Space agency funding, university research grants</li>
-    <li><strong>Technology Licensing:</strong> Royalty-based model for validated algorithms</li>
-    <li><strong>Commercial Products (Post-2027):</strong> Hardware sales + SaaS subscriptions</li>
-</ul>
-
-<div class="page-break"></div>
-
-<h2><span class="section-number">7.</span> Performance Evaluation</h2>
-
-<h3>7.1 Quantitative Results</h3>
-
-<table>
-    <tr>
-        <th>Metric</th>
-        <th>Target</th>
-        <th>Achieved</th>
-        <th>Status</th>
-    </tr>
-    <tr>
-        <td>Battery RUL Prediction Accuracy</td>
-        <td>&gt;90%</td>
-        <td>92.1%</td>
-        <td>✅ Exceeded</td>
-    </tr>
-    <tr>
-        <td>Vision Inference Time</td>
-        <td>&lt;100ms</td>
-        <td>85-95ms</td>
-        <td>✅ Met</td>
-    </tr>
-    <tr>
-        <td>Object Detection mAP</td>
-        <td>&gt;0.80</td>
-        <td>0.87</td>
-        <td>✅ Exceeded</td>
-    </tr>
-    <tr>
-        <td>Power Consumption (NPU)</td>
-        <td>&lt;200mW</td>
-        <td>50-100mW</td>
-        <td>✅ Exceeded</td>
-    </tr>
-    <tr>
-        <td>System Latency (End-to-End)</td>
-        <td>&lt;1s</td>
-        <td>0.5-0.8s</td>
-        <td>✅ Met</td>
-    </tr>
-</table>
-
-<h3>7.2 Mission Impact Assessment</h3>
-
-<table>
-    <tr>
-        <th>Impact Area</th>
-        <th>Baseline</th>
-        <th>With Our System</th>
-        <th>Improvement</th>
-    </tr>
-    <tr>
-        <td>Battery Lifespan Extension</td>
-        <td>2 years</td>
-        <td>2.5-2.6 years</td>
-        <td>+20-30%</td>
-    </tr>
-    <tr>
-        <td>Solar Panel Efficiency Maintenance</td>
-        <td>70-75% after 1 year</td>
-        <td>92-95% with alerts</td>
-        <td>+22-25%</td>
-    </tr>
-    <tr>
-        <td>Human Intervention Required</td>
-        <td>Daily manual checks</td>
-        <td>Weekly review of alerts</td>
-        <td>-80%</td>
-    </tr>
-    <tr>
-        <td>Critical Failure Prediction</td>
-        <td>Reactive (post-failure)</td>
-        <td>48-72h advance warning</td>
-        <td>Proactive</td>
-    </tr>
-</table>
-
-<div class="page-break"></div>
-
-<h2><span class="section-number">8.</span> Future Enhancements</h2>
-
-<h3>8.1 Phase 1: Enhanced Detection (Q2 2026)</h3>
-<ul>
-    <li>Multi-model fusion combining YOLO with depth estimation</li>
-    <li>Object tracking across frames using Kalman filtering</li>
-    <li>3D bounding box estimation from monocular camera</li>
-    <li>Optical flow for motion estimation and stabilization</li>
-</ul>
-
-<h3>8.2 Phase 2: Advanced AI (Q3 2026)</h3>
-<ul>
-    <li>Semantic segmentation for pixel-level panel analysis</li>
-    <li>Instance segmentation to separate overlapping anomalies</li>
-    <li>Pose estimation for robotic maintenance arm guidance</li>
-    <li>Face recognition for crew identification and access control</li>
-</ul>
-
-<h3>8.3 Phase 3: Sensor Fusion (Q4 2026)</h3>
-<ul>
-    <li>IMU integration for stable object tracking during vibration</li>
-    <li>GPS/GNSS data overlay for geo-tagging events</li>
-    <li>LIDAR fusion for accurate depth measurement</li>
-    <li>Thermal camera support for night vision and heat anomaly detection</li>
-</ul>
-
-<h3>8.4 Phase 4: Space Hardening (2027)</h3>
-<ul>
-    <li>Radiation-tolerant memory with Error Correction Code (ECC)</li>
-    <li>Redundant processing pipelines for fault tolerance</li>
-    <li>Watchdog timer for autonomous recovery from lockups</li>
-    <li>Thermal throttling algorithms for extreme temperature management</li>
-</ul>
-
-<div class="page-break"></div>
-
-<h2><span class="section-number">9.</span> Conclusion</h2>
-
-<p>The Solar-Battery Node AI system successfully demonstrates the feasibility of autonomous power system monitoring for space missions through the integration of machine learning, computer vision, and edge AI technologies. Key achievements include:</p>
+<h2><span class="section-number">6.</span> <span x-text="t.section6.title"></span></h2>
+<p x-text="t.section6.content"></p>
 
 <ul>
-    <li><strong>92% Battery Health Prediction Accuracy:</strong> Trained on NASA datasets, enabling proactive maintenance</li>
-    <li><strong>Sub-100ms Vision Inference:</strong> NPU-accelerated real-time anomaly detection</li>
-    <li><strong>80% Reduction in Human Intervention:</strong> AI-powered proactive alerts minimize manual oversight</li>
-    <li><strong>Mission-Critical Data Logging:</strong> Cloud-based persistent storage with offline resilience</li>
+    <template x-for="item in t.section6.achievements" :key="item">
+        <li x-html="item"></li>
+    </template>
 </ul>
 
-<p>The dual-microcontroller architecture balances computational efficiency with functional specialization, leveraging STM32's ecosystem for rapid prototyping and deployment. The NPU-accelerated vision system achieves performance previously requiring dedicated GPUs while consuming only 50-100mW.</p>
-
-<p>Following NASA's technology transfer paradigm, this space-validated system creates pathways for commercial applications in terrestrial solar energy monitoring, with potential markets including large-scale solar farms, remote infrastructure, and data centers.</p>
-
-<p>Future enhancements focusing on sensor fusion, advanced segmentation, and space-grade hardening will further improve system reliability and expand mission applicability to long-duration deep-space operations.</p>
-
-<div class="page-break"></div>
-
-<h2><span class="section-number">10.</span> References</h2>
-
-<ol style="font-size: 10pt;">
-    <li>NASA Battery Dataset: <em>Li-ion Battery Aging Datasets</em>, NASA Ames Prognostics Center of Excellence, 2008-2018.</li>
-    <li>Roboflow Solar Panel Dataset: <em>Solar Panel Anomaly Detection Dataset</em>, Roboflow Universe, 2024.</li>
-    <li>STMicroelectronics: <em>STM32N6 Reference Manual</em>, STMicroelectronics, 2024.</li>
-    <li>STEdgeAI Documentation: <em>STEdgeAI Developer Guide v2.2.0</em>, STMicroelectronics, 2024.</li>
-    <li>Ultralytics YOLOv8: <em>YOLOv8 Documentation</em>, Ultralytics, 2023.</li>
-    <li>OpenAI GPT-4o-mini: <em>GPT-4o-mini Technical Report</em>, OpenAI, 2024.</li>
-    <li>Google Drive API: <em>Drive API v3 Reference</em>, Google Cloud Platform, 2024.</li>
-    <li>ARM Cortex-M55: <em>Cortex-M55 Technical Reference Manual</em>, ARM Limited, 2023.</li>
-    <li>Flutter Framework: <em>Flutter 3.10 Documentation</em>, Google, 2023.</li>
-    <li>scikit-learn: <em>Random Forest Regressor Documentation</em>, scikit-learn developers, 2024.</li>
-</ol>
-
-<div class="page-break"></div>
-
-<h2>Appendix A: Hardware Specifications</h2>
-
-<h3>STM32 B-L475E-IOT01A Complete Specifications</h3>
-<table>
-    <tr><th>Parameter</th><th>Specification</th></tr>
-    <tr><td>MCU</td><td>STM32L475VGT6 (Ultra-low-power)</td></tr>
-    <tr><td>Core</td><td>ARM Cortex-M4F @ 80 MHz</td></tr>
-    <tr><td>Flash Memory</td><td>1 MB</td></tr>
-    <tr><td>SRAM</td><td>128 KB</td></tr>
-    <tr><td>WiFi Module</td><td>Inventek ISM43362-M3G-L44</td></tr>
-    <tr><td>WiFi Standards</td><td>802.11 b/g/n (2.4 GHz)</td></tr>
-    <tr><td>Temperature Sensor</td><td>HTS221 (-40°C to +120°C)</td></tr>
-    <tr><td>Humidity Sensor</td><td>HTS221 (0-100% RH)</td></tr>
-    <tr><td>Pressure Sensor</td><td>LPS22HB (260-1260 hPa)</td></tr>
-    <tr><td>Accelerometer</td><td>LSM6DSL (±2/±4/±8/±16 g)</td></tr>
-    <tr><td>Gyroscope</td><td>LSM6DSL (±125/±245/±500/±1000/±2000 dps)</td></tr>
-    <tr><td>Power Supply</td><td>USB or External Battery</td></tr>
-    <tr><td>Operating Voltage</td><td>3.3V</td></tr>
-    <tr><td>Dimensions</td><td>90mm × 65mm</td></tr>
-</table>
-
-<h3>STM32N6570-DK Complete Specifications</h3>
-<table>
-    <tr><th>Parameter</th><th>Specification</th></tr>
-    <tr><td>MCU</td><td>STM32N657X0H3QU</td></tr>
-    <tr><td>Core</td><td>ARM Cortex-M55 @ 600 MHz</td></tr>
-    <tr><td>NPU</td><td>Dedicated AI Accelerator (INT8/INT16)</td></tr>
-    <tr><td>Internal SRAM</td><td>2 MB</td></tr>
-    <tr><td>External PSRAM</td><td>32 MB (APS256XXN)</td></tr>
-    <tr><td>External Flash</td><td>128 MB (MX66UW1G45G)</td></tr>
-    <tr><td>Camera Interface</td><td>CSI-2 MIPI (2/4-lane)</td></tr>
-    <tr><td>Display Interface</td><td>LTDC with dual-layer support</td></tr>
-    <tr><td>Onboard LCD</td><td>High-resolution color display</td></tr>
-    <tr><td>DCMIPP Pipelines</td><td>2 independent pipelines</td></tr>
-    <tr><td>ISP Features</td><td>AWB, AE, Noise Reduction</td></tr>
-    <tr><td>Debug Interface</td><td>ST-LINK V3 onboard</td></tr>
-    <tr><td>Power Supply</td><td>USB-C (requires C-to-C cable)</td></tr>
-    <tr><td>Operating Voltage</td><td>3.3V (I/O), 1.8V (Core)</td></tr>
-</table>
+<h3 x-text="t.section6.future.title"></h3>
+<ul>
+    <template x-for="item in t.section6.future.items" :key="item">
+        <li x-html="item"></li>
+    </template>
+</ul>
 
 <div class="footer">
-    <p><strong>Solar-Battery Node AI Technical White Paper v1.0</strong></p>
-    <p>© 2026 Talgar Private Boarding School No. 1 | AEROO Space AI Competition 2026</p>
+    <p x-text="t.footer.main"></p>
+    <p x-text="t.footer.competition"></p>
+    <p x-text="t.footer.copyright"></p>
 </div>
+
+<script>
+function whitePaperApp() {
+    return {
+        currentLang: localStorage.getItem('whitepaper-lang') || 'en',
+
+        translations: {
+            en: {
+                subtitle: 'Technical White Paper',
+                description: 'Autonomous Solar Panel & Battery Health Monitoring System with Edge AI and Computer Vision',
+                metadata: {
+                    authors: 'Authors',
+                    advisor: 'Advisor',
+                    advisorTitle: 'Computer Science Teacher, B.Sc. Electrical & Electronics Engineering',
+                    institution: 'Institution',
+                    competition: 'Competition',
+                    date: 'Date',
+                    version: 'Version'
+                },
+                abstract: {
+                    title: 'Abstract',
+                    content: 'This research presents an integrated autonomous monitoring system for solar-powered space missions, combining machine learning-based battery health prediction with computer vision anomaly detection. The system employs dual STM32 microcontrollers: an IoT discovery board for real-time environmental monitoring and ML inference, and an N6 development kit with dedicated Neural Processing Unit for vision-based solar panel diagnostics. Using NASA battery degradation datasets and Roboflow solar panel imagery, we achieved 92% prediction accuracy for Remaining Useful Life estimation and sub-100ms inference time for multi-class object detection. The system integrates real-time web and mobile monitoring interfaces, a GPT-4o-mini powered proactive assistant for context-aware maintenance recommendations, with comprehensive data logging via Google Drive API for mission-critical analytics. Beyond immediate space applications, this research follows NASA\'s technology transfer paradigm, where extreme environment validation creates commercially viable spin-offs for terrestrial solar energy monitoring, with future scalability through advanced material science sensor integration.',
+                    keywords: 'Keywords'
+                },
+                section1: {
+                    title: 'Introduction',
+                    problem: {
+                        title: 'Problem Statement',
+                        intro: 'Space missions face critical challenges in power system management:',
+                        items: [
+                            '<strong>Battery Degradation:</strong> Harsh environments with extreme temperatures (-150°C to +150°C) and radiation exposure cause accelerated battery degradation, reducing mission lifespan and increasing failure risk.',
+                            '<strong>Solar Panel Efficiency Loss:</strong> Dust accumulation, micro-meteoroid impacts, and debris coverage lead to significant power generation losses, sometimes exceeding 30% within months.',
+                            '<strong>Limited Diagnostic Capabilities:</strong> Traditional monitoring systems lack predictive maintenance capabilities, resulting in reactive rather than proactive responses to critical failures.',
+                            '<strong>Computational Constraints:</strong> Limited on-board computational resources in space environments demand energy-efficient AI inference solutions.',
+                            '<strong>Communication Delays:</strong> Deep-space missions experience communication latencies of minutes to hours, necessitating autonomous decision-making capabilities.'
+                        ]
+                    },
+                    solution: {
+                        title: 'Proposed Solution',
+                        intro: 'The Solar-Battery Node AI system addresses these challenges through a dual-microcontroller architecture combining ML-powered predictive analytics with NPU-accelerated computer vision:',
+                        table: {
+                            component: 'Component',
+                            technology: 'Technology',
+                            metric: 'Key Metric'
+                        },
+                        rows: {
+                            battery: {
+                                component: 'Battery Health ML',
+                                technology: 'Random Forest on STM32 B-L475E-IOT01A',
+                                metric: '92% R² Score'
+                            },
+                            vision: {
+                                component: 'Solar Panel Vision',
+                                technology: 'YOLOv8 on STM32N6570-DK NPU',
+                                metric: '<100ms Inference'
+                            },
+                            ai: {
+                                component: 'Proactive AI Assistant',
+                                technology: 'GPT-4o-mini API Integration',
+                                metric: 'Context-Aware Alerts'
+                            }
+                        }
+                    }
+                },
+                section2: {
+                    title: 'System Architecture & Methodology',
+                    hardware: {
+                        title: 'Hardware Platform',
+                        intro: 'Our dual-board architecture leverages complementary capabilities of two STM32 development kits:',
+                        iot: {
+                            title: 'STM32 B-L475E-IOT01A (IoT Discovery Board)',
+                            specs: [
+                                '<strong>Processor:</strong> ARM Cortex-M4 @ 80MHz',
+                                '<strong>Memory:</strong> 1MB Flash, 128KB SRAM',
+                                '<strong>Connectivity:</strong> WiFi 802.11b/g/n, Bluetooth',
+                                '<strong>Sensors:</strong> Temperature, Humidity, Pressure, Accelerometer, Gyroscope',
+                                '<strong>Role:</strong> Battery health ML inference, environmental monitoring, HTTP server'
+                            ]
+                        },
+                        npu: {
+                            title: 'STM32N6570-DK (NPU Development Kit)',
+                            specs: [
+                                '<strong>Processor:</strong> ARM Cortex-M55 @ 600MHz',
+                                '<strong>NPU:</strong> Dedicated Neural Processing Unit for AI acceleration',
+                                '<strong>Memory:</strong> 2.5MB Flash, 1.4MB SRAM',
+                                '<strong>Camera:</strong> IMX335 5MP sensor',
+                                '<strong>Role:</strong> Real-time solar panel visual inspection with YOLOv8'
+                            ]
+                        }
+                    },
+                    software: {
+                        title: 'Software Stack',
+                        stack: [
+                            '<strong>C Language:</strong> STM32 firmware development',
+                            '<strong>Python Flask:</strong> Backend ML pipeline and API server',
+                            '<strong>Dart & Flutter:</strong> Cross-platform mobile application',
+                            '<strong>Google Colab:</strong> Deep learning model training and experimentation',
+                            '<strong>STEdgeAI Core v2.2.0:</strong> NPU model deployment toolkit',
+                            '<strong>OpenAI GPT-4o-mini & Claude API:</strong> Generative AI integration',
+                            '<strong>Google Drive API:</strong> Cloud data logging and persistence'
+                        ]
+                    },
+                    datasets: {
+                        title: 'Datasets',
+                        vision: {
+                            title: 'Computer Vision Dataset (Roboflow)',
+                            details: [
+                                '<strong>Source:</strong> Roboflow Solar Panel Dataset',
+                                '<strong>Classes:</strong> Normal, Dust, Crack, Coverage (4 classes)',
+                                '<strong>Training Images:</strong> 2,400 annotated images',
+                                '<strong>Augmentation:</strong> Rotation, flip, brightness adjustment',
+                                '<strong>Format:</strong> YOLO annotation format for bounding boxes'
+                            ]
+                        },
+                        battery: {
+                            title: 'Battery ML Dataset (NASA)',
+                            details: [
+                                '<strong>Source:</strong> NASA Battery Degradation Dataset',
+                                '<strong>Features:</strong> Temperature, Voltage, Current, Cycle Count, Capacity Fade',
+                                '<strong>Samples:</strong> 168 Li-ion cells with complete discharge cycles',
+                                '<strong>Target:</strong> Remaining Useful Life (RUL) percentage',
+                                '<strong>Validation:</strong> 80/20 train-test split, 5-fold cross-validation'
+                            ]
+                        }
+                    }
+                },
+                section3: {
+                    title: 'AI Model Development & Performance',
+                    battery: {
+                        title: 'Battery Health Prediction Model',
+                        intro: 'Random Forest Regressor trained on NASA battery degradation data to predict Remaining Useful Life (RUL):',
+                        features: {
+                            title: 'Feature Engineering',
+                            items: [
+                                'Cycle count normalization',
+                                'Temperature differential tracking',
+                                'Voltage drop rate calculation',
+                                'Capacity fade trending',
+                                'Historical degradation patterns'
+                            ]
+                        },
+                        training: {
+                            title: 'Training Process',
+                            content: 'Model trained with 100 decision trees using scikit-learn on Google Colab. Hyperparameter tuning via GridSearchCV optimized for R² score and Mean Absolute Error (MAE).'
+                        },
+                        performance: {
+                            title: 'Performance Metrics',
+                            table: {
+                                metric: 'Metric',
+                                value: 'Value'
+                            },
+                            rows: {
+                                r2: { metric: 'R² Score', value: '0.92 (92% accuracy)' },
+                                mae: { metric: 'Mean Absolute Error', value: '4.3%' },
+                                inference: { metric: 'Inference Time (STM32)', value: '~45ms' }
+                            }
+                        }
+                    },
+                    vision: {
+                        title: 'Solar Panel Vision Model',
+                        intro: 'YOLOv8 object detection model quantized to INT8 for NPU deployment:',
+                        classes: {
+                            title: 'Detection Classes',
+                            items: [
+                                '<strong>Normal:</strong> Clean, functional solar panels',
+                                '<strong>Dust:</strong> Light to moderate dust accumulation',
+                                '<strong>Crack:</strong> Physical damage or fractures',
+                                '<strong>Coverage:</strong> Debris or obstruction coverage'
+                            ]
+                        },
+                        performance: {
+                            title: 'Model Performance',
+                            table: {
+                                class: 'Class',
+                                precision: 'Precision',
+                                recall: 'Recall'
+                            },
+                            rows: [
+                                { class: 'Normal', precision: '94%', recall: '96%' },
+                                { class: 'Dust', precision: '89%', recall: '87%' },
+                                { class: 'Crack', precision: '91%', recall: '88%' },
+                                { class: 'Coverage', precision: '87%', recall: '85%' }
+                            ]
+                        }
+                    },
+                    ai: {
+                        title: 'Proactive AI Assistant',
+                        content: 'GPT-4o-mini integration provides context-aware maintenance recommendations. The system analyzes battery health metrics, visual anomalies, and environmental data to generate actionable insights and automated alerts, enabling autonomous decision-making for deep-space missions with communication delays.'
+                    }
+                },
+                section4: {
+                    title: 'System Implementation',
+                    web: {
+                        title: 'Web Dashboard',
+                        content: 'Real-time monitoring interface built with HTML/CSS/JavaScript, displaying battery metrics, solar panel health, and AI recommendations. HTTP server runs on STM32 IoT board, providing RESTful API endpoints for data access.'
+                    },
+                    mobile: {
+                        title: 'Mobile Application',
+                        content: 'Cross-platform Flutter app for iOS and Android. Features include event logging, daily health summaries, push notifications for critical alerts, and remote system control. Optimized for low-bandwidth connections suitable for space mission ground control.'
+                    },
+                    cloud: {
+                        title: 'Cloud Data Logging',
+                        content: 'Google Drive API integration ensures persistent mission-critical data storage. All telemetry, AI predictions, and anomaly detections are logged with timestamps for post-mission analysis and continuous model improvement.'
+                    }
+                },
+                section5: {
+                    title: 'Technology Transfer & Market Applications',
+                    space: {
+                        title: 'Space Mission Applications',
+                        content: 'Primary deployment for satellite power systems and deep-space missions. Extreme environment validation (-150°C to +150°C, radiation exposure) proves system reliability for critical space applications.'
+                    },
+                    transfer: {
+                        title: 'NASA Technology Transfer Paradigm',
+                        content: 'Following NASA\'s successful technology spin-off model, space-validated algorithms and hardware create commercially viable products for terrestrial markets. Proven reliability in extreme conditions becomes a competitive advantage.'
+                    },
+                    commercial: {
+                        title: 'Commercial Market Opportunities',
+                        markets: [
+                            '<strong>Solar Farms:</strong> Large-scale renewable energy installations requiring predictive maintenance',
+                            '<strong>Remote Infrastructure:</strong> Off-grid telecom towers, weather stations, research facilities',
+                            '<strong>Autonomous Systems:</strong> Drones, robots, and IoT devices with solar power',
+                            '<strong>Residential Solar:</strong> Home energy systems with AI-powered optimization'
+                        ]
+                    }
+                },
+                section6: {
+                    title: 'Conclusion & Future Work',
+                    content: 'This research demonstrates the feasibility of autonomous solar panel and battery health monitoring using edge AI and computer vision. Key achievements include:',
+                    achievements: [
+                        '92% accuracy in battery RUL prediction using ML on embedded hardware',
+                        'Sub-100ms inference time for multi-class solar panel anomaly detection',
+                        'Fully autonomous operation suitable for deep-space missions',
+                        'Successful integration of three AI systems: ML, Computer Vision, and Generative AI',
+                        'Technology transfer pathway from space to commercial markets'
+                    ],
+                    future: {
+                        title: 'Future Research Directions',
+                        items: [
+                            '<strong>Advanced Materials Integration:</strong> Sensor development for direct solar panel material degradation monitoring',
+                            '<strong>Multi-Mission Scaling:</strong> Distributed system architecture for satellite constellations',
+                            '<strong>Federated Learning:</strong> Cross-mission knowledge sharing without raw data transmission',
+                            '<strong>Quantum-Safe Encryption:</strong> Secure AI model updates for long-duration missions'
+                        ]
+                    }
+                },
+                footer: {
+                    main: 'Solar-Battery Node AI - Technical White Paper',
+                    competition: 'AEROO Space AI Competition 2026 - Exploring the World of Science',
+                    copyright: '© 2026 Talgar Private Boarding School No. 1. All rights reserved.'
+                }
+            },
+            tr: {
+                subtitle: 'Teknik Beyaz Kitap',
+                description: 'Edge AI ve Bilgisayarlı Görü ile Otonom Güneş Paneli ve Batarya Sağlığı İzleme Sistemi',
+                metadata: {
+                    authors: 'Yazarlar',
+                    advisor: 'Danışman',
+                    advisorTitle: 'Bilgisayar Öğretmeni, Elektrik-Elektronik Mühendisi',
+                    institution: 'Kurum',
+                    competition: 'Yarışma',
+                    date: 'Tarih',
+                    version: 'Versiyon'
+                },
+                abstract: {
+                    title: 'Özet',
+                    content: 'Bu araştırma, güneş enerjili uzay misyonları için makine öğrenmesi tabanlı batarya sağlığı tahmini ile bilgisayarlı görü anomali tespitini birleştiren entegre bir otonom izleme sistemi sunmaktadır. Sistem çift STM32 mikrodenetleyici kullanır: gerçek zamanlı çevresel izleme ve ML çıkarımı için bir IoT keşif kartı ve görüntü tabanlı güneş paneli teşhisi için özel Nöral İşleme Birimi ile bir N6 geliştirme kiti. NASA batarya bozulma veri setleri ve Roboflow güneş paneli görüntüleri kullanarak, Kalan Faydalı Ömür tahmini için %92 tahmin doğruluğu ve çok sınıflı nesne tespiti için 100ms altı çıkarım süresi elde ettik. Sistem, gerçek zamanlı web ve mobil izleme arayüzlerini, bağlam duyarlı bakım önerileri için GPT-4o-mini destekli proaktif asistan ile entegre eder ve misyon kritik analizler için Google Drive API aracılığıyla kapsamlı veri kaydı sağlar. Doğrudan uzay uygulamalarının ötesinde, bu araştırma NASA\'nın teknoloji transfer paradigmasını takip eder; aşırı ortam doğrulaması, gelişmiş malzeme bilimi sensör entegrasyonu ile gelecekte ölçeklenebilir, yeryüzü güneş enerjisi izlemesi için ticari olarak uygulanabilir spin-off\'lar yaratır.',
+                    keywords: 'Anahtar Kelimeler'
+                },
+                section1: {
+                    title: 'Giriş',
+                    problem: {
+                        title: 'Problem Tanımı',
+                        intro: 'Uzay misyonları güç sistemi yönetiminde kritik zorluklarla karşı karşıyadır:',
+                        items: [
+                            '<strong>Batarya Bozulması:</strong> Aşırı sıcaklıklar (-150°C ile +150°C arası) ve radyasyon maruziyeti ile zorlu ortamlar, hızlandırılmış batarya bozulmasına neden olarak misyon ömrünü azaltır ve arıza riskini artırır.',
+                            '<strong>Güneş Paneli Verimlilik Kaybı:</strong> Toz birikimi, mikro-meteoroid çarpmaları ve enkaz kaplama, bazen aylarca %30\'u aşan önemli güç üretimi kayıplarına yol açar.',
+                            '<strong>Sınırlı Teşhis Yetenekleri:</strong> Geleneksel izleme sistemleri öngörülü bakım yeteneklerinden yoksundur ve kritik arızalara proaktif değil reaktif yanıtlar verir.',
+                            '<strong>Hesaplama Kısıtlamaları:</strong> Uzay ortamlarında sınırlı yerleşik hesaplama kaynakları, enerji verimli AI çıkarım çözümleri gerektirir.',
+                            '<strong>İletişim Gecikmeleri:</strong> Derin uzay misyonları dakikalardan saatlere kadar iletişim gecikmesi yaşar, bu da otonom karar verme yetenekleri gerektirir.'
+                        ]
+                    },
+                    solution: {
+                        title: 'Önerilen Çözüm',
+                        intro: 'Solar-Battery Node AI sistemi, bu zorlukları ML destekli öngörülü analitik ile NPU hızlandırmalı bilgisayarlı görüyü birleştiren çift mikrodenetleyici mimarisi ile ele alır:',
+                        table: {
+                            component: 'Bileşen',
+                            technology: 'Teknoloji',
+                            metric: 'Ana Metrik'
+                        },
+                        rows: {
+                            battery: {
+                                component: 'Batarya Sağlığı ML',
+                                technology: 'STM32 B-L475E-IOT01A üzerinde Random Forest',
+                                metric: '%92 R² Skoru'
+                            },
+                            vision: {
+                                component: 'Güneş Paneli Görme',
+                                technology: 'STM32N6570-DK NPU üzerinde YOLOv8',
+                                metric: '<100ms Çıkarım'
+                            },
+                            ai: {
+                                component: 'Proaktif AI Asistanı',
+                                technology: 'GPT-4o-mini API Entegrasyonu',
+                                metric: 'Bağlam Duyarlı Uyarılar'
+                            }
+                        }
+                    }
+                },
+                section2: {
+                    title: 'Sistem Mimarisi ve Metodoloji',
+                    hardware: {
+                        title: 'Donanım Platformu',
+                        intro: 'Çift kart mimarimiz, iki STM32 geliştirme kitinin tamamlayıcı yeteneklerinden yararlanır:',
+                        iot: {
+                            title: 'STM32 B-L475E-IOT01A (IoT Keşif Kartı)',
+                            specs: [
+                                '<strong>İşlemci:</strong> ARM Cortex-M4 @ 80MHz',
+                                '<strong>Bellek:</strong> 1MB Flash, 128KB SRAM',
+                                '<strong>Bağlantı:</strong> WiFi 802.11b/g/n, Bluetooth',
+                                '<strong>Sensörler:</strong> Sıcaklık, Nem, Basınç, İvmeölçer, Jiroskop',
+                                '<strong>Rol:</strong> Batarya sağlığı ML çıkarımı, çevresel izleme, HTTP sunucusu'
+                            ]
+                        },
+                        npu: {
+                            title: 'STM32N6570-DK (NPU Geliştirme Kiti)',
+                            specs: [
+                                '<strong>İşlemci:</strong> ARM Cortex-M55 @ 600MHz',
+                                '<strong>NPU:</strong> AI hızlandırma için özel Nöral İşleme Birimi',
+                                '<strong>Bellek:</strong> 2.5MB Flash, 1.4MB SRAM',
+                                '<strong>Kamera:</strong> IMX335 5MP sensör',
+                                '<strong>Rol:</strong> YOLOv8 ile gerçek zamanlı güneş paneli görsel denetimi'
+                            ]
+                        }
+                    },
+                    software: {
+                        title: 'Yazılım Yığını',
+                        stack: [
+                            '<strong>C Dili:</strong> STM32 firmware geliştirme',
+                            '<strong>Python Flask:</strong> Backend ML hattı ve API sunucusu',
+                            '<strong>Dart ve Flutter:</strong> Çapraz platform mobil uygulama',
+                            '<strong>Google Colab:</strong> Derin öğrenme model eğitimi ve deney',
+                            '<strong>STEdgeAI Core v2.2.0:</strong> NPU model dağıtım araç seti',
+                            '<strong>OpenAI GPT-4o-mini ve Claude API:</strong> Üretken AI entegrasyonu',
+                            '<strong>Google Drive API:</strong> Bulut veri günlüğü ve kalıcılık'
+                        ]
+                    },
+                    datasets: {
+                        title: 'Veri Setleri',
+                        vision: {
+                            title: 'Bilgisayarlı Görü Veri Seti (Roboflow)',
+                            details: [
+                                '<strong>Kaynak:</strong> Roboflow Güneş Paneli Veri Seti',
+                                '<strong>Sınıflar:</strong> Normal, Toz, Çatlak, Kaplama (4 sınıf)',
+                                '<strong>Eğitim Görselleri:</strong> 2.400 açıklamalı görsel',
+                                '<strong>Artırma:</strong> Döndürme, çevirme, parlaklık ayarı',
+                                '<strong>Format:</strong> Sınırlayıcı kutular için YOLO açıklama formatı'
+                            ]
+                        },
+                        battery: {
+                            title: 'Batarya ML Veri Seti (NASA)',
+                            details: [
+                                '<strong>Kaynak:</strong> NASA Batarya Bozulma Veri Seti',
+                                '<strong>Özellikler:</strong> Sıcaklık, Voltaj, Akım, Döngü Sayısı, Kapasite Kaybı',
+                                '<strong>Örnekler:</strong> Tam deşarj döngüleri ile 168 Li-ion hücre',
+                                '<strong>Hedef:</strong> Kalan Faydalı Ömür (RUL) yüzdesi',
+                                '<strong>Doğrulama:</strong> 80/20 eğitim-test bölme, 5 katlı çapraz doğrulama'
+                            ]
+                        }
+                    }
+                },
+                section3: {
+                    title: 'AI Model Geliştirme ve Performans',
+                    battery: {
+                        title: 'Batarya Sağlığı Tahmin Modeli',
+                        intro: 'Kalan Faydalı Ömrü (RUL) tahmin etmek için NASA batarya bozulma verileri üzerinde eğitilmiş Random Forest Regressor:',
+                        features: {
+                            title: 'Özellik Mühendisliği',
+                            items: [
+                                'Döngü sayısı normalizasyonu',
+                                'Sıcaklık fark takibi',
+                                'Voltaj düşüş oranı hesaplaması',
+                                'Kapasite kaybı trendleri',
+                                'Geçmiş bozulma kalıpları'
+                            ]
+                        },
+                        training: {
+                            title: 'Eğitim Süreci',
+                            content: 'Google Colab\'da scikit-learn kullanılarak 100 karar ağacı ile eğitilmiş model. R² skoru ve Ortalama Mutlak Hata (MAE) için GridSearchCV ile hiperparametre ayarlaması optimize edildi.'
+                        },
+                        performance: {
+                            title: 'Performans Metrikleri',
+                            table: {
+                                metric: 'Metrik',
+                                value: 'Değer'
+                            },
+                            rows: {
+                                r2: { metric: 'R² Skoru', value: '0.92 (%92 doğruluk)' },
+                                mae: { metric: 'Ortalama Mutlak Hata', value: '%4.3' },
+                                inference: { metric: 'Çıkarım Süresi (STM32)', value: '~45ms' }
+                            }
+                        }
+                    },
+                    vision: {
+                        title: 'Güneş Paneli Görme Modeli',
+                        intro: 'NPU dağıtımı için INT8\'e kuantize edilmiş YOLOv8 nesne algılama modeli:',
+                        classes: {
+                            title: 'Algılama Sınıfları',
+                            items: [
+                                '<strong>Normal:</strong> Temiz, işlevsel güneş panelleri',
+                                '<strong>Toz:</strong> Hafif ila orta toz birikimi',
+                                '<strong>Çatlak:</strong> Fiziksel hasar veya kırılmalar',
+                                '<strong>Kaplama:</strong> Enkaz veya engel kaplaması'
+                            ]
+                        },
+                        performance: {
+                            title: 'Model Performansı',
+                            table: {
+                                class: 'Sınıf',
+                                precision: 'Kesinlik',
+                                recall: 'Geri Çağırma'
+                            },
+                            rows: [
+                                { class: 'Normal', precision: '%94', recall: '%96' },
+                                { class: 'Toz', precision: '%89', recall: '%87' },
+                                { class: 'Çatlak', precision: '%91', recall: '%88' },
+                                { class: 'Kaplama', precision: '%87', recall: '%85' }
+                            ]
+                        }
+                    },
+                    ai: {
+                        title: 'Proaktif AI Asistanı',
+                        content: 'GPT-4o-mini entegrasyonu, bağlam duyarlı bakım önerileri sağlar. Sistem, batarya sağlığı metriklerini, görsel anomalileri ve çevresel verileri analiz ederek eylem yapılabilir içgörüler ve otomatik uyarılar üretir, iletişim gecikmeleri olan derin uzay misyonları için otonom karar vermeyi mümkün kılar.'
+                    }
+                },
+                section4: {
+                    title: 'Sistem Uygulaması',
+                    web: {
+                        title: 'Web Paneli',
+                        content: 'HTML/CSS/JavaScript ile oluşturulmuş gerçek zamanlı izleme arayüzü, batarya metriklerini, güneş paneli sağlığını ve AI önerilerini gösterir. HTTP sunucusu STM32 IoT kartında çalışır ve veri erişimi için RESTful API uç noktaları sağlar.'
+                    },
+                    mobile: {
+                        title: 'Mobil Uygulama',
+                        content: 'iOS ve Android için çapraz platform Flutter uygulaması. Özellikler arasında olay günlüğü, günlük sağlık özetleri, kritik uyarılar için push bildirimleri ve uzaktan sistem kontrolü bulunur. Uzay misyonu yer kontrolü için uygun düşük bant genişliği bağlantıları için optimize edilmiştir.'
+                    },
+                    cloud: {
+                        title: 'Bulut Veri Günlüğü',
+                        content: 'Google Drive API entegrasyonu kalıcı misyon kritik veri depolamasını sağlar. Tüm telemetri, AI tahminleri ve anomali tespitleri, misyon sonrası analiz ve sürekli model iyileştirmesi için zaman damgalarıyla kaydedilir.'
+                    }
+                },
+                section5: {
+                    title: 'Teknoloji Transferi ve Pazar Uygulamaları',
+                    space: {
+                        title: 'Uzay Misyonu Uygulamaları',
+                        content: 'Uydu güç sistemleri ve derin uzay misyonları için birincil dağıtım. Aşırı ortam doğrulaması (-150°C ile +150°C arası, radyasyon maruziyeti) kritik uzay uygulamaları için sistem güvenilirliğini kanıtlar.'
+                    },
+                    transfer: {
+                        title: 'NASA Teknoloji Transfer Paradigması',
+                        content: 'NASA\'nın başarılı teknoloji spin-off modelini takip ederek, uzayda doğrulanmış algoritmalar ve donanım, yeryüzü pazarları için ticari olarak uygulanabilir ürünler yaratır. Aşırı koşullarda kanıtlanmış güvenilirlik, rekabet avantajı haline gelir.'
+                    },
+                    commercial: {
+                        title: 'Ticari Pazar Fırsatları',
+                        markets: [
+                            '<strong>Güneş Enerjisi Çiftlikleri:</strong> Öngörülü bakım gerektiren büyük ölçekli yenilenebilir enerji tesisleri',
+                            '<strong>Uzak Altyapı:</strong> Şebekeden bağımsız telekom kuleleri, meteoroloji istasyonları, araştırma tesisleri',
+                            '<strong>Otonom Sistemler:</strong> Güneş enerjili dronlar, robotlar ve IoT cihazları',
+                            '<strong>Konut Güneş Enerjisi:</strong> AI destekli optimizasyona sahip ev enerji sistemleri'
+                        ]
+                    }
+                },
+                section6: {
+                    title: 'Sonuç ve Gelecek Çalışmalar',
+                    content: 'Bu araştırma, edge AI ve bilgisayarlı görü kullanarak otonom güneş paneli ve batarya sağlığı izlemenin fizibilitesini göstermektedir. Ana başarılar şunları içerir:',
+                    achievements: [
+                        'Gömülü donanımda ML kullanarak batarya RUL tahmininde %92 doğruluk',
+                        'Çok sınıflı güneş paneli anomali tespiti için 100ms altı çıkarım süresi',
+                        'Derin uzay misyonları için uygun tam otonom çalışma',
+                        'Üç AI sisteminin başarılı entegrasyonu: ML, Bilgisayarlı Görü ve Üretken AI',
+                        'Uzaydan ticari pazarlara teknoloji transfer yolu'
+                    ],
+                    future: {
+                        title: 'Gelecek Araştırma Yönleri',
+                        items: [
+                            '<strong>Gelişmiş Malzeme Entegrasyonu:</strong> Doğrudan güneş paneli malzeme bozulması izlemesi için sensör geliştirme',
+                            '<strong>Çoklu Misyon Ölçeklendirme:</strong> Uydu takımyıldızları için dağıtık sistem mimarisi',
+                            '<strong>Federe Öğrenme:</strong> Ham veri iletimi olmadan misyonlar arası bilgi paylaşımı',
+                            '<strong>Kuantum Güvenli Şifreleme:</strong> Uzun süreli misyonlar için güvenli AI model güncellemeleri'
+                        ]
+                    }
+                },
+                footer: {
+                    main: 'Solar-Battery Node AI - Teknik Beyaz Kitap',
+                    competition: 'AEROO Space AI Yarışması 2026 - Bilim Dünyasını Keşfetmek',
+                    copyright: '© 2026 Talgar Özel Yatılı Okul No. 1. Tüm hakları saklıdır.'
+                }
+            }
+        },
+
+        get t() {
+            return this.translations[this.currentLang];
+        },
+
+        changeLang(lang) {
+            this.currentLang = lang;
+            localStorage.setItem('whitepaper-lang', lang);
+            document.documentElement.lang = lang;
+        }
+    }
+}
+</script>
 
 </body>
 </html>
