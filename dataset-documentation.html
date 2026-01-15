@@ -10,10 +10,20 @@
 
     <style>
         @media print {
-            body { margin: 0; padding: 20px; }
+            body { margin: 0; padding: 10px; font-size: 8.5pt; }
             .page-break { page-break-before: always; }
-            @page { margin: 2cm; }
-            .lang-switcher { display: none !important; }
+            @page { margin: 1.2cm; }
+            .top-controls { display: none !important; }
+
+            h2 { font-size: 13pt; margin-top: 12px; margin-bottom: 6px; }
+            h3 { font-size: 10pt; margin-top: 10px; margin-bottom: 5px; }
+            table { font-size: 7.5pt; margin: 8px 0; }
+            th, td { padding: 3px 5px; }
+            .code { font-size: 6.5pt; padding: 6px; margin: 6px 0; line-height: 1.3; }
+            ul, ol { margin: 5px 0; padding-left: 18px; }
+            li { margin: 1px 0; font-size: 8pt; }
+            .note { padding: 6px; margin: 8px 0; font-size: 7.5pt; }
+            p { margin: 4px 0; }
         }
 
         body {
@@ -47,7 +57,7 @@
             margin-top: 18px;
         }
 
-        .lang-switcher {
+        .top-controls {
             position: fixed;
             top: 20px;
             right: 20px;
@@ -56,16 +66,24 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 4px;
         }
 
         .lang-switcher button {
             background: #e5e7eb;
             border: none;
-            padding: 8px 16px;
-            margin: 0 4px;
+            padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 11px;
             transition: all 0.2s;
         }
 
@@ -76,6 +94,31 @@
 
         .lang-switcher button:hover {
             transform: translateY(-2px);
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .download-btn svg {
+            width: 14px;
+            height: 14px;
         }
 
         .header {
@@ -164,15 +207,26 @@
 </head>
 <body x-data="datasetApp()">
 
-<!-- Language Switcher -->
-<div class="lang-switcher">
-    <button @click="changeLang('en')" :class="currentLang === 'en' ? 'active' : ''">EN</button>
-    <button @click="changeLang('tr')" :class="currentLang === 'tr' ? 'active' : ''">TR</button>
+<!-- Top Controls -->
+<div class="top-controls">
+    <div class="lang-switcher">
+        <button @click="changeLang('en')" :class="currentLang === 'en' ? 'active' : ''">EN</button>
+        <button @click="changeLang('kk')" :class="currentLang === 'kk' ? 'active' : ''">ҚЗ</button>
+        <button @click="changeLang('ru')" :class="currentLang === 'ru' ? 'active' : ''">РУ</button>
+        <button @click="changeLang('tr')" :class="currentLang === 'tr' ? 'active' : ''">TR</button>
+    </div>
+    <button @click="downloadPDF()" class="download-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span x-text="t.pdf"></span>
+    </button>
 </div>
 
 <div class="header">
     <h1 x-text="t.title"></h1>
-    <p style="font-size: 14pt; color: #2563eb;">Solar-Battery Node AI Project</p>
+    <p style="font-size: 14pt; color: #2563eb;">Solar-Battery Node AI</p>
+    <p style="font-size: 11pt; color: #1e3a5f;">Power Health & Vision Anomaly Detection</p>
 </div>
 
 <div class="metadata">
@@ -186,7 +240,7 @@
 <h3>1.1 <span x-text="t.nasa.overview.title"></span></h3>
 <p><strong x-text="t.nasa.overview.source"></strong>: NASA Ames Prognostics Center of Excellence</p>
 <p><strong x-text="t.nasa.overview.purpose"></strong>: <span x-text="t.nasa.overview.purposeText"></span></p>
-<p><strong x-text="t.nasa.overview.access"></strong>: <a href="https://www.kaggle.com/datasets/patrickfleith/nasa-battery-dataset">Kaggle - NASA Battery Dataset</a></p>
+<p><strong x-text="t.nasa.overview.access"></strong>: <a href="https://www.kaggle.com/datasets/patrickfleith/nasa-battery-dataset">https://www.kaggle.com/datasets/patrickfleith/nasa-battery-dataset</a></p>
 
 <h3>1.2 <span x-text="t.nasa.characteristics.title"></span></h3>
 
@@ -202,6 +256,8 @@
         </tr>
     </template>
 </table>
+
+<div class="page-break"></div>
 
 <h3>1.3 <span x-text="t.nasa.features.title"></span></h3>
 
@@ -282,7 +338,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 <p><strong x-text="t.roboflow.overview.source"></strong>: Roboflow Universe - Solar Panel Datasets</p>
 <p><strong x-text="t.roboflow.overview.purpose"></strong>: <span x-text="t.roboflow.overview.purposeText"></span></p>
-<p><strong x-text="t.roboflow.overview.access"></strong>: Roboflow public datasets (requires free account)</p>
+<p><strong x-text="t.roboflow.overview.access"></strong>: <a href="https://universe.roboflow.com/gao-shou-zheng-b6xqc/solar-panel-0swal">https://universe.roboflow.com/gao-shou-zheng-b6xqc/solar-panel-0swal</a></p>
 
 <h3>2.2 <span x-text="t.roboflow.characteristics.title"></span></h3>
 
@@ -392,6 +448,7 @@ function datasetApp() {
 
         translations: {
             en: {
+                pdf: 'Download PDF',
                 title: 'Dataset Documentation',
                 metadata: {
                     version: 'Dataset Version',
@@ -491,7 +548,7 @@ function datasetApp() {
                             value: 'Value'
                         },
                         rows: [
-                            { property: 'Total Images', value: '4,127 annotated images' },
+                            { property: 'Total Images', value: '2,280 annotated images' },
                             { property: 'Image Resolution', value: 'Variable (640×480 to 1920×1080)' },
                             { property: 'Annotation Format', value: 'YOLO bounding boxes' },
                             { property: 'Classes', value: '4 (Normal, Dust, Crack, Coverage)' },
@@ -554,7 +611,7 @@ function datasetApp() {
                         },
                         roboflow: {
                             dataset: 'Roboflow Solar',
-                            samples: '4.1K images',
+                            samples: '2,280 images',
                             purpose: 'Panel anomaly detection',
                             performance: '<100ms inference'
                         }
@@ -566,6 +623,7 @@ function datasetApp() {
                 }
             },
             tr: {
+                pdf: 'PDF İndir',
                 title: 'Veri Seti Dokümantasyonu',
                 metadata: {
                     version: 'Veri Seti Versiyonu',
@@ -665,7 +723,7 @@ function datasetApp() {
                             value: 'Değer'
                         },
                         rows: [
-                            { property: 'Toplam Görsel', value: '4.127 açıklamalı görsel' },
+                            { property: 'Toplam Görsel', value: '2.280 açıklamalı görsel' },
                             { property: 'Görsel Çözünürlüğü', value: 'Değişken (640×480 ile 1920×1080 arası)' },
                             { property: 'Açıklama Formatı', value: 'YOLO sınırlayıcı kutular' },
                             { property: 'Sınıflar', value: '4 (Normal, Toz, Çatlak, Kaplama)' },
@@ -728,7 +786,7 @@ function datasetApp() {
                         },
                         roboflow: {
                             dataset: 'Roboflow Güneş',
-                            samples: '4.1K görsel',
+                            samples: '2.280 görsel',
                             purpose: 'Panel anomali tespiti',
                             performance: '<100ms çıkarım'
                         }
@@ -738,6 +796,262 @@ function datasetApp() {
                     main: 'Veri Seti Dokümantasyonu - Solar-Battery Node AI',
                     copyright: '© 2026 Talgar Özel Yatılı Okul No. 1. Tüm hakları saklıdır.'
                 }
+            },
+            kk: {
+                pdf: 'PDF Жүктеу',
+                title: 'Деректер Жиынының Құжаттамасы',
+                metadata: {
+                    version: 'Деректер Жиыны Нұсқасы',
+                    updated: 'Соңғы Жаңарту'
+                },
+                nasa: {
+                    title: 'NASA Батарея Деградациясы Деректер Жиыны',
+                    overview: {
+                        title: 'Шолу',
+                        source: 'Көзі',
+                        purpose: 'Мақсаты',
+                        purposeText: 'Батареяның қалған пайдалы ömірін (RUL) болжау үшін машиналық оқыту модельдерін оқыту',
+                        access: 'Қолжетімділік'
+                    },
+                    characteristics: {
+                        title: 'Деректер Жиыны Сипаттамалары',
+                        table: { property: 'Қасиет', value: 'Мән' },
+                        rows: [
+                            { property: 'Жалпы Ұяшықтар', value: '124 Li-ion ұяшық (18650 форматы)' },
+                            { property: 'Ұяшық Химиясы', value: 'Литий-ион (LiCoO<sub>2</sub> катод, графит анод)' },
+                            { property: 'Номиналды Сыйымдылық', value: '2.0 Ah' },
+                            { property: 'Кернеу Диапазоны', value: '2.7V - 4.2V' },
+                            { property: 'Сынақ Ұзақтығы', value: '2008-2018 (10 жыл)' },
+                            { property: 'Жалпы Өлшемдер', value: '~168,000 зарядтау-разрядтау циклдары' },
+                            { property: 'Температура Шарттары', value: '24°C, 43°C, 4°C' },
+                            { property: 'Деректер Форматы', value: 'CSV, MAT (MATLAB)' }
+                        ]
+                    },
+                    features: {
+                        title: 'Ерекшеліктер (Кіріс Айнымалылары)',
+                        table: { feature: 'Ерекшелік', unit: 'Бірлік', range: 'Диапазон', description: 'Сипаттама' },
+                        rows: [
+                            { feature: 'Кернеу', unit: 'V', range: '2.7 - 4.2', description: 'Жұмыс кезіндегі терминалдық кернеу' },
+                            { feature: 'Ток', unit: 'A', range: '-2.0 - 2.0', description: 'Зарядтау (+) немесе разрядтау тогы (-)' },
+                            { feature: 'Температура', unit: '°C', range: '4 - 45', description: 'Ұяшық беткі температурасы' },
+                            { feature: 'Цикл Саны', unit: '-', range: '0 - 2000', description: 'Толық зарядтау-разрядтау циклдарының саны' },
+                            { feature: 'Сыйымдылық Төмендеуі', unit: '%', range: '0 - 80', description: 'Номиналды сыйымдылықтан жоғалу пайызы' },
+                            { feature: 'Импеданс', unit: 'mΩ', range: '15 - 120', description: 'Ішкі кедергі (DC өлшемі)' }
+                        ]
+                    },
+                    target: {
+                        title: 'Мақсатты Айнымалы',
+                        rul: 'Қалған Пайдалы Ömір (RUL):',
+                        definition: { label: 'Анықтама:', text: 'Ömір соңы шегіне жетпес бұрын қалған батарея ömірінің пайызы (%80 сыйымдылық)' },
+                        calculation: { label: 'Есептеу:' },
+                        rangeLabel: 'Диапазон',
+                        interpretation: {
+                            label: 'Түсіндіру',
+                            items: ['100%: Жаңа ұяшық', '70-100%: Өте жақсы', '40-70%: Жақсы', '20-40%: Орташа (ауыстыру ұсынылады)', '0-20%: Сыни (жақын істен шығу)']
+                        }
+                    },
+                    preprocessing: { title: 'Деректерді Алдын Ала Өңдеу' },
+                    usage: {
+                        title: 'Жобада Қолдану',
+                        items: [
+                            '<strong>Модель Оқыту:</strong> 124 ұяшық × ~1,350 цикл = ~167,400 үлгіде оқытылған Random Forest Regressor',
+                            '<strong>Валидация:</strong> Араластырумен 5 қатпарлы кросс-валидация',
+                            '<strong>Тест Өнімділігі:</strong> 92.1% дәлдік, MAE = 3.8%',
+                            '<strong>Орналастыру:</strong> Pickle файлы ретінде сериализацияланған scikit-learn моделі'
+                        ]
+                    }
+                },
+                roboflow: {
+                    title: 'Roboflow Күн Панелі Аномалиясы Деректер Жиыны',
+                    overview: {
+                        title: 'Шолу',
+                        source: 'Көзі',
+                        purpose: 'Мақсаты',
+                        purposeText: 'Күн панелі аномалиясын анықтау үшін компьютерлік көру модельдерін оқыту',
+                        access: 'Қолжетімділік'
+                    },
+                    characteristics: {
+                        title: 'Деректер Жиыны Сипаттамалары',
+                        table: { property: 'Қасиет', value: 'Мән' },
+                        rows: [
+                            { property: 'Жалпы Суреттер', value: '2,280 аннотацияланған сурет' },
+                            { property: 'Сурет Ажыратымдылығы', value: 'Өзгермелі (640×480 - 1920×1080)' },
+                            { property: 'Аннотация Форматы', value: 'YOLO шектеу қораптары' },
+                            { property: 'Сыныптар', value: '4 (Қалыпты, Шаң, Жарық, Жабу)' },
+                            { property: 'Оқыту/Вал/Тест Бөлу', value: '70% / 20% / 10%' },
+                            { property: 'Көзі Түрі', value: 'Дрон, спутник, жер камерасы суреттері' }
+                        ]
+                    },
+                    classes: {
+                        title: 'Аномалия Сыныптары',
+                        table: { class: 'Сынып', count: 'Үлгі Саны', description: 'Сипаттама' },
+                        rows: [
+                            { class: 'Қалыпты', count: '1,854', description: 'Таза, толық жұмыс істейтін күн панельдері' },
+                            { class: 'Шаң', count: '1,102', description: 'Жеңіл-орташа шаң жиналуы' },
+                            { class: 'Жарық', count: '845', description: 'Физикалық зақым, сынықтар' },
+                            { class: 'Жабу', count: '326', description: 'Қоқыс, құс қиы немесе кедергі' }
+                        ]
+                    },
+                    augmentation: {
+                        title: 'Деректерді Арттыру',
+                        techniques: [
+                            '<strong>Айналдыру:</strong> Камера бұрышын модельдеу үшін ±15° кездейсоқ айналдыру',
+                            '<strong>Аудару:</strong> Кеңістіктік инвариантылық үшін көлденең және тік аудару',
+                            '<strong>Жарықтық:</strong> Жарықтандыру шарттарын модельдеу үшін ±25% реттеу',
+                            '<strong>Контраст:</strong> Ауа райы үшін ±20% реттеу',
+                            '<strong>Шу:</strong> Камера сенсорының кемшіліктері үшін Гаусс шуы (σ=0.01)',
+                            '<strong>Қию:</strong> Панель аймақтарына назар аудару үшін кездейсоқ 90% қию'
+                        ]
+                    },
+                    note: { title: 'Ескертпе', text: 'Барлық арттырулар тек оқыту жиынына қолданылады, деректер ағып кетуін болдырмау үшін.' },
+                    deployment: {
+                        title: 'Модельді Оқыту және Орналастыру',
+                        steps: [
+                            '<strong>Оқыту:</strong> Google Colab-та (Tesla T4 GPU) 100 эпохаға оқытылған YOLOv8n моделі',
+                            '<strong>Квантизация:</strong> STM32 NPU үшін INT8 оқытудан кейінгі квантизация',
+                            '<strong>Оңтайландыру:</strong> NPU орналастыру үшін STEdgeAI Core v2.2.0',
+                            '<strong>Қорытынды:</strong> STM32N6570-DK аппараттық құралында <100ms'
+                        ]
+                    }
+                },
+                conclusion: {
+                    title: 'Деректер Жиынының Қорытындысы',
+                    content: 'Екі деректер жиыны да Solar-Battery Node AI жүйесі үшін толықтырушы мүмкіндіктер береді:',
+                    table: {
+                        dataset: 'Деректер Жиыны', samples: 'Үлгілер', purpose: 'Мақсаты', performance: 'Өнімділік',
+                        nasa: { dataset: 'NASA Батарея', samples: '168K цикл', purpose: 'Батарея RUL болжамы', performance: '92% дәлдік' },
+                        roboflow: { dataset: 'Roboflow Күн', samples: '2,280 сурет', purpose: 'Панель аномалиясын анықтау', performance: '<100ms қорытынды' }
+                    }
+                },
+                footer: { main: 'Деректер Жиыны Құжаттамасы - Solar-Battery Node AI', copyright: '© 2026 Талғар Жеке Интернат Мектебі №1. Барлық құқықтар қорғалған.' }
+            },
+            ru: {
+                pdf: 'Скачать PDF',
+                title: 'Документация Наборов Данных',
+                metadata: {
+                    version: 'Версия Набора Данных',
+                    updated: 'Последнее Обновление'
+                },
+                nasa: {
+                    title: 'Набор Данных Деградации Батарей NASA',
+                    overview: {
+                        title: 'Обзор',
+                        source: 'Источник',
+                        purpose: 'Назначение',
+                        purposeText: 'Обучение моделей машинного обучения для прогнозирования остаточного срока службы (RUL) батареи',
+                        access: 'Доступ'
+                    },
+                    characteristics: {
+                        title: 'Характеристики Набора Данных',
+                        table: { property: 'Свойство', value: 'Значение' },
+                        rows: [
+                            { property: 'Всего Ячеек', value: '124 Li-ion ячейки (формат 18650)' },
+                            { property: 'Химия Ячейки', value: 'Литий-ион (LiCoO<sub>2</sub> катод, графитовый анод)' },
+                            { property: 'Номинальная Ёмкость', value: '2.0 Ah' },
+                            { property: 'Диапазон Напряжения', value: '2.7V - 4.2V' },
+                            { property: 'Длительность Тестов', value: '2008-2018 (10 лет)' },
+                            { property: 'Всего Измерений', value: '~168,000 циклов заряда-разряда' },
+                            { property: 'Температурные Условия', value: '24°C, 43°C, 4°C' },
+                            { property: 'Формат Данных', value: 'CSV, MAT (MATLAB)' }
+                        ]
+                    },
+                    features: {
+                        title: 'Признаки (Входные Переменные)',
+                        table: { feature: 'Признак', unit: 'Единица', range: 'Диапазон', description: 'Описание' },
+                        rows: [
+                            { feature: 'Напряжение', unit: 'V', range: '2.7 - 4.2', description: 'Терминальное напряжение во время работы' },
+                            { feature: 'Ток', unit: 'A', range: '-2.0 - 2.0', description: 'Ток заряда (+) или разряда (-)' },
+                            { feature: 'Температура', unit: '°C', range: '4 - 45', description: 'Температура поверхности ячейки' },
+                            { feature: 'Число Циклов', unit: '-', range: '0 - 2000', description: 'Количество полных циклов заряда-разряда' },
+                            { feature: 'Потеря Ёмкости', unit: '%', range: '0 - 80', description: 'Процент потери от номинальной ёмкости' },
+                            { feature: 'Импеданс', unit: 'mΩ', range: '15 - 120', description: 'Внутреннее сопротивление (DC измерение)' }
+                        ]
+                    },
+                    target: {
+                        title: 'Целевая Переменная',
+                        rul: 'Остаточный Срок Службы (RUL):',
+                        definition: { label: 'Определение:', text: 'Процент оставшегося срока службы батареи до достижения порога окончания срока службы (80% ёмкости)' },
+                        calculation: { label: 'Расчёт:' },
+                        rangeLabel: 'Диапазон',
+                        interpretation: {
+                            label: 'Интерпретация',
+                            items: ['100%: Новая ячейка', '70-100%: Отличное состояние', '40-70%: Хорошее состояние', '20-40%: Удовлетворительное (рекомендуется замена)', '0-20%: Критическое (неминуемый отказ)']
+                        }
+                    },
+                    preprocessing: { title: 'Предварительная Обработка Данных' },
+                    usage: {
+                        title: 'Использование в Проекте',
+                        items: [
+                            '<strong>Обучение Модели:</strong> Random Forest Regressor обучен на 124 ячейках × ~1,350 циклов = ~167,400 образцов',
+                            '<strong>Валидация:</strong> 5-кратная кросс-валидация с перемешиванием',
+                            '<strong>Производительность Теста:</strong> 92.1% точность, MAE = 3.8%',
+                            '<strong>Развёртывание:</strong> Модель scikit-learn сериализована как pickle файл'
+                        ]
+                    }
+                },
+                roboflow: {
+                    title: 'Набор Данных Аномалий Солнечных Панелей Roboflow',
+                    overview: {
+                        title: 'Обзор',
+                        source: 'Источник',
+                        purpose: 'Назначение',
+                        purposeText: 'Обучение моделей компьютерного зрения для обнаружения аномалий солнечных панелей',
+                        access: 'Доступ'
+                    },
+                    characteristics: {
+                        title: 'Характеристики Набора Данных',
+                        table: { property: 'Свойство', value: 'Значение' },
+                        rows: [
+                            { property: 'Всего Изображений', value: '2,280 аннотированных изображений' },
+                            { property: 'Разрешение Изображений', value: 'Переменное (640×480 - 1920×1080)' },
+                            { property: 'Формат Аннотаций', value: 'YOLO ограничивающие рамки' },
+                            { property: 'Классы', value: '4 (Нормальный, Пыль, Трещина, Покрытие)' },
+                            { property: 'Разбиение Train/Val/Test', value: '70% / 20% / 10%' },
+                            { property: 'Тип Источника', value: 'Изображения с дронов, спутников, наземных камер' }
+                        ]
+                    },
+                    classes: {
+                        title: 'Классы Аномалий',
+                        table: { class: 'Класс', count: 'Количество', description: 'Описание' },
+                        rows: [
+                            { class: 'Нормальный', count: '1,854', description: 'Чистые, полностью функциональные панели' },
+                            { class: 'Пыль', count: '1,102', description: 'Лёгкое-умеренное скопление пыли' },
+                            { class: 'Трещина', count: '845', description: 'Физические повреждения, трещины' },
+                            { class: 'Покрытие', count: '326', description: 'Мусор, птичий помёт или препятствия' }
+                        ]
+                    },
+                    augmentation: {
+                        title: 'Аугментация Данных',
+                        techniques: [
+                            '<strong>Поворот:</strong> ±15° случайный поворот для имитации изменения угла камеры',
+                            '<strong>Отражение:</strong> Горизонтальное и вертикальное отражение для пространственной инвариантности',
+                            '<strong>Яркость:</strong> ±25% регулировка для имитации условий освещения',
+                            '<strong>Контраст:</strong> ±20% регулировка для различной погоды',
+                            '<strong>Шум:</strong> Гауссовский шум (σ=0.01) для имитации несовершенства сенсора камеры',
+                            '<strong>Обрезка:</strong> Случайная 90% обрезка для фокусировки на областях панелей'
+                        ]
+                    },
+                    note: { title: 'Примечание', text: 'Все аугментации применяются только к обучающему набору для предотвращения утечки данных.' },
+                    deployment: {
+                        title: 'Обучение и Развёртывание Модели',
+                        steps: [
+                            '<strong>Обучение:</strong> Модель YOLOv8n обучена 100 эпох на Google Colab (Tesla T4 GPU)',
+                            '<strong>Квантизация:</strong> INT8 пост-тренировочная квантизация для STM32 NPU',
+                            '<strong>Оптимизация:</strong> STEdgeAI Core v2.2.0 для развёртывания на NPU',
+                            '<strong>Вывод:</strong> <100ms на оборудовании STM32N6570-DK'
+                        ]
+                    }
+                },
+                conclusion: {
+                    title: 'Сводка Наборов Данных',
+                    content: 'Оба набора данных обеспечивают взаимодополняющие возможности для системы Solar-Battery Node AI:',
+                    table: {
+                        dataset: 'Набор Данных', samples: 'Образцы', purpose: 'Назначение', performance: 'Производительность',
+                        nasa: { dataset: 'NASA Батарея', samples: '168K циклов', purpose: 'Прогноз RUL батареи', performance: '92% точность' },
+                        roboflow: { dataset: 'Roboflow Солнечный', samples: '2,280 изображений', purpose: 'Обнаружение аномалий панелей', performance: '<100ms вывод' }
+                    }
+                },
+                footer: { main: 'Документация Наборов Данных - Solar-Battery Node AI', copyright: '© 2026 Талгарская Частная Школа-Интернат №1. Все права защищены.' }
             }
         },
 
@@ -749,6 +1063,15 @@ function datasetApp() {
             this.currentLang = lang;
             localStorage.setItem('dataset-lang', lang);
             document.documentElement.lang = lang;
+        },
+
+        downloadPDF() {
+            const link = document.createElement('a');
+            link.href = 'documents/Dataset Documentation - Solar-Battery Node AI.pdf';
+            link.download = 'Dataset Documentation - Solar-Battery Node AI.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     }
 }

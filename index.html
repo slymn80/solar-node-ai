@@ -346,6 +346,18 @@
                     <span class="gradient-text" x-text="t.problem.title"></span>
                 </h2>
 
+                <!-- InSight Mission Images -->
+                <div class="grid md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                    <div class="tech-card rounded-2xl p-4 overflow-hidden">
+                        <img src="documents/resim 1.jpg" alt="InSight Lander Diagram" class="w-full h-auto rounded-lg mb-3">
+                        <p class="text-xs sm:text-sm text-gray-400 text-center" x-text="currentLang === 'en' ? 'Figure 1: InSight lander diagram (NASA / JPL-Caltech)' : currentLang === 'tr' ? 'Şekil 1: InSight lander diyagramı (NASA / JPL-Caltech)' : currentLang === 'ru' ? 'Рисунок 1: Диаграмма посадочного модуля InSight (NASA / JPL-Caltech)' : '1-сурет: InSight лендер диаграммасы (NASA / JPL-Caltech)'"></p>
+                    </div>
+                    <div class="tech-card rounded-2xl p-4 overflow-hidden">
+                        <img src="documents/resim 2.png" alt="InSight's Dusty Solar Panel" class="w-full h-auto rounded-lg mb-3">
+                        <p class="text-xs sm:text-sm text-gray-400 text-center" x-text="currentLang === 'en' ? 'Figure 2: InSight Dusty Solar Panel - ~5,000 to ~500 Wh/sol (NASA)' : currentLang === 'tr' ? 'Şekil 2: InSight Tozlu Güneş Paneli - ~5.000 den ~500 Wh/sol (NASA)' : currentLang === 'ru' ? 'Рисунок 2: Пыльная панель InSight - ~5000 до ~500 Вт·ч/сол (NASA)' : '2-сурет: InSight шаңды панелі - ~5000-ден ~500 Wh/sol (NASA)'"></p>
+                    </div>
+                </div>
+
                 <div class="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
                     <div class="tech-card rounded-2xl p-4 sm:p-6 md:p-8">
                         <div class="flex items-center mb-4 sm:mb-6">
@@ -539,115 +551,19 @@
                 <!-- Demo Screenshots Placeholder -->
                 <div class="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
                     <div class="tech-card rounded-2xl p-4 sm:p-6">
-                        <div class="bg-gray-800/50 rounded-xl mb-3 sm:mb-4 h-36 sm:h-48 flex items-center justify-center border border-gray-700">
-                            <div class="text-center">
-                                <svg class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                                <p class="text-gray-500 text-xs sm:text-sm" x-text="t.results.demo.dashboard"></p>
-                            </div>
+                        <div class="bg-gray-800/50 rounded-xl mb-3 sm:mb-4 overflow-hidden border border-gray-700">
+                            <img src="images/videoframe_0.png" alt="Web Dashboard Screenshot" class="w-full h-auto object-cover">
                         </div>
                         <h4 class="text-base sm:text-lg font-bold text-white mb-1 sm:mb-2" x-text="t.results.demo.web"></h4>
                         <p class="text-xs sm:text-sm text-gray-400" x-text="t.results.demo.webDesc"></p>
                     </div>
 
                     <div class="tech-card rounded-2xl p-4 sm:p-6">
-                        <div class="bg-gray-800/50 rounded-xl mb-3 sm:mb-4 h-36 sm:h-48 flex items-center justify-center border border-gray-700">
-                            <div class="text-center">
-                                <svg class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                                </svg>
-                                <p class="text-gray-500 text-xs sm:text-sm" x-text="t.results.demo.mobile"></p>
-                            </div>
+                        <div class="bg-gray-800/50 rounded-xl mb-3 sm:mb-4 overflow-hidden border border-gray-700">
+                            <img src="images/mobile.jpeg" alt="Mobile App Screenshot" class="w-full h-auto object-cover">
                         </div>
                         <h4 class="text-base sm:text-lg font-bold text-white mb-1 sm:mb-2" x-text="t.results.demo.app"></h4>
                         <p class="text-xs sm:text-sm text-gray-400" x-text="t.results.demo.appDesc"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive System Assembly Game -->
-    <section class="py-12 sm:py-20 relative bg-gradient-to-br from-purple-900/20 to-blue-900/20">
-        <div class="container mx-auto px-4 sm:px-6">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 text-center px-2 break-words">
-                    <span class="gradient-text" x-text="t.game?.title || 'Interactive System Assembly'"></span>
-                </h2>
-                <p class="text-center text-sm sm:text-base text-gray-400 mb-8 sm:mb-12 max-w-3xl mx-auto px-4" x-text="t.game?.subtitle || 'Drag and drop all 11 components in the correct order to build the complete system'"></p>
-
-                <div class="grid lg:grid-cols-2 gap-6 sm:gap-8">
-                    <!-- Component Library -->
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 px-2" x-text="t.game?.componentsTitle || 'Available Components (Drag These)'"></h3>
-                        <div class="space-y-2 max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-y-auto pr-1 sm:pr-2" id="componentLibrary">
-                            <template x-for="comp in shuffledComponents" :key="comp.id">
-                                <div class="rounded-lg p-2 sm:p-3 border cursor-move hover:scale-105 transition transform touch-manipulation"
-                                     :class="comp.gradient"
-                                     draggable="true"
-                                     @dragstart="dragStart($event, comp.id)"
-                                     :id="'component-' + comp.id">
-                                    <div class="flex items-center">
-                                        <div class="rounded-lg p-1.5 sm:p-2 mr-2 sm:mr-3 flex-shrink-0" :class="comp.iconBg">
-                                            <div class="w-5 h-5 sm:w-6 sm:h-6" x-html="comp.icon"></div>
-                                        </div>
-                                        <div class="min-w-0 flex-1">
-                                            <p class="font-bold text-white text-xs sm:text-sm truncate" x-text="t.game?.components?.[comp.id]?.name || comp.name"></p>
-                                            <p class="text-xs text-gray-400 truncate" x-text="t.game?.components?.[comp.id]?.desc || comp.desc"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-
-                    <!-- Assembly Area -->
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 px-2">
-                            <span x-text="t.game?.assemblyTitle || 'System Assembly'"></span>
-                            <span class="text-xs sm:text-sm text-gray-400 ml-2" x-text="'(' + assemblies.length + '/11)'"></span>
-                        </h3>
-                        <div class="bg-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-dashed border-gray-600 min-h-[300px] sm:min-h-[400px] lg:min-h-[550px] max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-y-auto relative"
-                             @drop="drop($event)"
-                             @dragover.prevent
-                             id="assemblyArea">
-                            <div class="text-center text-gray-500 absolute inset-0 flex items-center justify-center pointer-events-none px-4" x-show="assemblies.length === 0">
-                                <p class="text-xs sm:text-sm" x-text="t.game?.dragPrompt || 'Drag all 11 components here in correct order'"></p>
-                            </div>
-                            <div class="space-y-2">
-                                <template x-for="(item, index) in assemblies" :key="index">
-                                    <div class="rounded-lg p-2 border flex items-center justify-between"
-                                         :class="getComponentStyle(item)">
-                                        <div class="flex items-center min-w-0 flex-1 mr-2">
-                                            <span class="text-white font-bold mr-2 sm:mr-3 text-xs sm:text-sm bg-white/10 rounded px-1.5 sm:px-2 py-0.5 sm:py-1 flex-shrink-0" x-text="index + 1"></span>
-                                            <span class="text-white text-xs sm:text-sm truncate" x-text="getComponentName(item)"></span>
-                                        </div>
-                                        <button @click="removeComponent(index)" class="text-red-400 hover:text-red-300 flex-shrink-0 p-2 touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-
-                        <!-- Check Button -->
-                        <button @click="checkAssembly()"
-                                class="mt-3 sm:mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl transition text-sm sm:text-base touch-manipulation min-h-[44px]">
-                            <span x-text="t.game?.checkButton || 'Check Assembly'"></span>
-                        </button>
-
-                        <!-- Result Message -->
-                        <div x-show="gameResult" class="mt-3 sm:mt-4 p-3 sm:p-4 rounded-xl" :class="gameResult === 'correct' ? 'bg-green-500/20 border border-green-400' : 'bg-red-500/20 border border-red-400'">
-                            <p class="text-center font-bold text-xs sm:text-sm" :class="gameResult === 'correct' ? 'text-green-300' : 'text-red-300'" x-text="gameMessage"></p>
-                        </div>
-
-                        <!-- Reset Button -->
-                        <div class="mt-3 sm:mt-4 text-center">
-                            <button @click="resetGame()" class="text-blue-400 hover:text-blue-300 text-xs sm:text-sm underline touch-manipulation py-2 px-3 min-h-[44px] inline-flex items-center" x-text="t.game?.resetButton || 'Reset Game'"></button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -777,7 +693,7 @@
                 <!-- Download Resources Section -->
                 <div class="mt-12 sm:mt-16">
                     <h3 class="text-xl sm:text-2xl font-bold text-white mb-6 sm:mb-8 text-center px-4" x-text="t.implementation.resourcesTitle || 'Download Resources'"></h3>
-                    <div class="grid md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
+                    <div class="grid md:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
                         <!-- Technical White Paper -->
                         <a href="technical-whitepaper.html" target="_blank" class="tech-card rounded-2xl p-4 sm:p-6 card-hover block group">
                             <div class="flex items-center mb-3 sm:mb-4">
@@ -792,6 +708,22 @@
                                 </div>
                             </div>
                             <p class="text-[10px] sm:text-xs text-blue-400">→ Open & Print to PDF</p>
+                        </a>
+
+                        <!-- Pitch Deck -->
+                        <a href="pitch-deck.html" target="_blank" class="tech-card rounded-2xl p-4 sm:p-6 card-hover block group">
+                            <div class="flex items-center mb-3 sm:mb-4">
+                                <div class="bg-purple-500/20 rounded-lg p-2 sm:p-3 mr-3 sm:mr-4">
+                                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-base sm:text-lg font-bold text-white group-hover:text-purple-400 transition" x-text="t.implementation.pitchdeckTitle || 'Investor Pitch Deck'"></h4>
+                                    <p class="text-xs sm:text-sm text-gray-400" x-text="t.implementation.pitchdeckDesc || 'Business model, pricing & financials'"></p>
+                                </div>
+                            </div>
+                            <p class="text-[10px] sm:text-xs text-purple-400">→ Open & Print to PDF</p>
                         </a>
 
                         <!-- Dataset Documentation -->
@@ -976,6 +908,92 @@
         </div>
     </section>
 
+    <!-- Interactive System Assembly Game -->
+    <section class="py-12 sm:py-20 relative bg-gradient-to-br from-purple-900/20 to-blue-900/20">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 text-center px-2 break-words">
+                    <span class="gradient-text" x-text="t.game?.title || 'Interactive System Assembly'"></span>
+                </h2>
+                <p class="text-center text-sm sm:text-base text-gray-400 mb-8 sm:mb-12 max-w-3xl mx-auto px-4" x-text="t.game?.subtitle || 'Drag and drop all 11 components in the correct order to build the complete system'"></p>
+
+                <div class="grid lg:grid-cols-2 gap-6 sm:gap-8">
+                    <!-- Component Library -->
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 px-2" x-text="t.game?.componentsTitle || 'Available Components (Drag These)'"></h3>
+                        <div class="space-y-2 max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-y-auto pr-1 sm:pr-2" id="componentLibrary">
+                            <template x-for="comp in shuffledComponents" :key="comp.id">
+                                <div class="rounded-lg p-2 sm:p-3 border cursor-move hover:scale-105 transition transform touch-manipulation"
+                                     :class="comp.gradient"
+                                     draggable="true"
+                                     @dragstart="dragStart($event, comp.id)"
+                                     :id="'component-' + comp.id">
+                                    <div class="flex items-center">
+                                        <div class="rounded-lg p-1.5 sm:p-2 mr-2 sm:mr-3 flex-shrink-0" :class="comp.iconBg">
+                                            <div class="w-5 h-5 sm:w-6 sm:h-6" x-html="comp.icon"></div>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="font-bold text-white text-xs sm:text-sm truncate" x-text="t.game?.components?.[comp.id]?.name || comp.name"></p>
+                                            <p class="text-xs text-gray-400 truncate" x-text="t.game?.components?.[comp.id]?.desc || comp.desc"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Assembly Area -->
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 px-2">
+                            <span x-text="t.game?.assemblyTitle || 'System Assembly'"></span>
+                            <span class="text-xs sm:text-sm text-gray-400 ml-2" x-text="'(' + assemblies.length + '/11)'"></span>
+                        </h3>
+                        <div class="bg-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-dashed border-gray-600 min-h-[300px] sm:min-h-[400px] lg:min-h-[550px] max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-y-auto relative"
+                             @drop="drop($event)"
+                             @dragover.prevent
+                             id="assemblyArea">
+                            <div class="text-center text-gray-500 absolute inset-0 flex items-center justify-center pointer-events-none px-4" x-show="assemblies.length === 0">
+                                <p class="text-xs sm:text-sm" x-text="t.game?.dragPrompt || 'Drag all 11 components here in correct order'"></p>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="(item, index) in assemblies" :key="index">
+                                    <div class="rounded-lg p-2 border flex items-center justify-between"
+                                         :class="getComponentStyle(item)">
+                                        <div class="flex items-center min-w-0 flex-1 mr-2">
+                                            <span class="text-white font-bold mr-2 sm:mr-3 text-xs sm:text-sm bg-white/10 rounded px-1.5 sm:px-2 py-0.5 sm:py-1 flex-shrink-0" x-text="index + 1"></span>
+                                            <span class="text-white text-xs sm:text-sm truncate" x-text="getComponentName(item)"></span>
+                                        </div>
+                                        <button @click="removeComponent(index)" class="text-red-400 hover:text-red-300 flex-shrink-0 p-2 touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Check Button -->
+                        <button @click="checkAssembly()"
+                                class="mt-3 sm:mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl transition text-sm sm:text-base touch-manipulation min-h-[44px]">
+                            <span x-text="t.game?.checkButton || 'Check Assembly'"></span>
+                        </button>
+
+                        <!-- Result Message -->
+                        <div x-show="gameResult" class="mt-3 sm:mt-4 p-3 sm:p-4 rounded-xl" :class="gameResult === 'correct' ? 'bg-green-500/20 border border-green-400' : 'bg-red-500/20 border border-red-400'">
+                            <p class="text-center font-bold text-xs sm:text-sm" :class="gameResult === 'correct' ? 'text-green-300' : 'text-red-300'" x-text="gameMessage"></p>
+                        </div>
+
+                        <!-- Reset Button -->
+                        <div class="mt-3 sm:mt-4 text-center">
+                            <button @click="resetGame()" class="text-blue-400 hover:text-blue-300 text-xs sm:text-sm underline touch-manipulation py-2 px-3 min-h-[44px] inline-flex items-center" x-text="t.game?.resetButton || 'Reset Game'"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="border-t border-gray-800 py-6 sm:py-8 md:py-10">
         <div class="container mx-auto px-4 sm:px-6">
@@ -1118,7 +1136,7 @@
                         },
                         abstract: {
                             title: 'Abstract',
-                            content: 'This research presents an integrated autonomous monitoring system for solar-powered space missions, combining machine learning-based battery health prediction, computer vision anomaly detection, and generative AI-powered intelligent assistance. The system employs dual STM32 microcontrollers: an IoT discovery board for real-time environmental monitoring and ML inference, and an N6 development kit with dedicated Neural Processing Unit for vision-based solar panel diagnostics. Using NASA battery degradation datasets and Roboflow solar panel imagery, we achieved 92% prediction accuracy for Remaining Useful Life estimation and sub-100ms inference time for multi-class object detection. The system uniquely integrates real-time web and mobile monitoring interfaces with a generative AI proactive assistant (GPT-4o-mini) for context-aware maintenance recommendations, complemented by comprehensive data logging via Google Drive API for mission-critical analytics. Beyond immediate space applications, this research follows NASA\'s technology transfer paradigm, where extreme environment validation creates commercially viable spin-offs for terrestrial solar energy monitoring, with future scalability through advanced material science sensor integration.',
+                            content: 'This research presents an integrated autonomous monitoring system for solar-powered space missions, combining machine learning-based battery life prediction, computer vision anomaly detection, and generative AI-powered intelligent assistance. The system employs dual STM32 microcontrollers: an IoT board for real-time environmental monitoring and ML inference, and an N6-type development kit with dedicated Neural Processing Unit for vision-based solar panel anomaly detection. Using NASA\'s own battery datasets and a dataset of 2,290 solar panel images, we achieved 92% prediction accuracy and sub-100ms inference time for multi-class object detection. The system integrates real-time web and mobile monitoring interfaces with a generative AI proactive assistant (GPT-4o-mini) for context-aware maintenance recommendations. This research, in addition to space applications, aligns with NASA\'s technology transfer paradigm—meaning it has the characteristic of being a spin-off applicable not only in space but also on Earth. In the future, it can be transformed into a higher-function application through advanced material science sensor integration that will be placed inside solar panels.',
                             keywords: {
                                 title: 'Keywords',
                                 list: ['Machine Learning', 'Computer Vision', 'Generative AI', 'Edge AI', 'Battery Health Monitoring', 'Solar Panel Diagnostics', 'STM32 NPU', 'YOLO', 'Predictive Maintenance']
@@ -1129,11 +1147,11 @@
                             challenges: {
                                 title: 'Challenges',
                                 items: [
-                                    'Battery degradation in extreme space environments (-20°C to +60°C)',
-                                    'Solar panel efficiency loss from dust accumulation and micro-meteoroid impacts',
-                                    'Limited autonomous diagnostic capabilities for deep-space missions',
-                                    'High power consumption of traditional monitoring systems',
-                                    'Communication delays preventing real-time ground control'
+                                    'PV cell efficiency decreases as temperature increases; extreme temperatures (-150°C to +150°C) and radiation cause accelerated battery degradation',
+                                    'On planetary surfaces (Moon, Mars), dust accumulation can cause >30% power loss; NASA InSight dropped from ~5,000 Wh/sol to ~500 Wh/sol due to dust',
+                                    'Threshold monitoring cannot detect early anomalies; traditional approaches fail to reveal root causes and enable only reactive responses',
+                                    'Space missions require AI methods adapted for energy efficiency, resilience, and on-board operation due to limited resources and radiation effects',
+                                    'Communication delays: Lunar missions 3-14 seconds one-way; Mars missions up to 22 minutes one-way (44 minutes round-trip) making real-time control impossible'
                                 ]
                             },
                             objectives: {
@@ -1279,6 +1297,8 @@
                             resourcesTitle: 'Download Resources',
                             whitepaperTitle: 'Technical White Paper',
                             whitepaperDesc: 'Complete technical documentation (PDF-ready)',
+                            pitchdeckTitle: 'Investor Pitch Deck',
+                            pitchdeckDesc: 'Business model, pricing & financials',
                             datasetTitle: 'Dataset Documentation',
                             datasetDesc: 'NASA & Roboflow dataset details'
                         },
@@ -1470,7 +1490,7 @@
                         },
                         abstract: {
                             title: 'Аннотация',
-                            content: 'Бұл зерттеу күн энергиясымен жұмыс істейтін ғарыштық миссияларға арналған интеграцияланған автономды мониторинг жүйесін ұсынады, машиналық оқытуға негізделген батарея денсаулығын болжауды, компьютерлік көру аномалияларын анықтауды және генеративті AI қуатталған интеллектуалды көмекті біріктіреді. Жүйе екі STM32 микроконтроллерін пайдаланады: нақты уақыттағы қоршаған орта мониторингі мен МО қорытындысы үшін IoT табу платасы және көруге негізделген күн панелі диагностикасы үшін арнайы Нейрондық Өңдеу Блогымен N6 даму жинағы. NASA батарея деградация деректер жиынтығы мен Roboflow күн панелі кескіндемесін пайдалана отырып, біз Қалған Пайдалы Өмірді бағалау үшін 92% болжау дәлдігіне және көп класты объектіні анықтау үшін 100мс-тан төмен қорытынды уақытына қол жеткіздік. Жүйе бірегей түрде нақты уақыт веб және мобильді мониторинг интерфейстерін контекстке сезімтал техникалық қызмет көрсету ұсыныстары үшін генеративті AI проактивті көмекшімен (GPT-4o-mini) біріктіреді, миссияға критикалық талдау үшін Google Drive API арқылы кешенді деректер журналымен толықтырылған. Тікелей ғарыштық қолданулардан тыс, бұл зерттеу NASA технология трансферт парадигмасын қолданады, мұнда экстремалды орта тексеруі жердегі күн энергиясын бақылау үшін коммерциялық тұрғыдан тиімді spin-off жасайды, кеңейтілген материал ғылымы сенсор интеграциясы арқылы болашақта масштабталады.',
+                            content: 'Бұл зерттеу күн энергиясымен жұмыс істейтін ғарыштық миссияларға арналған интеграцияланған автономды мониторинг жүйесін ұсынады, машиналық оқытуға негізделген батарея өмірін болжауды, компьютерлік көру аномалияларын анықтауды және генеративті AI қуатталған интеллектуалды көмекті біріктіреді. Жүйе екі STM32 микроконтроллерін пайдаланады: нақты уақыттағы қоршаған орта мониторингі мен МО қорытындысы үшін IoT платасы және көруге негізделген күн панелі аномалияларын анықтау үшін арнайы Нейрондық Өңдеу Блогымен N6 типті даму жинағы. NASA-ның өз батарея деректер жинағы және 2290 күн панелі кескінінен тұратын деректер жиынтығын пайдалана отырып, біз 92% болжау дәлдігіне және көп класты объектіні анықтау үшін 100мс-тан төмен қорытынды уақытына қол жеткіздік. Жүйе нақты уақыт веб және мобильді мониторинг интерфейстерін контекстке сезімтал техникалық қызмет көрсету ұсыныстары үшін генеративті AI проактивті көмекшімен (GPT-4o-mini) біріктіреді. Бұл зерттеу ғарыштық қолданулардан тыс NASA технология трансферт парадигмасына сәйкес келеді - яғни тек ғарышта ғана емес, жер бетінде де қолданылатын spin-off болу қасиетіне ие. Болашақта күн панельдерінің ішіне орналастырылатын алдыңғы қатарлы материал ғылымы сенсорлық интеграциясы арқылы жоғары функционалды қосымшаға айналуы мүмкін.',
                             keywords: {
                                 title: 'Кілт сөздер',
                                 list: ['Машиналық Оқыту', 'Компьютерлік Көру', 'Генеративті AI', 'Edge AI', 'Батарея Денсаулығын Бақылау', 'Күн Панелі Диагностикасы', 'STM32 NPU', 'YOLO', 'Болжамды Қызмет']
@@ -1481,11 +1501,11 @@
                             challenges: {
                                 title: 'Қиындықтар',
                                 items: [
-                                    'Ғарыштың шектеп ортасында батареяның деградациясы (-20°C бастап +60°C дейін)',
-                                    'Шаң жинақталуынан және микро-метеороидтардан күн панелінің тиімділігі жоғалуы',
-                                    'Тереңдегі ғарыштық миссиялар үшін шектеулі автономды диагностикалық мүмкіндіктер',
-                                    'Дәстүрлі бақылау жүйелерінің жоғары қуат тұтынуы',
-                                    'Нақты уақытта жер бақылауына кедергі келтіретін байланыс кідірістері'
+                                    'Температура көтерілген сайын PV жасушаларының тиімділігі төмендейді; экстремалды температуралар (-150°C бастап +150°C дейін) және радиация батареяның жылдам деградациясына себеп болады',
+                                    'Планета беттерінде (Ай, Марс) шаң жинақталуы >30% қуат жоғалтуына әкелуі мүмкін; NASA InSight шаңға байланысты ~5,000 Wh/sol-дан ~500 Wh/sol-ға дейін түсті',
+                                    'Шекті мониторинг ерте аномалияларды анықтай алмайды; дәстүрлі тәсілдер түпкі себептерді анықтай алмайды және тек реактивті жауаптарды қамтамасыз етеді',
+                                    'Ғарыштық миссиялар шектеулі ресурстар мен радиация әсерлеріне байланысты энергия тиімділігі, тұрақтылық және борт үстіндегі жұмысқа бейімделген AI әдістерін талап етеді',
+                                    'Байланыс кідірістері: Ай миссияларында 3-14 секунд бір бағытта; Марс миссияларында бір бағытта 22 минутқа дейін (екі бағытта 44 минут) нақты уақыт бақылауын мүмкін емес етеді'
                                 ]
                             },
                             objectives: {
@@ -1631,6 +1651,8 @@
                             resourcesTitle: 'Ресурстарды Жүктеу',
                             whitepaperTitle: 'Техникалық Ақ Қағаз',
                             whitepaperDesc: 'Толық техникалық құжаттама (PDF-дайын)',
+                            pitchdeckTitle: 'Инвестор Презентациясы',
+                            pitchdeckDesc: 'Бизнес моделі, баға және қаржы',
                             datasetTitle: 'Деректер Жиынтығы Құжаттамасы',
                             datasetDesc: 'NASA және Roboflow деректер жиынтығы мәліметтері'
                         },
@@ -1822,7 +1844,7 @@
                         },
                         abstract: {
                             title: 'Аннотация',
-                            content: 'Это исследование представляет интегрированную автономную систему мониторинга для космических миссий на солнечной энергии, объединяющую прогнозирование состояния батарей на основе машинного обучения, обнаружение аномалий с помощью компьютерного зрения и интеллектуальную помощь на базе генеративного ИИ. Система использует два микроконтроллера STM32: плату IoT discovery для мониторинга окружающей среды в реальном времени и вывода МО, и комплект разработки N6 с выделенным блоком нейронной обработки для диагностики солнечных панелей на основе зрения. Используя наборы данных деградации батарей NASA и изображения солнечных панелей Roboflow, мы достигли точности прогнозирования 92% для оценки оставшегося срока службы и времени вывода менее 100мс для многоклассового обнаружения объектов. Система уникально интегрирует веб- и мобильные интерфейсы мониторинга в реальном времени с проактивным помощником на базе генеративного ИИ (GPT-4o-mini) для контекстно-зависимых рекомендаций по обслуживанию, дополненным комплексной регистрацией данных через Google Drive API для критически важного анализа миссий. Помимо непосредственных космических применений, это исследование следует парадигме передачи технологий NASA, где валидация в экстремальных условиях создает коммерчески жизнеспособные spin-off для наземного мониторинга солнечной энергии, с будущей масштабируемостью через интеграцию передовых сенсоров материаловедения.',
+                            content: 'Это исследование представляет интегрированную автономную систему мониторинга для космических миссий на солнечной энергии, объединяющую прогнозирование срока службы батарей на основе машинного обучения, обнаружение аномалий с помощью компьютерного зрения и интеллектуальную помощь на базе генеративного ИИ. Система использует два микроконтроллера STM32: плату IoT для мониторинга окружающей среды в реальном времени и вывода МО, и комплект разработки типа N6 с выделенным блоком нейронной обработки для обнаружения аномалий солнечных панелей на основе зрения. Используя собственные наборы данных батарей NASA и набор из 2290 изображений солнечных панелей, мы достигли точности прогнозирования 92% и времени вывода менее 100мс для многоклассового обнаружения объектов. Система интегрирует веб- и мобильные интерфейсы мониторинга в реальном времени с проактивным помощником на базе генеративного ИИ (GPT-4o-mini) для контекстно-зависимых рекомендаций по обслуживанию. Это исследование, помимо космических применений, соответствует парадигме передачи технологий NASA — то есть имеет характеристику spin-off, применимого не только в космосе, но и на Земле. В будущем оно может быть преобразовано в приложение с более высокой функциональностью благодаря интеграции передовых сенсоров материаловедения, которые будут размещены внутри солнечных панелей.',
                             keywords: {
                                 title: 'Ключевые слова',
                                 list: ['Машинное Обучение', 'Компьютерное Зрение', 'Генеративный ИИ', 'Edge AI', 'Мониторинг Здоровья Батарей', 'Диагностика Солнечных Панелей', 'STM32 NPU', 'YOLO', 'Предиктивное Обслуживание']
@@ -1833,11 +1855,11 @@
                             challenges: {
                                 title: 'Вызовы',
                                 items: [
-                                    'Деградация батарей в экстремальных космических условиях (-20°C до +60°C)',
-                                    'Потеря эффективности солнечных панелей от накопления пыли и микрометеоритов',
-                                    'Ограниченные автономные диагностические возможности для миссий в дальнем космосе',
-                                    'Высокое энергопотребление традиционных систем мониторинга',
-                                    'Задержки связи, препятствующие управлению с Земли в реальном времени'
+                                    'Эффективность PV-элементов снижается с ростом температуры; экстремальные температуры (-150°C до +150°C) и радиация вызывают ускоренную деградацию батарей',
+                                    'На поверхностях планет (Луна, Марс) накопление пыли может вызвать потерю мощности >30%; NASA InSight упал с ~5000 Вт·ч/сол до ~500 Вт·ч/сол из-за пыли',
+                                    'Пороговый мониторинг не может обнаружить ранние аномалии; традиционные подходы не выявляют первопричины и обеспечивают только реактивные ответы',
+                                    'Космические миссии требуют методов ИИ, адаптированных для энергоэффективности, устойчивости и бортовой работы из-за ограниченных ресурсов и радиационных эффектов',
+                                    'Задержки связи: лунные миссии 3-14 секунд в одну сторону; марсианские миссии до 22 минут в одну сторону (44 минуты туда-обратно), делая управление в реальном времени невозможным'
                                 ]
                             },
                             objectives: {
@@ -1983,6 +2005,8 @@
                             resourcesTitle: 'Скачать Ресурсы',
                             whitepaperTitle: 'Техническая Белая Книга',
                             whitepaperDesc: 'Полная техническая документация (готова к PDF)',
+                            pitchdeckTitle: 'Инвестиционная Презентация',
+                            pitchdeckDesc: 'Бизнес-модель, цены и финансы',
                             datasetTitle: 'Документация Датасета',
                             datasetDesc: 'Детали датасетов NASA и Roboflow'
                         },
@@ -2174,7 +2198,7 @@
                         },
                         abstract: {
                             title: 'Özet',
-                            content: 'Bu araştırma, güneş enerjili uzay misyonları için makine öğrenmesi tabanlı batarya sağlığı tahmini, bilgisayarlı görü anomali tespiti ve üretken yapay zeka destekli akıllı yardımı birleştiren entegre bir otonom izleme sistemi sunmaktadır. Sistem çift STM32 mikrodenetleyici kullanır: gerçek zamanlı çevresel izleme ve ML çıkarımı için bir IoT keşif kartı ve görüntü tabanlı güneş paneli teşhisi için özel Nöral İşleme Birimi ile bir N6 geliştirme kiti. NASA batarya bozulma veri setleri ve Roboflow güneş paneli görüntüleri kullanarak, Kalan Faydalı Ömür tahmini için %92 tahmin doğruluğu ve çok sınıflı nesne tespiti için 100ms altı çıkarım süresi elde ettik. Sistem benzersiz bir şekilde gerçek zamanlı web ve mobil izleme arayüzlerini bağlam duyarlı bakım önerileri için üretken yapay zeka proaktif asistanıyla (GPT-4o-mini) entegre eder, misyon kritik analizler için Google Drive API aracılığıyla kapsamlı veri kaydıyla tamamlanır. Doğrudan uzay uygulamalarının ötesinde, bu araştırma NASA\'nın teknoloji transfer paradigmasını takip eder; aşırı ortam doğrulaması yeryüzü güneş enerjisi izlemesi için ticari olarak uygulanabilir spin-off\'lar yaratır ve gelişmiş malzeme bilimi sensör entegrasyonu ile gelecekte ölçeklendirilebilir.',
+                            content: 'Bu araştırma, güneş enerjili uzay misyonları için makine öğrenmesi tabanlı batarya ömrü tahmini, bilgisayarlı görü anomali tespiti ve üretken yapay zeka destekli akıllı yardımı birleştiren entegre bir otonom izleme sistemi sunmaktadır. Sistem çift STM32 mikro denetleyici kullanmaktadır. Bu mikro denetleyiciler, gerçek zamanlı çevresel izleme ve ML çıkarımı için bir IoT kartı ve görüntü tabanlı güneş paneli anomali tespiti için özel nöral işleme birimi ile bir N6 türü geliştirme kitidir. NASA\'nın kendi bataryalarına ait olan veri setleri ve güneş panellerine ait 2290 adet görüntüden oluşan veri seti kullanılarak %92 tahmin doğruluğu ve çok sınıflı nesne tespiti için 100 ms altı çıkarım süresi elde edilmiştir. Sistem gerçek zamanlı web ve mobil izleme ara yüzlerini bağlam duyarlı bakım önerileri için üretken yapay zeka proaktif asistanıyla (GPT-4o-mini) entegre etmektedir. Bu araştırma, uzay uygulamalarının yanı sıra, NASA\'nın teknoloji transfer paradigmasına uygundur. Yani sadece uzayda değil yer yüzünde de uygulanabilir bir yan ürün olma özelliği taşımaktadır. Gelecekte güneş panellerinin içine yerleştirilecek olan gelişmiş malzeme bilimi sensör entegrasyonu ile daha yüksek fonksiyon sağlayan bir uygulamaya dönüştürülebilecektir.',
                             keywords: {
                                 title: 'Anahtar Kelimeler',
                                 list: ['Makine Öğrenmesi', 'Bilgisayarlı Görü', 'Üretken Yapay Zeka', 'Uç YZ', 'Batarya Sağlığı İzleme', 'Güneş Paneli Teşhisi', 'STM32 NPU', 'YOLO', 'Öngörülü Bakım']
@@ -2185,11 +2209,11 @@
                             challenges: {
                                 title: 'Zorluklar',
                                 items: [
-                                    'Aşırı uzay ortamlarında batarya bozulması (-20°C ile +60°C arası)',
-                                    'Toz birikimi ve mikro-meteoroid çarpmaları nedeniyle güneş paneli verimlilik kaybı',
-                                    'Derin uzay misyonları için sınırlı otonom teşhis yetenekleri',
-                                    'Geleneksel izleme sistemlerinin yüksek güç tüketimi',
-                                    'Gerçek zamanlı yer kontrolünü engelleyen iletişim gecikmeleri'
+                                    'Sıcaklık arttıkça PV hücrelerinin verimi düşer; aşırı sıcaklıklar (-150°C ile +150°C) ve radyasyon hızlandırılmış batarya bozulmasına neden olur',
+                                    'Gezegen yüzeylerinde (Ay, Mars) toz birikimi >%30 güç kaybına neden olabilir; NASA InSight toz nedeniyle ~5.000 Wh/sol\'dan ~500 Wh/sol\'a düştü',
+                                    'Eşik izleme erken anomalileri tespit edemez; geleneksel yaklaşımlar kök nedenleri ortaya koyamaz ve yalnızca reaktif yanıtlar sağlar',
+                                    'Uzay misyonları sınırlı kaynaklar ve radyasyon etkileri nedeniyle enerji verimliliği, dayanıklılık ve araç üzeri çalışmaya uyarlanmış AI yöntemleri gerektirir',
+                                    'İletişim gecikmeleri: Ay misyonları tek yönde 3-14 saniye; Mars misyonları tek yönde 22 dakikaya kadar (gidiş-dönüş 44 dakika) gerçek zamanlı kontrolü imkansız kılar'
                                 ]
                             },
                             objectives: {
@@ -2335,6 +2359,8 @@
                             resourcesTitle: 'Kaynakları İndir',
                             whitepaperTitle: 'Teknik Beyaz Kitap',
                             whitepaperDesc: 'Tam teknik dokümantasyon (PDF-hazır)',
+                            pitchdeckTitle: 'Yatırımcı Sunum Dosyası',
+                            pitchdeckDesc: 'İş modeli, fiyatlandırma ve finans',
                             datasetTitle: 'Veri Seti Dokümantasyonu',
                             datasetDesc: 'NASA ve Roboflow veri seti detayları'
                         },

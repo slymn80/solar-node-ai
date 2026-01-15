@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar-Battery Node AI - Pitch Deck</title>
+
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+
+    <style>
+        @media print {
+            body { margin: 0; padding: 0; font-size: 10pt; }
+            @page { margin: 8mm; size: A4; }
+            .top-controls { display: none !important; }
+            .footer { display: none !important; }
+
+            .section {
+                page-break-before: always;
+                page-break-inside: avoid;
+                padding: 0;
+            }
+
+            .section:first-of-type {
+                page-break-before: avoid;
+            }
+
+            /* Page 1: Header + Opening Pitch - fit on one page */
+            .header {
+                padding: 8px 0;
+                margin-bottom: 5px;
+                border-bottom-width: 2px;
+            }
+
+            .header h1 {
+                font-size: 20pt;
+            }
+
+            .header .subtitle {
+                font-size: 9pt;
+                margin-top: 3px;
+            }
+
+            .header .competition {
+                font-size: 7pt;
+                margin-bottom: 3px;
+            }
+
+            .metadata {
+                font-size: 7pt;
+                margin-bottom: 5px;
+            }
+
+            .opening-pitch {
+                padding: 10px;
+                margin-bottom: 0;
+            }
+
+            .opening-pitch h2 {
+                font-size: 11pt;
+                margin-bottom: 5px;
+            }
+
+            .opening-pitch p {
+                font-size: 7.5pt;
+                line-height: 1.35;
+                margin-bottom: 3px;
+                text-align: left;
+            }
+
+            h2 {
+                font-size: 16pt;
+                margin: 10px 0;
+            }
+
+            .problem-grid, .solution-grid {
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .problem-card .value, .solution-card .metric {
+                font-size: 20pt;
+            }
+
+            .problem-card .label, .solution-card .title {
+                font-size: 9pt;
+            }
+
+            .team-grid {
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .comparison-container {
+                gap: 15px;
+                margin: 20px 0;
+            }
+
+            .roadmap {
+                margin: 30px 0;
+            }
+
+            .cost-table {
+                margin: 20px 0;
+                font-size: 10pt;
+            }
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            background: #fff;
+        }
+
+        h1 {
+            font-size: 32pt;
+            color: #1e3a5f;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 20pt;
+            color: #2563eb;
+            margin: 40px 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 .icon {
+            font-size: 24pt;
+        }
+
+        .top-controls {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: white;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 5px;
+        }
+
+        .lang-switcher button {
+            background: #f3f4f6;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        .lang-switcher button.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 11px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, #059669, #047857) !important;
+            transform: translateY(-2px);
+        }
+
+        .download-btn.loading {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .download-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 3px solid #2563eb;
+            margin-bottom: 30px;
+        }
+
+        .header .competition {
+            font-size: 11pt;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 14pt;
+            color: #2563eb;
+            margin-top: 10px;
+        }
+
+        .metadata {
+            text-align: center;
+            color: #6b7280;
+            font-size: 10pt;
+            margin-bottom: 40px;
+        }
+
+        /* Opening Pitch */
+        .opening-pitch {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .opening-pitch h2 {
+            margin: 0 0 20px 0;
+            color: #1e3a5f;
+        }
+
+        .opening-pitch p {
+            font-size: 11pt;
+            line-height: 1.8;
+            color: #374151;
+            margin: 0 0 15px 0;
+            text-align: justify;
+        }
+
+        .opening-pitch p:last-child {
+            margin-bottom: 0;
+        }
+
+        .opening-pitch .highlight {
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+
+        /* Problem Cards */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .problem-card .value {
+            font-size: 28pt;
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .problem-card .label {
+            font-size: 10pt;
+            color: #7f1d1d;
+            margin-top: 5px;
+        }
+
+        .problem-card .source {
+            font-size: 8pt;
+            color: #9ca3af;
+            margin-top: 8px;
+        }
+
+        /* Solution Cards */
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .solution-card {
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .solution-card.blue {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border: 1px solid #93c5fd;
+        }
+
+        .solution-card.green {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1px solid #86efac;
+        }
+
+        .solution-card.purple {
+            background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+            border: 1px solid #c4b5fd;
+        }
+
+        .solution-card .icon {
+            font-size: 32pt;
+            margin-bottom: 10px;
+        }
+
+        .solution-card .title {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .solution-card .metric {
+            font-size: 18pt;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .solution-card.blue .metric { color: #2563eb; }
+        .solution-card.green .metric { color: #16a34a; }
+        .solution-card.purple .metric { color: #7c3aed; }
+
+        .solution-card .desc {
+            font-size: 9pt;
+            color: #6b7280;
+        }
+
+        /* Prototype Cost */
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 11pt;
+        }
+
+        .cost-table th {
+            background: #1e3a5f;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .cost-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .cost-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .cost-table .total-row {
+            background: #dbeafe !important;
+            font-weight: 700;
+        }
+
+        .cost-table .price {
+            text-align: right;
+            font-family: 'Consolas', monospace;
+        }
+
+        /* Impact Comparison */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-box {
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .comparison-box.before {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border: 2px solid #fecaca;
+        }
+
+        .comparison-box.after {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 2px solid #86efac;
+        }
+
+        .comparison-box .header-label {
+            font-size: 14pt;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .comparison-box.before .header-label { color: #dc2626; }
+        .comparison-box.after .header-label { color: #16a34a; }
+
+        .comparison-item {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 8px;
+        }
+
+        .comparison-item .value {
+            font-size: 20pt;
+            font-weight: 700;
+        }
+
+        .comparison-box.before .value { color: #dc2626; }
+        .comparison-box.after .value { color: #16a34a; }
+
+        .comparison-item .label {
+            font-size: 9pt;
+            color: #6b7280;
+        }
+
+        /* Roadmap Timeline */
+        .roadmap {
+            position: relative;
+            margin: 40px 0;
+        }
+
+        .roadmap-line {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2563eb, #16a34a);
+            border-radius: 2px;
+        }
+
+        .roadmap-items {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            position: relative;
+        }
+
+        .roadmap-item {
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .roadmap-item .dot {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 4px solid #2563eb;
+            border-radius: 50%;
+        }
+
+        .roadmap-item .year {
+            font-size: 16pt;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .roadmap-item .title {
+            font-size: 10pt;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 5px 0;
+        }
+
+        .roadmap-item .desc {
+            font-size: 9pt;
+            color: #6b7280;
+        }
+
+        /* Team */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .team-card {
+            text-align: center;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .team-card.leader {
+            border: 2px solid rgba(234, 179, 8, 0.5);
+            background: linear-gradient(135deg, #fefce8, #fef9c3);
+        }
+
+        .team-card.researcher {
+            border: 2px solid rgba(34, 197, 94, 0.5);
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        }
+
+        .team-card.advisor {
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        }
+
+        .team-card .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            object-fit: cover;
+            border: 4px solid #2563eb;
+        }
+
+        .team-card .avatar.leader {
+            border-color: #eab308;
+        }
+
+        .team-card .avatar.researcher {
+            border-color: #22c55e;
+        }
+
+        .team-card .avatar.advisor {
+            border-color: #3b82f6;
+        }
+
+        .team-card .name {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .team-card .role {
+            font-size: 10pt;
+            color: #2563eb;
+            margin: 5px 0;
+            font-weight: 600;
+        }
+
+        .team-card.leader .role { color: #ca8a04; }
+        .team-card.researcher .role { color: #16a34a; }
+        .team-card.advisor .role { color: #2563eb; }
+
+        .team-card .expertise {
+            font-size: 9pt;
+            color: #6b7280;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #2563eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 10pt;
+        }
+
+        .section {
+            min-height: auto;
+        }
+    </style>
+</head>
+<body x-data="pitchDeck()">
+
+<!-- Top Controls -->
+<div class="top-controls">
+    <div class="lang-switcher">
+        <button @click="currentLang = 'en'" :class="currentLang === 'en' ? 'active' : ''">EN</button>
+        <button @click="currentLang = 'kk'" :class="currentLang === 'kk' ? 'active' : ''">ҚЗ</button>
+        <button @click="currentLang = 'ru'" :class="currentLang === 'ru' ? 'active' : ''">РУ</button>
+        <button @click="currentLang = 'tr'" :class="currentLang === 'tr' ? 'active' : ''">TR</button>
+    </div>
+    <button @click="downloadPDF()" class="download-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span x-text="t.pdf.download"></span>
+    </button>
+</div>
+
+<!-- Page 1: Header + Opening Pitch -->
+<div class="section">
+    <div class="header">
+        <p class="competition">AEROO Space AI Competition 2026</p>
+        <h1>Solar-Battery Node AI</h1>
+        <p class="subtitle">Power Health & Vision Anomaly Detection</p>
+    </div>
+
+    <div class="metadata">
+        <strong x-text="t.meta.team"></strong>: Beasts (Ayla Badalova, Amir Dilovarov) &nbsp;|&nbsp;
+        <strong x-text="t.meta.advisor"></strong>: Suleyman Tongut &nbsp;|&nbsp;
+        <strong>Talgar Private Boarding School No. 1</strong>
+    </div>
+
+    <div class="opening-pitch">
+        <h2><span class="icon">🎯</span> <span x-text="t.pitch.title"></span></h2>
+        <p x-html="t.pitch.p1"></p>
+        <p x-html="t.pitch.p2"></p>
+        <p x-html="t.pitch.p3"></p>
+        <p x-html="t.pitch.p4"></p>
+        <p x-html="t.pitch.p5"></p>
+        <p x-html="t.pitch.p6"></p>
+    </div>
+</div>
+
+<!-- Page 2: Problem -->
+<div class="section">
+    <h2><span class="icon">⚠️</span> <span x-text="t.problem.title"></span></h2>
+    <div class="problem-grid">
+        <div class="problem-card">
+            <div class="value">$830M</div>
+            <div class="label" x-text="t.problem.items.p1"></div>
+            <div class="source">NASA InSight (2018-2022)</div>
+        </div>
+        <div class="problem-card">
+            <div class="value">30%+</div>
+            <div class="label" x-text="t.problem.items.p2"></div>
+            <div class="source">NASA InSight dust accumulation</div>
+        </div>
+        <div class="problem-card">
+            <div class="value">22.5 hrs</div>
+            <div class="label" x-text="t.problem.items.p3"></div>
+            <div class="source">Voyager 1 one-way signal</div>
+        </div>
+        <div class="problem-card">
+            <div class="value">78%</div>
+            <div class="label" x-text="t.problem.items.p4"></div>
+            <div class="source">Industry average</div>
+        </div>
+    </div>
+</div>
+
+<!-- Page 3: Solution -->
+<div class="section">
+    <h2><span class="icon">💡</span> <span x-text="t.solution.title"></span></h2>
+    <div class="solution-grid">
+        <div class="solution-card blue">
+            <div class="icon">🔋</div>
+            <div class="title" x-text="t.solution.ml.title"></div>
+            <div class="metric">92%</div>
+            <div class="desc" x-text="t.solution.ml.desc"></div>
+        </div>
+        <div class="solution-card green">
+            <div class="icon">👁️</div>
+            <div class="title" x-text="t.solution.vision.title"></div>
+            <div class="metric">&lt;100ms</div>
+            <div class="desc" x-text="t.solution.vision.desc"></div>
+        </div>
+        <div class="solution-card purple">
+            <div class="icon">🤖</div>
+            <div class="title" x-text="t.solution.ai.title"></div>
+            <div class="metric">GPT-4o</div>
+            <div class="desc" x-text="t.solution.ai.desc"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Page 4: Prototype Cost -->
+<div class="section">
+    <h2><span class="icon">💰</span> <span x-text="t.cost.title"></span></h2>
+    <table class="cost-table">
+        <tr>
+            <th x-text="t.cost.component"></th>
+            <th style="text-align: right;" x-text="t.cost.price"></th>
+        </tr>
+        <tr>
+            <td>STM32N6570-DK (NPU Board)</td>
+            <td class="price">$193</td>
+        </tr>
+        <tr>
+            <td>STM32 B-L475E-IOT01A (IoT Board)</td>
+            <td class="price">$54</td>
+        </tr>
+        <tr>
+            <td>IMX335 5MP Camera Module</td>
+            <td class="price">$65</td>
+        </tr>
+        <tr class="total-row">
+            <td><strong x-text="t.cost.total"></strong></td>
+            <td class="price"><strong>$312</strong></td>
+        </tr>
+    </table>
+    <p style="text-align: center; color: #6b7280; font-size: 10pt;" x-text="t.cost.note"></p>
+</div>
+
+<!-- Page 5: Impact Comparison -->
+<div class="section">
+    <h2><span class="icon">📊</span> <span x-text="t.impact.title"></span></h2>
+    <div class="comparison-container">
+        <div class="comparison-box before">
+            <div class="header-label" x-text="t.impact.before"></div>
+            <div class="comparison-item">
+                <div class="value">78%</div>
+                <div class="label" x-text="t.impact.items.reactive"></div>
+            </div>
+            <div class="comparison-item">
+                <div class="value">0%</div>
+                <div class="label" x-text="t.impact.items.prediction"></div>
+            </div>
+            <div class="comparison-item">
+                <div class="value">22+ hrs</div>
+                <div class="label" x-text="t.impact.items.response"></div>
+            </div>
+            <div class="comparison-item">
+                <div class="value">30%+</div>
+                <div class="label" x-text="t.impact.items.loss"></div>
+            </div>
+        </div>
+        <div class="comparison-box after">
+            <div class="header-label" x-text="t.impact.after"></div>
+            <div class="comparison-item">
+                <div class="value">15%</div>
+                <div class="label" x-text="t.impact.items.reactive"></div>
+            </div>
+            <div class="comparison-item">
+                <div class="value">92%</div>
+                <div class="label" x-text="t.impact.items.prediction"></div>
+            </div>
+            <div class="comparison-item">
+                <div class="value">&lt;100ms</div>
+                <div class="label" x-text="t.impact.items.response"></div>
+            </div>
+            <div class="comparison-item">
+                <div class="value">&lt;5%</div>
+                <div class="label" x-text="t.impact.items.loss"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page 6: Roadmap -->
+<div class="section">
+    <h2><span class="icon">🗺️</span> <span x-text="t.roadmap.title"></span></h2>
+    <div class="roadmap">
+        <div class="roadmap-line"></div>
+        <div class="roadmap-items">
+            <div class="roadmap-item" style="position: relative;">
+                <div class="dot"></div>
+                <div class="year">1 <span x-text="t.roadmap.year"></span></div>
+                <div class="title" x-text="t.roadmap.y1.title"></div>
+                <div class="desc" x-text="t.roadmap.y1.desc"></div>
+            </div>
+            <div class="roadmap-item" style="position: relative;">
+                <div class="dot" style="border-color: #3b82f6;"></div>
+                <div class="year">3 <span x-text="t.roadmap.year"></span></div>
+                <div class="title" x-text="t.roadmap.y3.title"></div>
+                <div class="desc" x-text="t.roadmap.y3.desc"></div>
+            </div>
+            <div class="roadmap-item" style="position: relative;">
+                <div class="dot" style="border-color: #10b981;"></div>
+                <div class="year">5 <span x-text="t.roadmap.year"></span></div>
+                <div class="title" x-text="t.roadmap.y5.title"></div>
+                <div class="desc" x-text="t.roadmap.y5.desc"></div>
+            </div>
+            <div class="roadmap-item" style="position: relative;">
+                <div class="dot" style="border-color: #16a34a;"></div>
+                <div class="year">10 <span x-text="t.roadmap.year"></span></div>
+                <div class="title" x-text="t.roadmap.y10.title"></div>
+                <div class="desc" x-text="t.roadmap.y10.desc"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page 7: Team -->
+<div class="section">
+    <h2><span class="icon">👥</span> <span x-text="t.team.title"></span></h2>
+    <div class="team-grid">
+    <div class="team-card leader">
+        <img src="images/amir.jpeg" alt="Amir Dilovarov" class="avatar leader">
+        <div class="name">Amir Dilovarov</div>
+        <div class="role" x-text="t.team.amir.role"></div>
+        <div class="expertise" x-text="t.team.amir.expertise"></div>
+    </div>
+    <div class="team-card researcher">
+        <img src="images/ayla.jpeg" alt="Ayla Badalova" class="avatar researcher">
+        <div class="name">Ayla Badalova</div>
+        <div class="role" x-text="t.team.ayla.role"></div>
+        <div class="expertise" x-text="t.team.ayla.expertise"></div>
+    </div>
+    <div class="team-card advisor">
+        <img src="images/IMG_6985.JPG" alt="Süleyman Tongut" class="avatar advisor">
+        <div class="name">Süleyman Tongut</div>
+        <div class="role" x-text="t.team.suleyman.role"></div>
+        <div class="expertise" x-text="t.team.suleyman.expertise"></div>
+    </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>&copy; 2026 Solar-Battery Node AI | AEROO Space AI Competition</p>
+    <p>Talgar Private Boarding School No. 1</p>
+</div>
+
+<script>
+function pitchDeck() {
+    return {
+        currentLang: 'en',
+        get t() { return this.translations[this.currentLang]; },
+
+        downloadPDF() {
+            const link = document.createElement('a');
+            link.href = 'documents/Solar-Battery Node AI - Pitch Deck.pdf';
+            link.download = 'Solar-Battery Node AI - Pitch Deck.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },
+
+        translations: {
+            en: {
+                meta: { team: 'Team', advisor: 'Advisor' },
+                pdf: { download: 'Download PDF' },
+                pitch: {
+                    title: 'Opening Pitch',
+                    p1: 'Power failure is one of the most expensive and underestimated risks in space missions. NASA\'s InSight mission alone resulted in an estimated <span class="highlight">$830 million loss</span>, primarily due to dust accumulation and undetected degradation in its power system.',
+                    p2: 'Today, more than <span class="highlight">78% of maintenance actions</span> in energy systems are reactive, meaning failures are detected after performance is already lost. In space, where communication delays can exceed 22 hours, reactive maintenance is simply too late.',
+                    p3: '<span class="highlight">Solar-Battery Node AI</span> addresses this problem by combining battery health prediction, computer vision–based surface monitoring, and AI-driven decision support into a single, low-cost intelligent node.',
+                    p4: 'Our system predicts battery Remaining Useful Life with up to <span class="highlight">92% accuracy</span> in laboratory conditions, detects solar panel anomalies in under <span class="highlight">100 milliseconds</span>, and provides autonomous maintenance recommendations to operators.',
+                    p5: 'What makes this approach unique is its <span class="highlight">space-first validation strategy</span>. By proving reliability under extreme environments, we unlock technology transfer opportunities where predictive maintenance creates immediate economic value — from large-scale solar farms to remote infrastructure.',
+                    p6: '<span class="highlight">Our goal is simple:</span> reduce mission risk, extend system lifetime, and transform power systems from reactive to predictive — first in space, then on Earth.'
+                },
+                problem: {
+                    title: 'The Problem',
+                    items: {
+                        p1: 'Mission loss due to power failure',
+                        p2: 'Efficiency loss from dust accumulation',
+                        p3: 'Deep space communication delay',
+                        p4: 'Reactive maintenance rate'
+                    }
+                },
+                solution: {
+                    title: 'Our Solution',
+                    ml: { title: 'Battery Health ML', desc: 'Remaining Useful Life prediction accuracy' },
+                    vision: { title: 'Computer Vision', desc: 'YOLOv8 anomaly detection inference' },
+                    ai: { title: 'AI Assistant', desc: 'Autonomous maintenance recommendations' }
+                },
+                cost: {
+                    title: 'Prototype Cost',
+                    component: 'Component',
+                    price: 'Price',
+                    total: 'Total Prototype Cost',
+                    note: 'All prices from DigiKey/Mouser (January 2025). Space certification costs not included.'
+                },
+                impact: {
+                    title: 'Impact Comparison',
+                    before: 'Without Our System',
+                    after: 'With Solar-Battery Node AI',
+                    items: {
+                        reactive: 'Reactive maintenance',
+                        prediction: 'Failure prediction accuracy',
+                        response: 'Response time',
+                        loss: 'Undetected power loss'
+                    }
+                },
+                roadmap: {
+                    title: 'Development Roadmap',
+                    year: 'Year',
+                    y1: { title: 'Prototype & Testing', desc: 'Complete prototype, lab testing, competition submission' },
+                    y3: { title: 'Space Agency Partnership', desc: 'ISS experiment proposal, NASA/ESA collaboration' },
+                    y5: { title: 'Commercial Deployment', desc: 'Satellite integration, solar farm pilots' },
+                    y10: { title: 'Global Scale', desc: 'Standard for space missions, renewable energy worldwide' }
+                },
+                team: {
+                    title: 'Our Team',
+                    amir: { role: 'Team Leader', expertise: 'Grade 11' },
+                    ayla: { role: 'Student Researcher', expertise: 'Grade 11' },
+                    suleyman: { role: 'Project Advisor', expertise: 'Computer Science Teacher, B.Sc. EEE' }
+                }
+            },
+            kk: {
+                meta: { team: 'Команда', advisor: 'Кеңесші' },
+                pdf: { download: 'PDF Жүктеу' },
+                pitch: {
+                    title: 'Кіріспе Презентация',
+                    p1: 'Қуат ақауы ғарыш миссияларындағы ең қымбат және бағаланбаған тәуекелдердің бірі. NASA InSight миссиясы шаң жиналуы мен қуат жүйесіндегі анықталмаған деградацияға байланысты <span class="highlight">$830 миллион шығынға</span> әкелді.',
+                    p2: 'Бүгінде энергетикалық жүйелердегі <span class="highlight">техникалық қызмет көрсету әрекеттерінің 78%-дан астамы</span> реактивті, яғни ақаулар өнімділік жоғалғаннан кейін анықталады. Байланыс кідірісі 22 сағаттан асатын ғарышта реактивті техникалық қызмет тым кеш.',
+                    p3: '<span class="highlight">Solar-Battery Node AI</span> бұл мәселені батарея денсаулығын болжау, компьютерлік көруге негізделген беткі мониторинг және AI басқаратын шешім қолдауын бір арзан интеллектуалды түйінге біріктіру арқылы шешеді.',
+                    p4: 'Біздің жүйе зертханалық жағдайларда батареяның қалған пайдалы өмірін <span class="highlight">92% дәлдікпен</span> болжайды, күн панелі ақауларын <span class="highlight">100 миллисекундтан</span> аз уақытта анықтайды және операторларға автономды техникалық қызмет ұсыныстарын береді.',
+                    p5: 'Бұл тәсілді ерекше ететін оның <span class="highlight">ғарыш-бірінші валидация стратегиясы</span>. Экстремалды орталарда сенімділікті дәлелдеу арқылы біз болжамды техникалық қызмет тікелей экономикалық құндылық жасайтын технология трансфері мүмкіндіктерін ашамыз.',
+                    p6: '<span class="highlight">Біздің мақсатымыз қарапайым:</span> миссия тәуекелін азайту, жүйе қызмет мерзімін ұзарту және қуат жүйелерін реактивтіден болжамдыға айналдыру — алдымен ғарышта, содан кейін Жерде.'
+                },
+                problem: {
+                    title: 'Мәселе',
+                    items: {
+                        p1: 'Қуат ақауынан миссия жоғалуы',
+                        p2: 'Шаң жиналуынан тиімділік жоғалуы',
+                        p3: 'Терең ғарыш байланыс кідірісі',
+                        p4: 'Реактивті техникалық қызмет'
+                    }
+                },
+                solution: {
+                    title: 'Біздің Шешім',
+                    ml: { title: 'Батарея ML', desc: 'Қалған пайдалы өмірді болжау дәлдігі' },
+                    vision: { title: 'Компьютерлік Көру', desc: 'YOLOv8 аномалия анықтау' },
+                    ai: { title: 'AI Көмекші', desc: 'Автономды техникалық қызмет ұсыныстары' }
+                },
+                cost: {
+                    title: 'Прототип Құны',
+                    component: 'Компонент',
+                    price: 'Бағасы',
+                    total: 'Жалпы Прототип Құны',
+                    note: 'Барлық бағалар DigiKey/Mouser (2025 қаңтар). Ғарыш сертификаттау шығындары қосылмаған.'
+                },
+                impact: {
+                    title: 'Әсер Салыстыруы',
+                    before: 'Жүйесіз',
+                    after: 'Solar-Battery Node AI-мен',
+                    items: {
+                        reactive: 'Реактивті техникалық қызмет',
+                        prediction: 'Ақау болжау дәлдігі',
+                        response: 'Жауап беру уақыты',
+                        loss: 'Анықталмаған қуат жоғалуы'
+                    }
+                },
+                roadmap: {
+                    title: 'Даму Жол Картасы',
+                    year: 'Жыл',
+                    y1: { title: 'Прототип және Тестілеу', desc: 'Прототипті аяқтау, зертханалық тестілеу' },
+                    y3: { title: 'Ғарыш Агенттігі Серіктестігі', desc: 'ХҒС эксперимент ұсынысы, NASA/ESA ынтымақтастығы' },
+                    y5: { title: 'Коммерциялық Орналастыру', desc: 'Спутник интеграциясы, күн фермасы пилоттары' },
+                    y10: { title: 'Жаһандық Масштаб', desc: 'Ғарыш миссиялары үшін стандарт' }
+                },
+                team: {
+                    title: 'Біздің Команда',
+                    amir: { role: 'Команда Жетекшісі', expertise: '11-сынып' },
+                    ayla: { role: 'Студент Зерттеуші', expertise: '11-сынып' },
+                    suleyman: { role: 'Жоба Кеңесшісі', expertise: 'Информатика Мұғалімі, ЭЭИ' }
+                }
+            },
+            ru: {
+                meta: { team: 'Команда', advisor: 'Руководитель' },
+                pdf: { download: 'Скачать PDF' },
+                pitch: {
+                    title: 'Вступительная Презентация',
+                    p1: 'Отказ питания — один из самых дорогостоящих и недооценённых рисков в космических миссиях. Только миссия NASA InSight привела к убыткам в размере <span class="highlight">$830 миллионов</span>, в основном из-за накопления пыли и необнаруженной деградации системы питания.',
+                    p2: 'Сегодня более <span class="highlight">78% действий по техническому обслуживанию</span> энергетических систем являются реактивными, то есть неисправности обнаруживаются после того, как производительность уже потеряна. В космосе, где задержки связи могут превышать 22 часа, реактивное обслуживание просто слишком поздно.',
+                    p3: '<span class="highlight">Solar-Battery Node AI</span> решает эту проблему, объединяя прогнозирование состояния батареи, мониторинг поверхности на основе компьютерного зрения и поддержку принятия решений на базе ИИ в единый недорогой интеллектуальный узел.',
+                    p4: 'Наша система прогнозирует оставшийся срок службы батареи с точностью до <span class="highlight">92%</span> в лабораторных условиях, обнаруживает аномалии солнечных панелей менее чем за <span class="highlight">100 миллисекунд</span> и предоставляет автономные рекомендации по обслуживанию операторам.',
+                    p5: 'Уникальность этого подхода заключается в <span class="highlight">стратегии валидации «сначала космос»</span>. Доказывая надёжность в экстремальных условиях, мы открываем возможности для передачи технологий, где предиктивное обслуживание создаёт непосредственную экономическую ценность.',
+                    p6: '<span class="highlight">Наша цель проста:</span> снизить риски миссии, продлить срок службы системы и преобразовать энергосистемы из реактивных в предиктивные — сначала в космосе, затем на Земле.'
+                },
+                problem: {
+                    title: 'Проблема',
+                    items: {
+                        p1: 'Потеря миссии из-за сбоя питания',
+                        p2: 'Потеря эффективности от накопления пыли',
+                        p3: 'Задержка связи в глубоком космосе',
+                        p4: 'Реактивное обслуживание'
+                    }
+                },
+                solution: {
+                    title: 'Наше Решение',
+                    ml: { title: 'ML Батареи', desc: 'Точность прогноза оставшегося ресурса' },
+                    vision: { title: 'Компьютерное Зрение', desc: 'Обнаружение аномалий YOLOv8' },
+                    ai: { title: 'ИИ Ассистент', desc: 'Автономные рекомендации по обслуживанию' }
+                },
+                cost: {
+                    title: 'Стоимость Прототипа',
+                    component: 'Компонент',
+                    price: 'Цена',
+                    total: 'Общая Стоимость Прототипа',
+                    note: 'Все цены с DigiKey/Mouser (январь 2025). Затраты на космическую сертификацию не включены.'
+                },
+                impact: {
+                    title: 'Сравнение Влияния',
+                    before: 'Без Нашей Системы',
+                    after: 'С Solar-Battery Node AI',
+                    items: {
+                        reactive: 'Реактивное обслуживание',
+                        prediction: 'Точность прогноза отказов',
+                        response: 'Время отклика',
+                        loss: 'Необнаруженная потеря мощности'
+                    }
+                },
+                roadmap: {
+                    title: 'Дорожная Карта Развития',
+                    year: 'Год',
+                    y1: { title: 'Прототип и Тестирование', desc: 'Завершение прототипа, лабораторные испытания' },
+                    y3: { title: 'Партнерство с Космическим Агентством', desc: 'Предложение эксперимента на МКС, сотрудничество с NASA/ESA' },
+                    y5: { title: 'Коммерческое Внедрение', desc: 'Интеграция со спутниками, пилоты солнечных ферм' },
+                    y10: { title: 'Глобальный Масштаб', desc: 'Стандарт для космических миссий' }
+                },
+                team: {
+                    title: 'Наша Команда',
+                    amir: { role: 'Лидер Команды', expertise: '11 класс' },
+                    ayla: { role: 'Студент-Исследователь', expertise: '11 класс' },
+                    suleyman: { role: 'Руководитель Проекта', expertise: 'Учитель Информатики, ЭЭИ' }
+                }
+            },
+            tr: {
+                meta: { team: 'Takım', advisor: 'Danışman' },
+                pdf: { download: 'PDF İndir' },
+                pitch: {
+                    title: 'Açılış Sunumu',
+                    p1: 'Güç arızası, uzay misyonlarındaki en pahalı ve hafife alınan risklerden biridir. NASA\'nın InSight misyonu tek başına, başta toz birikimi ve güç sistemindeki tespit edilemeyen bozulma nedeniyle tahmini <span class="highlight">830 milyon dolar kayba</span> yol açtı.',
+                    p2: 'Bugün, enerji sistemlerindeki <span class="highlight">bakım eylemlerinin %78\'inden fazlası</span> reaktiftir, yani arızalar performans kaybedildikten sonra tespit edilmektedir. İletişim gecikmelerinin 22 saati aşabildiği uzayda, reaktif bakım basitçe çok geçtir.',
+                    p3: '<span class="highlight">Solar-Battery Node AI</span>, batarya sağlığı tahmini, bilgisayarlı görüye dayalı yüzey izleme ve yapay zeka destekli karar desteğini tek, düşük maliyetli akıllı bir düğümde birleştirerek bu sorunu ele alır.',
+                    p4: 'Sistemimiz, laboratuvar koşullarında bataryanın Kalan Kullanım Ömrünü <span class="highlight">%92 doğrulukla</span> tahmin eder, güneş paneli anomalilerini <span class="highlight">100 milisaniyenin</span> altında tespit eder ve operatörlere otonom bakım önerileri sunar.',
+                    p5: 'Bu yaklaşımı benzersiz kılan şey, <span class="highlight">önce-uzay doğrulama stratejisidir</span>. Ekstrem ortamlarda güvenilirliği kanıtlayarak, öngörücü bakımın anında ekonomik değer yarattığı teknoloji transferi fırsatlarını açıyoruz.',
+                    p6: '<span class="highlight">Hedefimiz basit:</span> misyon riskini azaltmak, sistem ömrünü uzatmak ve güç sistemlerini reaktiften öngörücüye dönüştürmek — önce uzayda, sonra Dünya\'da.'
+                },
+                problem: {
+                    title: 'Problem',
+                    items: {
+                        p1: 'Güç arızasından misyon kaybı',
+                        p2: 'Toz birikiminden verimlilik kaybı',
+                        p3: 'Derin uzay iletişim gecikmesi',
+                        p4: 'Reaktif bakım oranı'
+                    }
+                },
+                solution: {
+                    title: 'Çözümümüz',
+                    ml: { title: 'Batarya Sağlığı ML', desc: 'Kalan kullanım ömrü tahmin doğruluğu' },
+                    vision: { title: 'Bilgisayarlı Görü', desc: 'YOLOv8 anomali tespiti' },
+                    ai: { title: 'AI Asistan', desc: 'Otonom bakım önerileri' }
+                },
+                cost: {
+                    title: 'Prototip Maliyeti',
+                    component: 'Bileşen',
+                    price: 'Fiyat',
+                    total: 'Toplam Prototip Maliyeti',
+                    note: 'Tüm fiyatlar DigiKey/Mouser kaynaklı (Ocak 2025). Uzay sertifikasyon maliyetleri dahil değil.'
+                },
+                impact: {
+                    title: 'Etki Karşılaştırması',
+                    before: 'Sistemimiz Olmadan',
+                    after: 'Solar-Battery Node AI ile',
+                    items: {
+                        reactive: 'Reaktif bakım',
+                        prediction: 'Arıza tahmin doğruluğu',
+                        response: 'Yanıt süresi',
+                        loss: 'Tespit edilemeyen güç kaybı'
+                    }
+                },
+                roadmap: {
+                    title: 'Geliştirme Yol Haritası',
+                    year: 'Yıl',
+                    y1: { title: 'Prototip ve Test', desc: 'Prototip tamamlama, laboratuvar testleri' },
+                    y3: { title: 'Uzay Ajansı Ortaklığı', desc: 'UUİ deney önerisi, NASA/ESA iş birliği' },
+                    y5: { title: 'Ticari Dağıtım', desc: 'Uydu entegrasyonu, güneş çiftliği pilotları' },
+                    y10: { title: 'Küresel Ölçek', desc: 'Uzay misyonları için standart' }
+                },
+                team: {
+                    title: 'Takımımız',
+                    amir: { role: 'Takım Lideri', expertise: '11. Sınıf' },
+                    ayla: { role: 'Öğrenci Araştırmacı', expertise: '11. Sınıf' },
+                    suleyman: { role: 'Proje Danışmanı', expertise: 'Bilgisayar Öğretmeni, EEE' }
+                }
+            }
+        }
+    }
+}
+</script>
+
+</body>
+</html>

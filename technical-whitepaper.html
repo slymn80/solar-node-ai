@@ -8,12 +8,18 @@
     <!-- Alpine.js CDN -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <!-- PDF Generation Libraries -->
+    <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
     <style>
         @media print {
             body { margin: 0; padding: 20px; }
             .page-break { page-break-before: always; }
             @page { margin: 2cm; }
             .lang-switcher { display: none !important; }
+            table, .abstract, .figure, .metadata, h2, h3 { page-break-inside: avoid; break-inside: avoid; }
+            tr { page-break-inside: avoid; break-inside: avoid; }
         }
 
         body {
@@ -85,6 +91,31 @@
             transform: translateY(-2px);
         }
 
+        .download-btn {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, #059669, #047857) !important;
+        }
+
+        .download-btn.loading {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .download-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -123,6 +154,8 @@
             border-collapse: collapse;
             margin: 20px 0;
             font-size: 10pt;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         th {
@@ -190,18 +223,35 @@
 
 <!-- Language Switcher -->
 <div class="lang-switcher">
-    <button @click="changeLang('en')" :class="currentLang === 'en' ? 'active' : ''">EN</button>
-    <button @click="changeLang('tr')" :class="currentLang === 'tr' ? 'active' : ''">TR</button>
+    <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+        <button @click="changeLang('en')" :class="currentLang === 'en' ? 'active' : ''">EN</button>
+        <button @click="changeLang('kk')" :class="currentLang === 'kk' ? 'active' : ''">KK</button>
+        <button @click="changeLang('ru')" :class="currentLang === 'ru' ? 'active' : ''">RU</button>
+        <button @click="changeLang('tr')" :class="currentLang === 'tr' ? 'active' : ''">TR</button>
+    </div>
+    <button @click="downloadPDF()" :class="isDownloading ? 'download-btn loading' : 'download-btn'" :disabled="isDownloading">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span x-text="isDownloading ? (currentLang === 'en' ? 'Generating...' : currentLang === 'kk' ? 'Жасалуда...' : currentLang === 'ru' ? 'Создание...' : 'Olusturuluyor...') : (currentLang === 'en' ? 'Download PDF' : currentLang === 'kk' ? 'PDF Жуктеу' : currentLang === 'ru' ? 'Скачать PDF' : 'PDF Indir')"></span>
+    </button>
 </div>
 
 <div class="header">
+    <p style="font-size: 12pt; color: #6b7280; margin-bottom: 5px;" x-text="currentLang === 'en' ? 'Competition: Exploring World of Science' : currentLang === 'kk' ? 'Байқау: Exploring World of Science' : currentLang === 'ru' ? 'Конкурс: Exploring World of Science' : 'Yarışma: Exploring World of Science'"></p>
+    <p style="font-size: 12pt; color: #6b7280; margin-bottom: 15px;" x-text="currentLang === 'en' ? 'Category: AEROO Space AI Competition' : currentLang === 'kk' ? 'Санат: AEROO Space AI Competition' : currentLang === 'ru' ? 'Категория: AEROO Space AI Competition' : 'Kategori: AEROO Space AI Competition'"></p>
     <h1>Solar-Battery Node AI</h1>
+    <p style="font-size: 14pt; color: #2563eb; margin: 10px 0;" x-text="currentLang === 'en' ? 'Power Health & Vision Anomaly Detection' : currentLang === 'kk' ? 'Қуат Денсаулығы және Көрнекі Аномалияны Анықтау' : currentLang === 'ru' ? 'Мониторинг Здоровья Питания и Обнаружение Визуальных Аномалий' : 'Güç Sağlığı ve Görsel Anomali Tespiti'"></p>
     <p style="font-size: 16pt; color: #2563eb; margin: 10px 0;" x-text="t.subtitle"></p>
     <p style="font-size: 14pt; color: #374151;" x-text="t.description"></p>
 </div>
 
 <div class="metadata">
-    <strong x-text="t.metadata.authors"></strong>: Amir Dilovarov, Ayla Badalova<br>
+    <strong x-text="currentLang === 'en' ? 'School' : currentLang === 'kk' ? 'Мектеп' : currentLang === 'ru' ? 'Школа' : 'Okul'"></strong>: <span x-text="currentLang === 'en' ? 'Talgar Private Boarding School No. 1' : currentLang === 'kk' ? 'Талғар №1 Жеке Мектеп-Интернаты' : currentLang === 'ru' ? 'Талгарская Частная Школа-Интернат №1' : 'Özel Talgar Yatılı 1 Nolu Lisesi'"></span><br>
+    <strong x-text="currentLang === 'en' ? 'Team Name' : currentLang === 'kk' ? 'Команда Аты' : currentLang === 'ru' ? 'Название Команды' : 'Takım Adı'"></strong>: Beasts<br>
+    <strong x-text="currentLang === 'en' ? 'Team Members' : currentLang === 'kk' ? 'Команда Мүшелері' : currentLang === 'ru' ? 'Члены Команды' : 'Takım Üyeleri'"></strong>:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;• Amir Dilovarov - <span x-text="currentLang === 'en' ? '11th Grade, Team Leader' : currentLang === 'kk' ? '11 сынып, Команда Жетекшісі' : currentLang === 'ru' ? '11 класс, Руководитель Команды' : '11. Sınıf, Takım Lideri'"></span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;• Ayla Badalova - <span x-text="currentLang === 'en' ? '11th Grade, Researcher' : currentLang === 'kk' ? '11 сынып, Зерттеуші' : currentLang === 'ru' ? '11 класс, Исследователь' : '11. Sınıf, Araştırmacı'"></span><br>
     <strong x-text="t.metadata.advisor"></strong>: Süleyman Tongut, <span x-text="t.metadata.advisorTitle"></span><br>
     <strong x-text="t.metadata.institution"></strong>: Talgar Private Boarding School No. 1, Almaty Region, Kazakhstan<br>
     <strong x-text="t.metadata.competition"></strong>: AEROO Space AI Competition 2026 - Exploring the World of Science<br>
@@ -221,11 +271,22 @@
 
 <h3>1.1 <span x-text="t.section1.problem.title"></span></h3>
 <p x-text="t.section1.problem.intro"></p>
+
+<div class="figure">
+    <img src="documents/resim 1.jpg" alt="InSight Lander Diagram" style="max-width: 100%; height: auto;">
+    <p class="figure-caption" x-text="currentLang === 'en' ? 'Figure 1: InSight lander diagram (NASA / JPL-Caltech)' : currentLang === 'kk' ? '1-сурет: InSight лендер диаграммасы (NASA / JPL-Caltech)' : currentLang === 'ru' ? 'Рисунок 1: Диаграмма посадочного модуля InSight (NASA / JPL-Caltech)' : 'Şekil 1: InSight lander diyagramı (NASA / JPL-Caltech)'"></p>
+</div>
+
 <ul>
     <template x-for="item in t.section1.problem.items" :key="item">
         <li x-html="item"></li>
     </template>
 </ul>
+
+<div class="figure">
+    <img src="documents/resim 2.png" alt="InSight's Dusty Solar Panel" style="max-width: 100%; height: auto;">
+    <p class="figure-caption" x-text="currentLang === 'en' ? 'Figure 2: InSight Dusty Solar Panel - Power generation dropped from ~5,000 Wh/sol to ~500 Wh/sol due to dust accumulation (NASA)' : currentLang === 'kk' ? '2-сурет: InSight шаңды күн панелі - Шаң жиналуына байланысты қуат өндірісі ~5000 Wh/sol-дан ~500 Wh/sol-ға дейін төмендеді (NASA)' : currentLang === 'ru' ? 'Рисунок 2: Пыльная солнечная панель InSight - Выработка энергии упала с ~5000 Вт·ч/сол до ~500 Вт·ч/сол из-за накопления пыли (NASA)' : 'Şekil 2: InSight Tozlu Güneş Paneli - Toz birikimi nedeniyle güç üretimi ~5.000 Wh/sol dan ~500 Wh/sol a düştü (NASA)'"></p>
+</div>
 
 <h3>1.2 <span x-text="t.section1.solution.title"></span></h3>
 <p x-text="t.section1.solution.intro"></p>
@@ -393,6 +454,75 @@
     </template>
 </ul>
 
+<!-- Business Model - now part of Section 5 -->
+<h3>5.4 <span x-text="currentLang === 'en' ? 'Development Roadmap' : currentLang === 'kk' ? 'Даму Жол Картасы' : currentLang === 'ru' ? 'Дорожная Карта Развития' : 'Geliştirme Yol Haritası'"></span></h3>
+<p x-text="currentLang === 'en' ? 'Space-grade R&D with commercial spin-off potential' : currentLang === 'kk' ? 'Коммерциялық spin-off әлеуеті бар ғарыштық деңгейдегі Ғ&Д' : currentLang === 'ru' ? 'Космические НИОКР с потенциалом коммерческого spin-off' : 'Ticari spin-off potansiyeli ile uzay sınıfı Ar-Ge'"></p>
+
+<table>
+    <tr>
+        <th x-text="currentLang === 'en' ? 'Phase' : currentLang === 'kk' ? 'Кезең' : currentLang === 'ru' ? 'Этап' : 'Aşama'"></th>
+        <th x-text="currentLang === 'en' ? 'Description' : currentLang === 'kk' ? 'Сипаттама' : currentLang === 'ru' ? 'Описание' : 'Açıklama'"></th>
+    </tr>
+    <tr>
+        <td><strong x-text="currentLang === 'en' ? 'Phase 1: Space Mission Technology' : currentLang === 'kk' ? 'Кезең 1: Ғарыштық Миссия Технологиясы' : currentLang === 'ru' ? 'Этап 1: Технология Космических Миссий' : 'Aşama 1: Uzay Misyonu Teknolojisi'"></strong></td>
+        <td x-text="currentLang === 'en' ? 'Primary focus: Satellite and deep-space solar panel diagnostics for long-duration missions. Extreme environment testing (-150°C to +150°C).' : currentLang === 'kk' ? 'Негізгі фокус: Ұзақ мерзімді миссиялар үшін серік және терең ғарыш күн панелі диагностикасы. Экстремалды орта тестілеуі (-150°C бастап +150°C дейін).' : currentLang === 'ru' ? 'Основной фокус: Диагностика солнечных панелей спутников и дальнего космоса для долгосрочных миссий. Испытания в экстремальных условиях (-150°C до +150°C).' : 'Birincil odak: Uzun süreli misyonlar için uydu ve derin uzay güneş paneli teşhisi. Aşırı ortam testleri (-150°C ile +150°C).'"></td>
+    </tr>
+    <tr>
+        <td><strong x-text="currentLang === 'en' ? 'Phase 2: Space-to-Earth Transfer' : currentLang === 'kk' ? 'Кезең 2: Ғарыштан Жерге Трансфер' : currentLang === 'ru' ? 'Этап 2: Передача из Космоса на Землю' : 'Aşama 2: Uzaydan Dünyaya Transfer'"></strong></td>
+        <td x-text="currentLang === 'en' ? 'Technology spin-off to terrestrial markets following NASA model. Proven space-grade reliability as competitive advantage.' : currentLang === 'kk' ? 'NASA моделін қолданып жердегі нарықтарға технология spin-off. Бәсекелестік артықшылық ретінде дәлелденген ғарыштық сенімділік.' : currentLang === 'ru' ? 'Spin-off технологий на наземные рынки по модели NASA. Проверенная космическая надежность как конкурентное преимущество.' : 'NASA modelini takip ederek yeryüzü pazarlarına teknoloji spin-off. Rekabet avantajı olarak kanıtlanmış uzay sınıfı güvenilirlik.'"></td>
+    </tr>
+    <tr>
+        <td><strong x-text="currentLang === 'en' ? 'Commercial Application: Solar Farms' : currentLang === 'kk' ? 'Коммерциялық Қолдану: Күн Фермалары' : currentLang === 'ru' ? 'Коммерческое Применение: Солнечные Фермы' : 'Ticari Uygulama: Güneş Çiftlikleri'"></strong></td>
+        <td x-text="currentLang === 'en' ? 'Large-scale renewable energy installations. Apply space mission ML and vision algorithms to Earth-based monitoring.' : currentLang === 'kk' ? 'Үлкен көлемді жаңартылатын энергия қондырғылары. Ғарыштық миссия ML және көру алгоритмдерін жер мониторингіне қолдану.' : currentLang === 'ru' ? 'Крупномасштабные установки возобновляемой энергии. Применение алгоритмов МО и зрения космических миссий для наземного мониторинга.' : 'Büyük ölçekli yenilenebilir enerji tesisleri. Uzay misyonu ML ve görü algoritmalarını Dünya izlemesine uygulama.'"></td>
+    </tr>
+    <tr>
+        <td><strong x-text="currentLang === 'en' ? 'Commercial Application: Remote Infrastructure' : currentLang === 'kk' ? 'Коммерциялық Қолдану: Қашықтағы Инфрақұрылым' : currentLang === 'ru' ? 'Коммерческое Применение: Удаленная Инфраструктура' : 'Ticari Uygulama: Uzak Altyapı'"></strong></td>
+        <td x-text="currentLang === 'en' ? 'Off-grid telecom towers, weather stations. Leverage autonomous diagnostics developed for space communications.' : currentLang === 'kk' ? 'Тор сыртындағы телеком мұнаралары, ауа-райы станциялары. Ғарыштық байланыс үшін әзірленген автономды диагностиканы пайдалану.' : currentLang === 'ru' ? 'Автономные телекоммуникационные вышки, метеостанции. Использование автономной диагностики, разработанной для космической связи.' : 'Şebekeden bağımsız telekom kuleleri, meteoroloji istasyonları. Uzay iletişimi için geliştirilen otonom teşhisten yararlanma.'"></td>
+    </tr>
+</table>
+
+<h3>5.5 <span x-text="currentLang === 'en' ? 'Funding & Revenue Model' : currentLang === 'kk' ? 'Қаржыландыру және Табыс Моделі' : currentLang === 'ru' ? 'Модель Финансирования и Дохода' : 'Finansman ve Gelir Modeli'"></span></h3>
+
+<table>
+    <tr>
+        <th x-text="currentLang === 'en' ? 'Revenue Stream' : currentLang === 'kk' ? 'Табыс Ағыны' : currentLang === 'ru' ? 'Источник Дохода' : 'Gelir Akışı'"></th>
+        <th x-text="currentLang === 'en' ? 'Description' : currentLang === 'kk' ? 'Сипаттама' : currentLang === 'ru' ? 'Описание' : 'Açıklama'"></th>
+        <th x-text="currentLang === 'en' ? 'Timeline' : currentLang === 'kk' ? 'Уақыт Кестесі' : currentLang === 'ru' ? 'Сроки' : 'Zaman Çizelgesi'"></th>
+    </tr>
+    <tr>
+        <td><strong x-text="currentLang === 'en' ? 'R&D Grants & Space Partnerships' : currentLang === 'kk' ? 'ҒЗТКЖ Гранттары және Ғарыш Серіктестіктері' : currentLang === 'ru' ? 'Гранты НИОКР и Космические Партнерства' : 'Ar-Ge Hibeleri ve Uzay Ortaklıkları'"></strong></td>
+        <td x-text="currentLang === 'en' ? 'Space agency funding, university research grants, satellite operator pilot programs' : currentLang === 'kk' ? 'Ғарыш агенттігі қаржыландыруы, университет зерттеу гранттары, спутник операторының пилоттық бағдарламалары' : currentLang === 'ru' ? 'Финансирование космических агентств, университетские исследовательские гранты, пилотные программы спутниковых операторов' : 'Uzay ajansı finansmanı, üniversite araştırma hibeleri, uydu operatörü pilot programları'"></td>
+        <td x-text="currentLang === 'en' ? 'Primary focus 2026-2027' : currentLang === 'kk' ? 'Негізгі фокус 2026-2027' : currentLang === 'ru' ? 'Основной фокус 2026-2027' : 'Birincil odak 2026-2027'"></td>
+    </tr>
+    <tr>
+        <td><strong x-text="currentLang === 'en' ? 'Technology Licensing' : currentLang === 'kk' ? 'Технология Лицензиялау' : currentLang === 'ru' ? 'Лицензирование Технологий' : 'Teknoloji Lisanslama'"></strong></td>
+        <td x-text="currentLang === 'en' ? 'License space-validated algorithms and hardware designs to commercial partners' : currentLang === 'kk' ? 'Ғарышта расталған алгоритмдер мен аппараттық дизайндарды коммерциялық серіктестерге лицензиялау' : currentLang === 'ru' ? 'Лицензирование валидированных в космосе алгоритмов и аппаратных конструкций коммерческим партнерам' : 'Uzayda doğrulanmış algoritma ve donanım tasarımlarını ticari ortaklara lisanslama'"></td>
+        <td x-text="currentLang === 'en' ? 'Royalty-based model' : currentLang === 'kk' ? 'Роялти негізіндегі модель' : currentLang === 'ru' ? 'Модель на основе роялти' : 'Telif hakkı bazlı model'"></td>
+    </tr>
+    <tr>
+        <td><strong x-text="currentLang === 'en' ? 'Commercial Product Sales' : currentLang === 'kk' ? 'Коммерциялық Өнім Сатылымы' : currentLang === 'ru' ? 'Продажа Коммерческих Продуктов' : 'Ticari Ürün Satışları'"></strong></td>
+        <td x-text="currentLang === 'en' ? 'Adapted hardware for terrestrial markets after space validation' : currentLang === 'kk' ? 'Ғарыштық растаудан кейін жер нарықтары үшін бейімделген аппараттық құрал' : currentLang === 'ru' ? 'Адаптированное оборудование для земных рынков после космической валидации' : 'Uzay doğrulamasından sonra yeryüzü pazarları için uyarlanmış donanım'"></td>
+        <td x-text="currentLang === 'en' ? 'Post-2027 revenue stream' : currentLang === 'kk' ? '2027 жылдан кейінгі табыс ағыны' : currentLang === 'ru' ? 'Поток доходов после 2027' : '2027 sonrası gelir akışı'"></td>
+    </tr>
+</table>
+
+<h3>5.6 <span x-text="currentLang === 'en' ? 'Unique Value Proposition' : currentLang === 'kk' ? 'Бірегей Құндылық Ұсынысы' : currentLang === 'ru' ? 'Уникальное Ценностное Предложение' : 'Benzersiz Değer Önerisi'"></span></h3>
+<ul>
+    <li x-text="currentLang === 'en' ? 'Space-first design: Technology proven in extreme environments (radiation, temperature, vacuum)' : currentLang === 'kk' ? 'Ғарыш-бірінші дизайн: Экстремалды орталарда (радиация, температура, вакуум) дәлелденген технология' : currentLang === 'ru' ? 'Космос-первый дизайн: Технология, проверенная в экстремальных условиях (радиация, температура, вакуум)' : 'Uzay-öncelikli tasarım: Aşırı ortamlarda (radyasyon, sıcaklık, vakum) kanıtlanmış teknoloji'"></li>
+    <li x-text="currentLang === 'en' ? 'Dual-AI architecture: Battery health ML + vision anomaly detection in one system' : currentLang === 'kk' ? 'Қос-AI архитектурасы: Батарея денсаулығы ML + көру аномалиясын анықтау бір жүйеде' : currentLang === 'ru' ? 'Двойная ИИ-архитектура: ML здоровья батареи + обнаружение визуальных аномалий в одной системе' : 'İkili YZ mimarisi: Batarya sağlığı ML + görü anomali tespiti tek sistemde'"></li>
+    <li x-text="currentLang === 'en' ? 'Autonomous operation: Zero-communication diagnostics for deep space missions' : currentLang === 'kk' ? 'Автономды жұмыс: Терең ғарыш миссиялары үшін нөлдік байланыс диагностикасы' : currentLang === 'ru' ? 'Автономная работа: Диагностика без связи для миссий в глубоком космосе' : 'Otonom çalışma: Derin uzay misyonları için sıfır iletişim teşhisi'"></li>
+    <li x-text="currentLang === 'en' ? 'Future material science: Platform for advanced sensor integration and panel material research' : currentLang === 'kk' ? 'Болашақ материалтану: Жетілдірілген сенсор интеграциясы және панель материалын зерттеу платформасы' : currentLang === 'ru' ? 'Наука о материалах будущего: Платформа для интеграции передовых датчиков и исследования материалов панелей' : 'Geleceğin malzeme bilimi: Gelişmiş sensör entegrasyonu ve panel malzeme araştırması için platform'"></li>
+    <li x-text="currentLang === 'en' ? 'Technology transfer model: Space R&D creates commercial IP with NASA-proven pathway' : currentLang === 'kk' ? 'Технология трансфері моделі: Ғарыштық ҒЗТКЖ NASA-мен дәлелденген жолмен коммерциялық зияткерлік меншік жасайды' : currentLang === 'ru' ? 'Модель передачи технологий: Космические НИОКР создают коммерческую ИС по проверенному NASA пути' : 'Teknoloji transfer modeli: Uzay Ar-Ge, NASA-kanıtlı yolla ticari fikri mülkiyet yaratır'"></li>
+    <li x-text="currentLang === 'en' ? 'Edge processing: Critical for space latency, valuable for Earth remote locations' : currentLang === 'kk' ? 'Edge өңдеу: Ғарыштық кідіріс үшін маңызды, Жердегі қашықтағы орындар үшін құнды' : currentLang === 'ru' ? 'Граничные вычисления: Критически важны для космической задержки, ценны для удаленных мест на Земле' : 'Edge işleme: Uzay gecikmesi için kritik, Dünya uzak lokasyonları için değerli'"></li>
+</ul>
+
+<h3>5.7 <span x-text="currentLang === 'en' ? 'Development & Commercialization Path' : currentLang === 'kk' ? 'Даму және Коммерцияландыру Жолы' : currentLang === 'ru' ? 'Путь Развития и Коммерциализации' : 'Geliştirme ve Ticarileştirme Yolu'"></span></h3>
+<ul>
+    <li><strong x-text="currentLang === 'en' ? 'Stage 1: Space R&D (2026-2027)' : currentLang === 'kk' ? '1-кезең: Ғарыш ҒЗТКЖ (2026-2027)' : currentLang === 'ru' ? 'Этап 1: Космические НИОКР (2026-2027)' : 'Aşama 1: Uzay Ar-Ge (2026-2027)'"></strong> - <span x-text="currentLang === 'en' ? 'Academic research, space agency collaboration, ISS experiment proposal. Focus on extreme environment validation.' : currentLang === 'kk' ? 'Академиялық зерттеу, ғарыш агенттігімен ынтымақтастық, ХҒС эксперимент ұсынысы. Экстремалды орта валидациясына назар аудару.' : currentLang === 'ru' ? 'Академические исследования, сотрудничество с космическим агентством, предложение эксперимента на МКС. Фокус на валидации в экстремальных условиях.' : 'Akademik araştırma, uzay ajansı iş birliği, UUİ deney önerisi. Aşırı ortam doğrulamasına odaklanma.'"></span></li>
+    <li><strong x-text="currentLang === 'en' ? 'Stage 2: Material Science Integration' : currentLang === 'kk' ? '2-кезең: Материалтану Интеграциясы' : currentLang === 'ru' ? 'Этап 2: Интеграция Материаловедения' : 'Aşama 2: Malzeme Bilimi Entegrasyonu'"></strong> - <span x-text="currentLang === 'en' ? 'Advanced sensor research for solar panel material monitoring. Collaboration with materials engineering labs.' : currentLang === 'kk' ? 'Күн панелі материалын бақылау үшін жетілдірілген сенсор зерттеуі. Материалдық инженерия зертханаларымен ынтымақтастық.' : currentLang === 'ru' ? 'Исследование передовых датчиков для мониторинга материала солнечных панелей. Сотрудничество с лабораториями материаловедения.' : 'Güneş paneli malzeme izleme için gelişmiş sensör araştırması. Malzeme mühendisliği laboratuvarları ile iş birliği.'"></span></li>
+    <li><strong x-text="currentLang === 'en' ? 'Stage 3: Technology Transfer' : currentLang === 'kk' ? '3-кезең: Технология Трансфері' : currentLang === 'ru' ? 'Этап 3: Передача Технологий' : 'Aşama 3: Teknoloji Transferi'"></strong> - <span x-text="currentLang === 'en' ? 'Spin-off commercial applications using space-validated technology. Partner with industry for market deployment.' : currentLang === 'kk' ? 'Ғарышта расталған технологияны пайдаланып коммерциялық қолданбалардың spin-off-ы. Нарықтық орналастыру үшін өнеркәсіппен серіктестік.' : currentLang === 'ru' ? 'Выделение коммерческих приложений с использованием технологии, валидированной в космосе. Партнерство с индустрией для вывода на рынок.' : 'Uzayda doğrulanmış teknoloji kullanan ticari uygulamaların spin-offu. Pazar dağıtımı için endüstri ile ortaklık.'"></span></li>
+</ul>
+
 <div class="page-break"></div>
 
 <h2><span class="section-number">6.</span> <span x-text="t.section6.title"></span></h2>
@@ -421,6 +551,7 @@
 function whitePaperApp() {
     return {
         currentLang: localStorage.getItem('whitepaper-lang') || 'en',
+        isDownloading: false,
 
         translations: {
             en: {
@@ -437,7 +568,7 @@ function whitePaperApp() {
                 },
                 abstract: {
                     title: 'Abstract',
-                    content: 'This research presents an integrated autonomous monitoring system for solar-powered space missions, combining machine learning-based battery health prediction with computer vision anomaly detection. The system employs dual STM32 microcontrollers: an IoT discovery board for real-time environmental monitoring and ML inference, and an N6 development kit with dedicated Neural Processing Unit for vision-based solar panel diagnostics. Using NASA battery degradation datasets and Roboflow solar panel imagery, we achieved 92% prediction accuracy for Remaining Useful Life estimation and sub-100ms inference time for multi-class object detection. The system integrates real-time web and mobile monitoring interfaces, a GPT-4o-mini powered proactive assistant for context-aware maintenance recommendations, with comprehensive data logging via Google Drive API for mission-critical analytics. Beyond immediate space applications, this research follows NASA\'s technology transfer paradigm, where extreme environment validation creates commercially viable spin-offs for terrestrial solar energy monitoring, with future scalability through advanced material science sensor integration.',
+                    content: 'This research presents an integrated autonomous monitoring system for solar-powered space missions, combining machine learning-based battery life prediction, computer vision anomaly detection, and generative AI-powered intelligent assistance. The system employs dual STM32 microcontrollers: an IoT board for real-time environmental monitoring and ML inference, and an N6-type development kit with dedicated Neural Processing Unit for vision-based solar panel anomaly detection. Using NASA\'s own battery datasets and a dataset of 2,290 solar panel images, we achieved 92% prediction accuracy and sub-100ms inference time for multi-class object detection. The system integrates real-time web and mobile monitoring interfaces with a generative AI proactive assistant (GPT-4o-mini) for context-aware maintenance recommendations. This research, in addition to space applications, aligns with NASA\'s technology transfer paradigm—meaning it has the characteristic of being a spin-off applicable not only in space but also on Earth. In the future, it can be transformed into a higher-function application through advanced material science sensor integration that will be placed inside solar panels.',
                     keywords: 'Keywords'
                 },
                 section1: {
@@ -446,16 +577,16 @@ function whitePaperApp() {
                         title: 'Problem Statement',
                         intro: 'Space missions face critical challenges in power system management:',
                         items: [
-                            '<strong>Battery Degradation:</strong> Harsh environments with extreme temperatures (-150°C to +150°C) and radiation exposure cause accelerated battery degradation, reducing mission lifespan and increasing failure risk.',
-                            '<strong>Solar Panel Efficiency Loss:</strong> Dust accumulation, micro-meteoroid impacts, and debris coverage lead to significant power generation losses, sometimes exceeding 30% within months.',
-                            '<strong>Limited Diagnostic Capabilities:</strong> Traditional monitoring systems lack predictive maintenance capabilities, resulting in reactive rather than proactive responses to critical failures.',
-                            '<strong>Computational Constraints:</strong> Limited on-board computational resources in space environments demand energy-efficient AI inference solutions.',
-                            '<strong>Communication Delays:</strong> Deep-space missions experience communication latencies of minutes to hours, necessitating autonomous decision-making capabilities.'
+                            '<strong>Battery Degradation:</strong> The smallest active unit of a solar panel is the PV cell. Many academic studies have shown that the efficiency of PV cells decreases as temperature increases. When temperature rises, the output voltage of PV cells drops, reducing total power and efficiency. This effect is expressed by a linear relationship: as temperature increases, efficiency decreases. Harsh environments with extreme temperatures (-150°C to +150°C) and radiation exposure cause accelerated battery degradation, reducing mission lifespan and increasing failure risk.',
+                            '<strong>Solar Panel Efficiency Loss:</strong> On planetary surfaces and atmospheric environments (e.g., Moon, Mars), dust layers accumulating on solar panels can lead to power generation losses exceeding 30% within months. In orbit, micro-meteoroid and debris impacts cause localized cell damage over time, resulting in gradual efficiency decline. NASA\'s InSight Mars lander solar panels also experienced severe power generation decline due to dust: while producing ~5,000 Wh/sol in the first years, dust accumulation reduced this to ~500 Wh/sol over time.',
+                            '<strong>Limited Diagnostic Capabilities:</strong> Many researchers note that the primary method in spacecraft health monitoring today is threshold value monitoring and continuous tracking of key telemetry parameters by operators; however, the threshold monitoring approach does not enable early detection of emergency situations or abnormal spacecraft behaviors. Traditional monitoring approaches based on telemetry thresholds cannot provide predictive maintenance as they fail to reveal root causes of failures, causing spacecraft to respond only reactively to critical situations.',
+                            '<strong>Computational Constraints:</strong> Space missions impose unique constraints including limited energy and on-board computational resources, radiation effects, and long communication delays, requiring AI methods to be adapted for energy efficiency, resilience, and on-board operation.',
+                            '<strong>Communication Delays:</strong> Due to extreme distances, communication with deep space missions can take from several minutes to hours one-way, making real-time control from Earth impossible. Due to distance from Earth and communication architectures used, one-way communication delays in lunar missions can range from 3 to 14 seconds, while in Mars missions at maximum distance from Earth, one-way delay can reach 22 minutes and round-trip delay up to 44 minutes.'
                         ]
                     },
                     solution: {
                         title: 'Proposed Solution',
-                        intro: 'The Solar-Battery Node AI system addresses these challenges through a dual-microcontroller architecture combining ML-powered predictive analytics with NPU-accelerated computer vision:',
+                        intro: 'The Solar-Battery Node AI system addresses these challenges through a dual-microcontroller architecture combining ML-powered predictive analytics with NPU-accelerated computer vision, and provides context-aware alerts with data from these two observation points through a proactive AI assistant:',
                         table: {
                             component: 'Component',
                             technology: 'Technology',
@@ -681,7 +812,7 @@ function whitePaperApp() {
                 },
                 abstract: {
                     title: 'Özet',
-                    content: 'Bu araştırma, güneş enerjili uzay misyonları için makine öğrenmesi tabanlı batarya sağlığı tahmini ile bilgisayarlı görü anomali tespitini birleştiren entegre bir otonom izleme sistemi sunmaktadır. Sistem çift STM32 mikrodenetleyici kullanır: gerçek zamanlı çevresel izleme ve ML çıkarımı için bir IoT keşif kartı ve görüntü tabanlı güneş paneli teşhisi için özel Nöral İşleme Birimi ile bir N6 geliştirme kiti. NASA batarya bozulma veri setleri ve Roboflow güneş paneli görüntüleri kullanarak, Kalan Faydalı Ömür tahmini için %92 tahmin doğruluğu ve çok sınıflı nesne tespiti için 100ms altı çıkarım süresi elde ettik. Sistem, gerçek zamanlı web ve mobil izleme arayüzlerini, bağlam duyarlı bakım önerileri için GPT-4o-mini destekli proaktif asistan ile entegre eder ve misyon kritik analizler için Google Drive API aracılığıyla kapsamlı veri kaydı sağlar. Doğrudan uzay uygulamalarının ötesinde, bu araştırma NASA\'nın teknoloji transfer paradigmasını takip eder; aşırı ortam doğrulaması, gelişmiş malzeme bilimi sensör entegrasyonu ile gelecekte ölçeklenebilir, yeryüzü güneş enerjisi izlemesi için ticari olarak uygulanabilir spin-off\'lar yaratır.',
+                    content: 'Bu araştırma, güneş enerjili uzay misyonları için makine öğrenmesi tabanlı batarya ömrü tahmini, bilgisayarlı görü anomali tespiti ve üretken yapay zeka destekli akıllı yardımı birleştiren entegre bir otonom izleme sistemi sunmaktadır. Sistem çift STM32 mikro denetleyici kullanmaktadır. Bu mikro denetleyiciler, gerçek zamanlı çevresel izleme ve ML çıkarımı için bir IoT kartı ve görüntü tabanlı güneş paneli anomali tespiti için özel nöral işleme birimi ile bir N6 türü geliştirme kitidir. NASA\'nın kendi bataryalarına ait olan veri setleri ve güneş panellerine ait 2290 adet görüntüden oluşan veri seti kullanılarak %92 tahmin doğruluğu ve çok sınıflı nesne tespiti için 100 ms altı çıkarım süresi elde edilmiştir. Sistem gerçek zamanlı web ve mobil izleme ara yüzlerini bağlam duyarlı bakım önerileri için üretken yapay zeka proaktif asistanıyla (GPT-4o-mini) entegre etmektedir. Bu araştırma, uzay uygulamalarının yanı sıra, NASA\'nın teknoloji transfer paradigmasına uygundur. Yani sadece uzayda değil yer yüzünde de uygulanabilir bir yan ürün olma özelliği taşımaktadır. Gelecekte güneş panellerinin içine yerleştirilecek olan gelişmiş malzeme bilimi sensör entegrasyonu ile daha yüksek fonksiyon sağlayan bir uygulamaya dönüştürülebilecektir.',
                     keywords: 'Anahtar Kelimeler'
                 },
                 section1: {
@@ -690,16 +821,16 @@ function whitePaperApp() {
                         title: 'Problem Tanımı',
                         intro: 'Uzay misyonları güç sistemi yönetiminde kritik zorluklarla karşı karşıyadır:',
                         items: [
-                            '<strong>Batarya Bozulması:</strong> Aşırı sıcaklıklar (-150°C ile +150°C arası) ve radyasyon maruziyeti ile zorlu ortamlar, hızlandırılmış batarya bozulmasına neden olarak misyon ömrünü azaltır ve arıza riskini artırır.',
-                            '<strong>Güneş Paneli Verimlilik Kaybı:</strong> Toz birikimi, mikro-meteoroid çarpmaları ve enkaz kaplama, bazen aylarca %30\'u aşan önemli güç üretimi kayıplarına yol açar.',
-                            '<strong>Sınırlı Teşhis Yetenekleri:</strong> Geleneksel izleme sistemleri öngörülü bakım yeteneklerinden yoksundur ve kritik arızalara proaktif değil reaktif yanıtlar verir.',
-                            '<strong>Hesaplama Kısıtlamaları:</strong> Uzay ortamlarında sınırlı yerleşik hesaplama kaynakları, enerji verimli AI çıkarım çözümleri gerektirir.',
-                            '<strong>İletişim Gecikmeleri:</strong> Derin uzay misyonları dakikalardan saatlere kadar iletişim gecikmesi yaşar, bu da otonom karar verme yetenekleri gerektirir.'
+                            '<strong>Batarya Bozulması:</strong> Güneş panelinin en küçük aktif birimi PV hücresidir. Birçok akademik çalışma, PV hücrelerinin veriminin sıcaklık arttıkça düştüğünü göstermiştir. Sıcaklık yükseldiğinde PV hücrelerin çıkış voltajı düşer, bu da toplam güç ve verimi azaltır. Bu etki doğrusal bir ilişkiyle ifade edilir: sıcaklık arttıkça verim azalır. Aşırı sıcaklıklar (-150°C ile +150°C arası) ve radyasyon maruziyeti ile zorlu ortamlar, hızlandırılmış batarya bozulmasına neden olarak misyon ömrünü azaltır ve arıza riskini artırır.',
+                            '<strong>Güneş Paneli Verimlilik Kaybı:</strong> Gezegen yüzeylerinde ve atmosferik ortamlarda (ör. Ay, Mars), güneş panelleri üzerinde biriken toz tabakaları aylar içinde %30\'u aşan güç üretim kayıplarına yol açabilmektedir. Yörüngedeki uydularda ise mikro-meteoroid ve enkaz çarpmaları zamanla lokal hücre hasarlarına neden olarak kademeli verim düşüşü oluşturur. NASA\'nın InSight Mars lander\'ı üzerinde bulunan solar panellerde de toz sebebiyle güç üretimi zamanla ciddi şekilde düşmüştür: İlk yıllarda ~5.000 Wh/sol üretirken, yıllar içinde toz birikimi ile bu ~500 Wh/sol seviyesine kadar düşmüştür.',
+                            '<strong>Sınırlı Teşhis Yetenekleri:</strong> Birçok araştırmacı, günümüzde uzay aracı sağlık izleme süreçlerinde temel yöntemin eşik değer izleme (threshold value monitoring) ve operatör tarafından anahtar telemetri parametrelerinin sürekli takibi olduğunu belirtmektedir; ancak eşik değer izleme yaklaşımı, acil bir durumun başlangıcını ya da anormal uzay aracı davranışlarını erken aşamada tespit etmeye olanak tanımamaktadır. Telemetri eşiklerine dayalı geleneksel izleme yaklaşımları, arızaların kök nedenlerini ortaya koyamadığı için öngörülü bakım sağlayamamakta ve uzay araçlarının kritik durumlara yalnızca reaktif yanıtlar vermesine neden olmaktadır.',
+                            '<strong>Hesaplama Kısıtlamaları:</strong> Uzay görevleri; sınırlı enerji ve yerleşik hesaplama kaynakları, radyasyon etkileri ve uzun iletişim gecikmeleri gibi kendine özgü kısıtlar getirmekte olup, bu durum yapay zekâ yöntemlerinin enerji verimliliği, dayanıklılık ve araç üzerinde (on-board) çalışacak şekilde uyarlanmasını zorunlu kılmaktadır.',
+                            '<strong>İletişim Gecikmeleri:</strong> Mesafelerin son derece büyük olması nedeniyle, derin uzay görevleriyle iletişim tek yönlü olarak birkaç dakikadan saatlere kadar sürebilmekte, bu da Dünya\'dan gerçek zamanlı kontrolü imkânsız hale getirmektedir. Dünya\'dan uzaklık ve kullanılan iletişim mimarileri nedeniyle, Ay görevlerinde tek yönlü iletişim gecikmeleri 3 ila 14 saniye arasında olabilirken, Mars görevlerinde Dünya\'ya en uzak konumda tek yönlü gecikme 22 dakikaya, çift yön (gidiş–dönüş) gecikmesi ise 44 dakikaya kadar çıkabilmektedir.'
                         ]
                     },
                     solution: {
                         title: 'Önerilen Çözüm',
-                        intro: 'Solar-Battery Node AI sistemi, bu zorlukları ML destekli öngörülü analitik ile NPU hızlandırmalı bilgisayarlı görüyü birleştiren çift mikrodenetleyici mimarisi ile ele alır:',
+                        intro: 'Solar-Battery Node AI sistemi, bu zorlukları ML destekli öngörülü analitik ile NPU hızlandırmalı bilgisayarlı görüyü birleştiren çift mikrodenetleyici mimarisi ile ele alır ve proaktif AI asistanı ile bu iki gözlem noktasından gelen veri ile bağlam duyarlı uyarılarda bulunur:',
                         table: {
                             component: 'Bileşen',
                             technology: 'Teknoloji',
@@ -910,6 +1041,494 @@ function whitePaperApp() {
                     competition: 'AEROO Space AI Yarışması 2026 - Bilim Dünyasını Keşfetmek',
                     copyright: '© 2026 Talgar Özel Yatılı Okul No. 1. Tüm hakları saklıdır.'
                 }
+            },
+            kk: {
+                subtitle: 'Техникалық Ақ Қағаз',
+                description: 'Edge AI және Компьютерлік Көру арқылы Автономды Күн Панелі мен Батарея Денсаулығын Бақылау Жүйесі',
+                metadata: {
+                    authors: 'Авторлар',
+                    advisor: 'Кеңесші',
+                    advisorTitle: 'Информатика Мұғалімі, Электр және Электроника Инженері',
+                    institution: 'Мекеме',
+                    competition: 'Байқау',
+                    date: 'Күні',
+                    version: 'Нұсқа'
+                },
+                abstract: {
+                    title: 'Аннотация',
+                    content: 'Бұл зерттеу күн энергиясымен жұмыс істейтін ғарыштық миссияларға арналған интеграцияланған автономды мониторинг жүйесін ұсынады, машиналық оқытуға негізделген батарея өмірін болжауды, компьютерлік көру аномалияларын анықтауды және генеративті AI қуатталған интеллектуалды көмекті біріктіреді. Жүйе екі STM32 микроконтроллерін пайдаланады: нақты уақыттағы қоршаған орта мониторингі мен ML қорытындысы үшін IoT платасы және көруге негізделген күн панелі аномалияларын анықтау үшін арнайы Нейрондық Өңдеу Блогымен N6 типті даму жинағы. NASA-ның өз батарея деректер жинағы және 2290 күн панелі кескінінен тұратын деректер жиынтығын пайдалана отырып, біз 92% болжау дәлдігіне және көп класты объектіні анықтау үшін 100мс-тан төмен қорытынды уақытына қол жеткіздік.',
+                    keywords: 'Кілт сөздер'
+                },
+                section1: {
+                    title: 'Кіріспе',
+                    problem: {
+                        title: 'Мәселе Анықтамасы',
+                        intro: 'Ғарыштық миссиялар қуат жүйесін басқаруда маңызды қиындықтарға тап болады:',
+                        items: [
+                            '<strong>Батарея Деградациясы:</strong> Күн панелінің ең кіші белсенді бірлігі PV жасушасы болып табылады. Көптеген академиялық зерттеулер PV жасушаларының тиімділігі температура көтерілген сайын төмендейтінін көрсетті. Экстремалды температуралар (-150°C бастап +150°C дейін) және радиация әсері батареяның жылдамдатылған деградациясына әкеледі.',
+                            '<strong>Күн Панелі Тиімділігінің Жоғалуы:</strong> Планета беттерінде (Ай, Марс) күн панельдеріне жиналған шаң қабаттары айлар ішінде 30%-дан астам қуат өндіру шығындарына әкелуі мүмкін. NASA InSight Mars lander күн панельдері де шаңға байланысты қуат өндірісінің күрт төмендеуін бастан кешірді.',
+                            '<strong>Шектеулі Диагностикалық Мүмкіндіктер:</strong> Көптеген зерттеушілер бүгінгі күні ғарыш аппараты денсаулығын бақылаудағы негізгі әдіс шекті мәнді бақылау екенін атап өтеді; алайда шекті бақылау тәсілі төтенше жағдайлардың басталуын ерте анықтауға мүмкіндік бермейді.',
+                            '<strong>Есептеу Шектеулері:</strong> Ғарыштық миссиялар шектеулі энергия мен борт үстіндегі есептеу ресурстары, радиация әсерлері және ұзақ байланыс кідірістерін қоса алғанда бірегей шектеулер қояды.',
+                            '<strong>Байланыс Кідірістері:</strong> Өте үлкен қашықтықтарға байланысты терең ғарыштық миссиялармен байланыс бір бағытта бірнеше минуттан сағаттарға дейін созылуы мүмкін. Ай миссияларында 3-14 секунд, Марс миссияларында 22 минутқа дейін.'
+                        ]
+                    },
+                    solution: {
+                        title: 'Ұсынылған Шешім',
+                        intro: 'Solar-Battery Node AI жүйесі бұл қиындықтарды ML қуатталған болжамды аналитика мен NPU жеделдетілген компьютерлік көруді біріктіретін қос микроконтроллер архитектурасы арқылы шешеді:',
+                        table: {
+                            component: 'Компонент',
+                            technology: 'Технология',
+                            metric: 'Негізгі Метрика'
+                        },
+                        rows: {
+                            battery: {
+                                component: 'Батарея Денсаулығы ML',
+                                technology: 'STM32 B-L475E-IOT01A үстінде Random Forest',
+                                metric: '92% R² Ұпайы'
+                            },
+                            vision: {
+                                component: 'Күн Панелі Көру',
+                                technology: 'STM32N6570-DK NPU үстінде YOLOv8',
+                                metric: '<100мс Қорытынды'
+                            },
+                            ai: {
+                                component: 'Проактивті AI Көмекшісі',
+                                technology: 'GPT-4o-mini API Интеграциясы',
+                                metric: 'Контекстке Сезімтал Ескертулер'
+                            }
+                        }
+                    }
+                },
+                section2: {
+                    title: 'Жүйе Архитектурасы және Әдістеме',
+                    hardware: {
+                        title: 'Аппараттық Платформа',
+                        intro: 'Біздің қос плата архитектурамыз екі STM32 даму жинағының толықтырушы мүмкіндіктерін пайдаланады:',
+                        iot: {
+                            title: 'STM32 B-L475E-IOT01A (IoT Табу Платасы)',
+                            specs: [
+                                '<strong>Процессор:</strong> ARM Cortex-M4 @ 80MHz',
+                                '<strong>Жад:</strong> 1MB Flash, 128KB SRAM',
+                                '<strong>Қосылым:</strong> WiFi 802.11b/g/n, Bluetooth',
+                                '<strong>Сенсорлар:</strong> Температура, Ылғалдылық, Қысым, Акселерометр, Гироскоп',
+                                '<strong>Рөл:</strong> Батарея денсаулығы ML қорытындысы, қоршаған ортаны бақылау, HTTP сервер'
+                            ]
+                        },
+                        npu: {
+                            title: 'STM32N6570-DK (NPU Даму Жинағы)',
+                            specs: [
+                                '<strong>Процессор:</strong> ARM Cortex-M55 @ 600MHz',
+                                '<strong>NPU:</strong> AI жеделдету үшін арнайы Нейрондық Өңдеу Блогы',
+                                '<strong>Жад:</strong> 2.5MB Flash, 1.4MB SRAM',
+                                '<strong>Камера:</strong> IMX335 5MP сенсор',
+                                '<strong>Рөл:</strong> YOLOv8 арқылы нақты уақыттағы күн панелін көрнекі тексеру'
+                            ]
+                        }
+                    },
+                    software: {
+                        title: 'Бағдарламалық Стек',
+                        stack: [
+                            '<strong>C Тілі:</strong> STM32 микробағдарламасын әзірлеу',
+                            '<strong>Python Flask:</strong> Backend ML құбыры және API сервер',
+                            '<strong>Dart және Flutter:</strong> Кросс-платформалы мобильді қосымша',
+                            '<strong>Google Colab:</strong> Терең оқыту моделін оқыту және эксперимент',
+                            '<strong>STEdgeAI Core v2.2.0:</strong> NPU моделін орналастыру құралдар жинағы',
+                            '<strong>OpenAI GPT-4o-mini және Claude API:</strong> Генеративті AI интеграциясы',
+                            '<strong>Google Drive API:</strong> Бұлтты деректер журналы және тұрақтылық'
+                        ]
+                    },
+                    datasets: {
+                        title: 'Деректер Жиынтықтары',
+                        vision: {
+                            title: 'Компьютерлік Көру Деректер Жиынтығы (Roboflow)',
+                            details: [
+                                '<strong>Қайнар көзі:</strong> Roboflow Күн Панелі Деректер Жиынтығы',
+                                '<strong>Кластар:</strong> Қалыпты, Шаң, Жарық, Жабу (4 класс)',
+                                '<strong>Оқыту Кескіндері:</strong> 2,400 аннотацияланған кескін',
+                                '<strong>Толықтыру:</strong> Айналдыру, бұру, жарықтықты реттеу',
+                                '<strong>Формат:</strong> Шектеу қораптары үшін YOLO аннотация форматы'
+                            ]
+                        },
+                        battery: {
+                            title: 'Батарея ML Деректер Жиынтығы (NASA)',
+                            details: [
+                                '<strong>Қайнар көзі:</strong> NASA Батарея Деградация Деректер Жиынтығы',
+                                '<strong>Мүмкіндіктер:</strong> Температура, Кернеу, Ток, Цикл Саны, Сыйымдылық Өшуі',
+                                '<strong>Үлгілер:</strong> Толық разряд циклдері бар 168 Li-ion жасуша',
+                                '<strong>Мақсат:</strong> Қалған Пайдалы Өмір (RUL) пайызы',
+                                '<strong>Тексеру:</strong> 80/20 train-test бөлу, 5-қат кросс-валидация'
+                            ]
+                        }
+                    }
+                },
+                section3: {
+                    title: 'AI Модель Әзірлеу және Өнімділік',
+                    battery: {
+                        title: 'Батарея Денсаулығын Болжау Моделі',
+                        intro: 'Қалған Пайдалы Өмірді (RUL) болжау үшін NASA батарея деградация деректерінде оқытылған Random Forest Regressor:',
+                        features: {
+                            title: 'Мүмкіндік Инженериясы',
+                            items: [
+                                'Цикл санын нормалау',
+                                'Температура айырмашылығын бақылау',
+                                'Кернеу құлдырау жылдамдығын есептеу',
+                                'Сыйымдылық жоғалту трендтері',
+                                'Тарихи деградация үлгілері'
+                            ]
+                        },
+                        training: {
+                            title: 'Оқыту Процесі',
+                            content: 'Google Colab-та scikit-learn пайдаланып 100 шешім ағашымен оқытылған модель. R² ұпайы және Орташа Абсолютті Қате (MAE) үшін GridSearchCV арқылы гиперпараметр баптау оңтайландырылды.'
+                        },
+                        performance: {
+                            title: 'Өнімділік Метрикалары',
+                            table: {
+                                metric: 'Метрика',
+                                value: 'Мән'
+                            },
+                            rows: {
+                                r2: { metric: 'R² Ұпайы', value: '0.92 (92% дәлдік)' },
+                                mae: { metric: 'Орташа Абсолютті Қате', value: '4.3%' },
+                                inference: { metric: 'Қорытынды Уақыты (STM32)', value: '~45мс' }
+                            }
+                        }
+                    },
+                    vision: {
+                        title: 'Күн Панелі Көру Моделі',
+                        intro: 'NPU орналастыру үшін INT8-ге кванттаған YOLOv8 объектіні анықтау моделі:',
+                        classes: {
+                            title: 'Анықтау Кластары',
+                            items: [
+                                '<strong>Қалыпты:</strong> Таза, функционалды күн панельдері',
+                                '<strong>Шаң:</strong> Жеңіл және орташа шаң жиналуы',
+                                '<strong>Жарық:</strong> Физикалық зақым немесе сынықтар',
+                                '<strong>Жабу:</strong> Қоқыс немесе кедергі жабуы'
+                            ]
+                        },
+                        performance: {
+                            title: 'Модель Өнімділігі',
+                            table: {
+                                class: 'Класс',
+                                precision: 'Дәлдік',
+                                recall: 'Еске Түсіру'
+                            },
+                            rows: [
+                                { class: 'Қалыпты', precision: '94%', recall: '96%' },
+                                { class: 'Шаң', precision: '89%', recall: '87%' },
+                                { class: 'Жарық', precision: '91%', recall: '88%' },
+                                { class: 'Жабу', precision: '87%', recall: '85%' }
+                            ]
+                        }
+                    },
+                    ai: {
+                        title: 'Проактивті AI Көмекшісі',
+                        content: 'GPT-4o-mini интеграциясы контекстке сезімтал техникалық қызмет көрсету ұсыныстарын қамтамасыз етеді. Жүйе батарея денсаулығы метрикаларын, көрнекі аномалияларды және қоршаған орта деректерін талдап, әрекет етуге болатын түсініктер мен автоматты ескертулер жасайды, байланыс кешігулері бар терең ғарыш миссиялары үшін автономды шешім қабылдауды мүмкін етеді.'
+                    }
+                },
+                section4: {
+                    title: 'Жүйені Іске Асыру',
+                    web: {
+                        title: 'Веб Панелі',
+                        content: 'HTML/CSS/JavaScript арқылы құрылған нақты уақыттағы бақылау интерфейсі батарея метрикаларын, күн панелі денсаулығын және AI ұсыныстарын көрсетеді.'
+                    },
+                    mobile: {
+                        title: 'Мобильді Қосымша',
+                        content: 'iOS және Android үшін кросс-платформалы Flutter қосымшасы. Оқиға журналы, күнделікті денсаулық қорытындылары, критикалық ескертулер үшін push хабарландырулары және қашықтан жүйені басқару мүмкіндіктері бар.'
+                    },
+                    cloud: {
+                        title: 'Бұлтты Деректер Журналы',
+                        content: 'Google Drive API интеграциясы тұрақты миссияға маңызды деректерді сақтауды қамтамасыз етеді.'
+                    }
+                },
+                section5: {
+                    title: 'Технология Трансферті және Нарық Қолданулары',
+                    space: {
+                        title: 'Ғарыштық Миссия Қолданулары',
+                        content: 'Серік қуат жүйелері мен терең ғарыштық миссиялар үшін бастапқы орналастыру. Экстремалды орта тексеруі (-150°C бастап +150°C дейін, радиация әсері) маңызды ғарыштық қолданулар үшін жүйе сенімділігін дәлелдейді.'
+                    },
+                    transfer: {
+                        title: 'NASA Технология Трансферт Парадигмасы',
+                        content: 'NASA-ның табысты технология spin-off моделін қолдана отырып, ғарышта тексерілген алгоритмдер мен аппараттық құрал жердегі нарықтар үшін коммерциялық тұрғыдан өміршең өнімдер жасайды.'
+                    },
+                    commercial: {
+                        title: 'Коммерциялық Нарық Мүмкіндіктері',
+                        markets: [
+                            '<strong>Күн Энергиясы Фермалары:</strong> Болжамды техникалық қызмет көрсетуді қажет ететін үлкен көлемді жаңартылатын энергия қондырғылары',
+                            '<strong>Қашықтағы Инфрақұрылым:</strong> Тор сыртындағы телеком мұнаралары, метеорологиялық станциялар, зерттеу нысандары',
+                            '<strong>Автономды Жүйелер:</strong> Күн энергиясымен жұмыс істейтін дрондар, роботтар және IoT құрылғылары',
+                            '<strong>Тұрғын Үй Күн Энергиясы:</strong> AI қуатты оңтайландыруымен үй энергия жүйелері'
+                        ]
+                    }
+                },
+                section6: {
+                    title: 'Қорытынды және Болашақ Жұмыстар',
+                    content: 'Бұл зерттеу edge AI және компьютерлік көру арқылы автономды күн панелі мен батарея денсаулығын бақылаудың орындылығын көрсетеді. Негізгі жетістіктерге:',
+                    achievements: [
+                        'Енгізілген аппараттық құралда ML пайдаланып батарея RUL болжауында 92% дәлдік',
+                        'Көп класты күн панелі аномалиясын анықтау үшін 100мс-тан төмен қорытынды уақыты',
+                        'Терең ғарыштық миссияларға жарамды толық автономды жұмыс',
+                        'Үш AI жүйесінің табысты интеграциясы: ML, Компьютерлік Көру және Генеративті AI',
+                        'Ғарыштан коммерциялық нарықтарға технология трансфер жолы'
+                    ],
+                    future: {
+                        title: 'Болашақ Зерттеу Бағыттары',
+                        items: [
+                            '<strong>Жетілдірілген Материал Интеграциясы:</strong> Тікелей күн панелі материалының деградациясын бақылау үшін сенсор әзірлеу',
+                            '<strong>Көп Миссиялы Масштабтау:</strong> Серік шоғырлары үшін бөлінген жүйе архитектурасы',
+                            '<strong>Федеративті Оқыту:</strong> Шикі деректерді жібермей миссиялар арасында білім алмасу',
+                            '<strong>Кванттық Қауіпсіз Шифрлау:</strong> Ұзақ мерзімді миссиялар үшін қауіпсіз AI модель жаңартулары'
+                        ]
+                    }
+                },
+                footer: {
+                    main: 'Solar-Battery Node AI - Техникалық Ақ Қағаз',
+                    competition: 'AEROO Space AI Байқауы 2026 - Ғылым Әлемін Ашамыз',
+                    copyright: '© 2026 Талғар №1 Жеке Мектеп-Интернаты. Барлық құқықтар қорғалған.'
+                }
+            },
+            ru: {
+                subtitle: 'Техническая Белая Книга',
+                description: 'Автономная Система Мониторинга Солнечных Панелей и Здоровья Батарей с Edge AI и Компьютерным Зрением',
+                metadata: {
+                    authors: 'Авторы',
+                    advisor: 'Руководитель',
+                    advisorTitle: 'Учитель Информатики, Инженер-электрик и Электроник',
+                    institution: 'Учреждение',
+                    competition: 'Конкурс',
+                    date: 'Дата',
+                    version: 'Версия'
+                },
+                abstract: {
+                    title: 'Аннотация',
+                    content: 'Это исследование представляет интегрированную автономную систему мониторинга для космических миссий на солнечной энергии, объединяющую прогнозирование срока службы батарей на основе машинного обучения, обнаружение аномалий с помощью компьютерного зрения и интеллектуальную помощь на базе генеративного ИИ. Система использует два микроконтроллера STM32: плату IoT для мониторинга окружающей среды в реальном времени и вывода МО, и комплект разработки типа N6 с выделенным блоком нейронной обработки для обнаружения аномалий солнечных панелей. Используя собственные наборы данных батарей NASA и набор из 2290 изображений солнечных панелей, мы достигли точности прогнозирования 92% и времени вывода менее 100мс для многоклассового обнаружения объектов.',
+                    keywords: 'Ключевые слова'
+                },
+                section1: {
+                    title: 'Введение',
+                    problem: {
+                        title: 'Постановка Проблемы',
+                        intro: 'Космические миссии сталкиваются с критическими проблемами в управлении энергосистемой:',
+                        items: [
+                            '<strong>Деградация Батарей:</strong> Наименьшая активная единица солнечной панели - это PV-элемент. Многие академические исследования показали, что эффективность PV-элементов снижается с ростом температуры. Экстремальные температуры (-150°C до +150°C) и радиационное воздействие вызывают ускоренную деградацию батарей.',
+                            '<strong>Потеря Эффективности Солнечных Панелей:</strong> На поверхностях планет (Луна, Марс) слои пыли, накапливающиеся на солнечных панелях, могут привести к потерям выработки энергии более 30% в течение месяцев. Солнечные панели NASA InSight Mars lander также испытали серьезное снижение выработки энергии из-за пыли.',
+                            '<strong>Ограниченные Диагностические Возможности:</strong> Многие исследователи отмечают, что основным методом мониторинга здоровья космических аппаратов сегодня является пороговый мониторинг; однако этот подход не позволяет обнаруживать аварийные ситуации на ранней стадии.',
+                            '<strong>Вычислительные Ограничения:</strong> Космические миссии накладывают уникальные ограничения, включая ограниченные энергетические и бортовые вычислительные ресурсы, радиационные эффекты и длительные задержки связи.',
+                            '<strong>Задержки Связи:</strong> Из-за огромных расстояний связь с миссиями в дальнем космосе может занимать от нескольких минут до часов в одну сторону. В лунных миссиях 3-14 секунд, в марсианских до 22 минут.'
+                        ]
+                    },
+                    solution: {
+                        title: 'Предлагаемое Решение',
+                        intro: 'Система Solar-Battery Node AI решает эти проблемы через двухмикроконтроллерную архитектуру, объединяющую предиктивную аналитику на основе МО с компьютерным зрением с ускорением NPU:',
+                        table: {
+                            component: 'Компонент',
+                            technology: 'Технология',
+                            metric: 'Ключевая Метрика'
+                        },
+                        rows: {
+                            battery: {
+                                component: 'МО Здоровья Батарей',
+                                technology: 'Random Forest на STM32 B-L475E-IOT01A',
+                                metric: '92% R² Оценка'
+                            },
+                            vision: {
+                                component: 'Зрение Солнечных Панелей',
+                                technology: 'YOLOv8 на STM32N6570-DK NPU',
+                                metric: '<100мс Вывод'
+                            },
+                            ai: {
+                                component: 'Проактивный ИИ Ассистент',
+                                technology: 'Интеграция API GPT-4o-mini',
+                                metric: 'Контекстно-зависимые Оповещения'
+                            }
+                        }
+                    }
+                },
+                section2: {
+                    title: 'Архитектура Системы и Методология',
+                    hardware: {
+                        title: 'Аппаратная Платформа',
+                        intro: 'Наша двухплатная архитектура использует взаимодополняющие возможности двух комплектов разработки STM32:',
+                        iot: {
+                            title: 'STM32 B-L475E-IOT01A (Плата IoT Discovery)',
+                            specs: [
+                                '<strong>Процессор:</strong> ARM Cortex-M4 @ 80MHz',
+                                '<strong>Память:</strong> 1MB Flash, 128KB SRAM',
+                                '<strong>Подключение:</strong> WiFi 802.11b/g/n, Bluetooth',
+                                '<strong>Датчики:</strong> Температура, Влажность, Давление, Акселерометр, Гироскоп',
+                                '<strong>Роль:</strong> МО вывод здоровья батарей, мониторинг окружающей среды, HTTP сервер'
+                            ]
+                        },
+                        npu: {
+                            title: 'STM32N6570-DK (Комплект Разработки NPU)',
+                            specs: [
+                                '<strong>Процессор:</strong> ARM Cortex-M55 @ 600MHz',
+                                '<strong>NPU:</strong> Выделенный Блок Нейронной Обработки для ускорения ИИ',
+                                '<strong>Память:</strong> 2.5MB Flash, 1.4MB SRAM',
+                                '<strong>Камера:</strong> Датчик IMX335 5MP',
+                                '<strong>Роль:</strong> Визуальный осмотр солнечных панелей в реальном времени с YOLOv8'
+                            ]
+                        }
+                    },
+                    software: {
+                        title: 'Программный Стек',
+                        stack: [
+                            '<strong>Язык C:</strong> Разработка прошивки STM32',
+                            '<strong>Python Flask:</strong> Backend МО конвейер и API сервер',
+                            '<strong>Dart и Flutter:</strong> Кросс-платформенное мобильное приложение',
+                            '<strong>Google Colab:</strong> Обучение моделей глубокого обучения и эксперименты',
+                            '<strong>STEdgeAI Core v2.2.0:</strong> Инструментарий развертывания моделей NPU',
+                            '<strong>OpenAI GPT-4o-mini и Claude API:</strong> Интеграция генеративного ИИ',
+                            '<strong>Google Drive API:</strong> Облачное логирование данных и постоянство'
+                        ]
+                    },
+                    datasets: {
+                        title: 'Наборы Данных',
+                        vision: {
+                            title: 'Набор Данных Компьютерного Зрения (Roboflow)',
+                            details: [
+                                '<strong>Источник:</strong> Набор Данных Солнечных Панелей Roboflow',
+                                '<strong>Классы:</strong> Нормальный, Пыль, Трещина, Покрытие (4 класса)',
+                                '<strong>Обучающие Изображения:</strong> 2,400 аннотированных изображений',
+                                '<strong>Аугментация:</strong> Вращение, отражение, регулировка яркости',
+                                '<strong>Формат:</strong> Формат аннотаций YOLO для ограничивающих рамок'
+                            ]
+                        },
+                        battery: {
+                            title: 'Набор Данных МО Батарей (NASA)',
+                            details: [
+                                '<strong>Источник:</strong> Набор Данных Деградации Батарей NASA',
+                                '<strong>Признаки:</strong> Температура, Напряжение, Ток, Количество Циклов, Потеря Емкости',
+                                '<strong>Образцы:</strong> 168 Li-ion элементов с полными циклами разряда',
+                                '<strong>Цель:</strong> Процент Оставшегося Срока Службы (RUL)',
+                                '<strong>Валидация:</strong> Разделение train-test 80/20, 5-кратная кросс-валидация'
+                            ]
+                        }
+                    }
+                },
+                section3: {
+                    title: 'Разработка ИИ Моделей и Производительность',
+                    battery: {
+                        title: 'Модель Прогнозирования Здоровья Батарей',
+                        intro: 'Random Forest Regressor, обученный на данных деградации батарей NASA для прогнозирования Оставшегося Срока Службы (RUL):',
+                        features: {
+                            title: 'Инженерия Признаков',
+                            items: [
+                                'Нормализация количества циклов',
+                                'Отслеживание разницы температур',
+                                'Расчет скорости падения напряжения',
+                                'Тренды потери емкости',
+                                'Исторические паттерны деградации'
+                            ]
+                        },
+                        training: {
+                            title: 'Процесс Обучения',
+                            content: 'Модель обучена с 100 деревьями решений с использованием scikit-learn в Google Colab. Настройка гиперпараметров оптимизирована с GridSearchCV для R² оценки и Средней Абсолютной Ошибки (MAE).'
+                        },
+                        performance: {
+                            title: 'Метрики Производительности',
+                            table: {
+                                metric: 'Метрика',
+                                value: 'Значение'
+                            },
+                            rows: {
+                                r2: { metric: 'R² Оценка', value: '0.92 (92% точность)' },
+                                mae: { metric: 'Средняя Абсолютная Ошибка', value: '4.3%' },
+                                inference: { metric: 'Время Вывода (STM32)', value: '~45мс' }
+                            }
+                        }
+                    },
+                    vision: {
+                        title: 'Модель Зрения Солнечных Панелей',
+                        intro: 'Модель обнаружения объектов YOLOv8, квантованная в INT8 для развертывания NPU:',
+                        classes: {
+                            title: 'Классы Обнаружения',
+                            items: [
+                                '<strong>Нормальный:</strong> Чистые, функциональные солнечные панели',
+                                '<strong>Пыль:</strong> Легкое или умеренное накопление пыли',
+                                '<strong>Трещина:</strong> Физическое повреждение или разломы',
+                                '<strong>Покрытие:</strong> Покрытие мусором или препятствием'
+                            ]
+                        },
+                        performance: {
+                            title: 'Производительность Модели',
+                            table: {
+                                class: 'Класс',
+                                precision: 'Точность',
+                                recall: 'Полнота'
+                            },
+                            rows: [
+                                { class: 'Нормальный', precision: '94%', recall: '96%' },
+                                { class: 'Пыль', precision: '89%', recall: '87%' },
+                                { class: 'Трещина', precision: '91%', recall: '88%' },
+                                { class: 'Покрытие', precision: '87%', recall: '85%' }
+                            ]
+                        }
+                    },
+                    ai: {
+                        title: 'Проактивный ИИ Ассистент',
+                        content: 'Интеграция GPT-4o-mini обеспечивает контекстно-зависимые рекомендации по обслуживанию. Система анализирует метрики здоровья батарей, визуальные аномалии и данные окружающей среды для генерации практических выводов и автоматических оповещений, обеспечивая автономное принятие решений для миссий в дальний космос с задержками связи.'
+                    }
+                },
+                section4: {
+                    title: 'Реализация Системы',
+                    web: {
+                        title: 'Веб-Панель',
+                        content: 'Интерфейс мониторинга в реальном времени, созданный с HTML/CSS/JavaScript, отображает метрики батарей, здоровье солнечных панелей и рекомендации ИИ.'
+                    },
+                    mobile: {
+                        title: 'Мобильное Приложение',
+                        content: 'Кросс-платформенное приложение Flutter для iOS и Android. Функции включают логирование событий, ежедневные сводки здоровья, push-уведомления для критических оповещений и удаленное управление системой.'
+                    },
+                    cloud: {
+                        title: 'Облачное Логирование Данных',
+                        content: 'Интеграция API Google Drive обеспечивает постоянное хранение критически важных данных миссии.'
+                    }
+                },
+                section5: {
+                    title: 'Передача Технологий и Рыночные Применения',
+                    space: {
+                        title: 'Применения в Космических Миссиях',
+                        content: 'Первичное развертывание для спутниковых энергосистем и миссий в дальний космос. Валидация в экстремальных условиях (-150°C до +150°C, радиационное воздействие) доказывает надежность системы для критических космических применений.'
+                    },
+                    transfer: {
+                        title: 'Парадигма Передачи Технологий NASA',
+                        content: 'Следуя успешной модели spin-off технологий NASA, алгоритмы и аппаратное обеспечение, проверенные в космосе, создают коммерчески жизнеспособные продукты для наземных рынков.'
+                    },
+                    commercial: {
+                        title: 'Коммерческие Рыночные Возможности',
+                        markets: [
+                            '<strong>Солнечные Фермы:</strong> Крупномасштабные установки возобновляемой энергии, требующие предиктивного обслуживания',
+                            '<strong>Удаленная Инфраструктура:</strong> Автономные телекоммуникационные вышки, метеостанции, исследовательские объекты',
+                            '<strong>Автономные Системы:</strong> Дроны на солнечной энергии, роботы и IoT устройства',
+                            '<strong>Домашняя Солнечная Энергия:</strong> Домашние энергосистемы с оптимизацией на базе ИИ'
+                        ]
+                    }
+                },
+                section6: {
+                    title: 'Заключение и Будущие Работы',
+                    content: 'Это исследование демонстрирует осуществимость автономного мониторинга солнечных панелей и здоровья батарей с использованием edge AI и компьютерного зрения. Основные достижения включают:',
+                    achievements: [
+                        '92% точность прогнозирования RUL батарей с использованием МО на встраиваемом оборудовании',
+                        'Время вывода менее 100мс для многоклассового обнаружения аномалий солнечных панелей',
+                        'Полностью автономная работа, подходящая для миссий в дальний космос',
+                        'Успешная интеграция трех ИИ систем: МО, Компьютерное Зрение и Генеративный ИИ',
+                        'Путь передачи технологий из космоса на коммерческие рынки'
+                    ],
+                    future: {
+                        title: 'Будущие Направления Исследований',
+                        items: [
+                            '<strong>Интеграция Передовых Материалов:</strong> Разработка сенсоров для прямого мониторинга деградации материалов солнечных панелей',
+                            '<strong>Многомиссионное Масштабирование:</strong> Распределенная системная архитектура для спутниковых созвездий',
+                            '<strong>Федеративное Обучение:</strong> Обмен знаниями между миссиями без передачи сырых данных',
+                            '<strong>Квантово-безопасное Шифрование:</strong> Безопасные обновления ИИ моделей для долгосрочных миссий'
+                        ]
+                    }
+                },
+                footer: {
+                    main: 'Solar-Battery Node AI - Техническая Белая Книга',
+                    competition: 'Конкурс AEROO Space AI 2026 - Исследуя Мир Науки',
+                    copyright: '© 2026 Талгарская Частная Школа-Интернат №1. Все права защищены.'
+                }
             }
         },
 
@@ -921,6 +1540,16 @@ function whitePaperApp() {
             this.currentLang = lang;
             localStorage.setItem('whitepaper-lang', lang);
             document.documentElement.lang = lang;
+        },
+
+        downloadPDF() {
+            // Download the pre-made PDF file
+            const link = document.createElement('a');
+            link.href = 'documents/Technical_White_Paper.pdf';
+            link.download = 'Solar-Battery-Node-AI-Technical-Whitepaper.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     }
 }

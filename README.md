@@ -6,6 +6,8 @@
 ![STM32](https://img.shields.io/badge/STM32-NPU%20Enabled-orange)
 ![ML Accuracy](https://img.shields.io/badge/ML%20Accuracy-92%25-green)
 ![Inference](https://img.shields.io/badge/Vision%20Inference-%3C100ms-green)
+![Prototype Cost](https://img.shields.io/badge/Prototype%20Cost-%24312-brightgreen)
+![Languages](https://img.shields.io/badge/Languages-EN%20|%20KK%20|%20RU%20|%20TR-lightgrey)
 
 ## Overview
 
@@ -19,11 +21,16 @@ An integrated autonomous monitoring system for solar-powered space missions, com
 - **Edge AI Processing**: Autonomous diagnostics without cloud dependency
 - **Multi-Platform**: Web dashboard + Flutter mobile app
 - **AI Assistant**: GPT-4o-mini powered proactive maintenance recommendations
+- **Multi-Language Support**: English, Kazakh, Russian, Turkish
 
 ## Hardware
 
-- **STM32 B-L475E-IOT01A**: Environmental monitoring & ML inference
-- **STM32N6570-DK**: NPU-accelerated computer vision (YOLOv8)
+| Component | Price |
+|-----------|-------|
+| STM32N6570-DK (NPU Board) | $193 |
+| STM32 B-L475E-IOT01A (IoT Board) | $54 |
+| IMX335 5MP Camera Module | $65 |
+| **Total Prototype Cost** | **$312** |
 
 ## Technology Stack
 
@@ -36,8 +43,21 @@ An integrated autonomous monitoring system for solar-powered space missions, com
 
 ## Datasets
 
-- **NASA Battery Dataset**: 124 Li-ion cells degradation data
-- **Roboflow Solar Panel**: 4-class anomaly detection (Normal, Dust, Crack, Coverage)
+| Dataset | Samples | Purpose |
+|---------|---------|---------|
+| [NASA Battery Dataset](https://www.kaggle.com/datasets/patrickfleith/nasa-battery-dataset) | 168K cycles | Battery RUL prediction |
+| [Roboflow Solar Panel](https://universe.roboflow.com/gao-shou-zheng-b6xqc/solar-panel-0swal) | 2,280 images | Panel anomaly detection (Normal, Dust, Crack, Coverage) |
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Main Website](index.html) | Project overview, features, and team information |
+| [Technical Whitepaper](technical-whitepaper.html) | Detailed technical documentation and research methodology |
+| [Pitch Deck](pitch-deck.html) | Investment presentation with roadmap (1-3-5-10 years) |
+| [Dataset Documentation](dataset-documentation.html) | NASA Battery & Roboflow Solar Panel dataset details |
+
+All documentation pages support 4 languages (EN, KK, RU, TR) and include PDF download.
 
 ## Research Team
 
