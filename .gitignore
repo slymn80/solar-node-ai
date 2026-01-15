@@ -5,8 +5,10 @@
 README_1.md
 README_2.md
 links.txt
-*.pdf
 *.xlsx
+
+# Allow PDFs in documents folder
+!documents/*.pdf
 
 # OS files
 .DS_Store
